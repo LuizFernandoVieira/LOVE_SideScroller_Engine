@@ -24,7 +24,7 @@ require("tile")
 function love.load()
   loveConfigurations()
   Gamestate.registerEvents()
-  Gamestate.switch(splashState)
+  Gamestate.switch(gameState)
 end
 
 function loveConfigurations()

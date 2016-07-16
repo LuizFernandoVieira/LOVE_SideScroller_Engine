@@ -6,7 +6,6 @@ end
 
 function splashState:update(dt)
   transitionTime = transitionTime + dt
-  print(transitionTime)
 end
 
 function splashState:draw()

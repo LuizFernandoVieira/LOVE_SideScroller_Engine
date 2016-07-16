@@ -14,9 +14,10 @@ local PLAYER_NAME     = "Player"
 local PLAYER_VELOCITY = 1
 local PLAYER_HEALTH   = 1
 
-local PLAYERSTATE_IDLE    = 0
-local PLAYERSTATE_WALKING = 1
-local PLAYERSTATE_RUNNING = 2
+local PLAYERSTATE_IDLE     = 0
+local PLAYERSTATE_WALKING  = 1
+local PLAYERSTATE_CLIMBING = 2
+local PLAYERSTATE_DEAD     = 3
 
 function Player:_init(x, y, imgPath, imgWidth, imgHeight)
   GameActor._init(self, x, y)
@@ -30,6 +31,8 @@ function Player:_init(x, y, imgPath, imgWidth, imgHeight)
   self.velocity    = PLAYER_VELOCITY
   self.health      = PLAYER_HEALTH
   self.grounded    = false
+  self.state       = PLAYERSTATE_IDLE
+  self.grounded    = false
 
   self.sprite = Sprite._init(self, imgPath, 1, imgWidth, imgHeight)
 end
@@ -37,18 +40,53 @@ end
 function Player:update(dt)
   self.sprite:update(dt)
 
-  if self.moveUp then
-    self.y = self.y - self.velocity
-  end
-  if self.moveRight then
+  if self.moveRight and self.moveLeft then
+    self.state = PLAYERSTATE_IDLE
+  elseif self.moveRight then
     self.x = self.x + self.velocity
-  end
-  if self.moveDown then
-    self.y = self.y + self.velocity
-  end
-  if self.moveLeft then
+    self.state = PLAYERSTATE_WALKING
+  elseif self.moveLeft then
     self.x = self.x - self.velocity
+    self.state = PLAYERSTATE_WALKING
+  else
+    self.state = PLAYERSTATE_IDLE
   end
+
+  print(self.state)
+  
+  -- IDLE STATE
+  if self.state == PLAYERSTATE_IDLE then
+  -- WALKING STATE
+  elseif self.state == PLAYERSTATE_WALKING then
+  -- CLIMBING STATE
+  elseif self.state == PLAYERSTATE_CLIMBING then
+  -- DEAD STATE
+  elseif self.state == PLAYERSTATE_DEAD then
+  end
+end
+
+function Player:updateIdle(dt)
+end
+
+function Player:updateWalking(dt)
+
+end
+
+function Player:updateClimbing(dt)
+end
+
+function Player:updateDead(dt)
+end
+
+function Player:jump()
+  if self.state == PLAYERSTATE_CLIMBING then
+    self:leaveLadder()
+  elseif self.grounded == true then
+    -- pula
+  end
+end
+
+function Player:leaveLadder()
 end
 
 function Player:draw()

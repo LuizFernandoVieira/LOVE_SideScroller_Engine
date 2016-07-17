@@ -22,6 +22,7 @@ require("map")
 require("tile")
 require("vector")
 require("rect")
+require("geometry_helper")
 
 function love.load()
   loveConfigurations()

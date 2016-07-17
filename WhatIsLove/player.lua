@@ -55,7 +55,7 @@ function Player:update(dt)
   end
 
   if not self.grounded then
-    self.box.y = self.box.y + GRAVITY*dt
+    -- self.box.y = self.box.y + GRAVITY*dt
   end
 
   -- IDLE STATE
@@ -100,8 +100,12 @@ function Player:isDead()
 end
 
 function Player:notifyCollision(other)
-  if other.name == "Tile" then
+  if other.type == "Tile" then
     print("colidiu com tile")
+  elseif other.type == "Enemy" then
+    print("colidiu com enemy")
+  elseif other.type == "Item" then
+    print("colidiu com item")
   end
 end
 

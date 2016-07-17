@@ -20,10 +20,10 @@ function Rect:center()
   return Vector(self.x + self.w/2, self.y + self.h/2)
 end
 
-function Rect:center(x, y)
-  x = self.x + self.w/2
-  y = self.y + self.h/2
-end
+-- function Rect:center(x, y)
+--   x = self.x + self.w / 2
+--   y = self.y + self.h / 2
+-- end
 
 function Rect:isInside(vector)
   if (vector.x >= self.x

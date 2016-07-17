@@ -34,3 +34,13 @@ end
 function Enemy:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
+
+function Enemy:isDead()
+end
+
+function Enemy:notifyCollision()
+end
+
+function Enemy:is(type)
+  return type == self.type
+end

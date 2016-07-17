@@ -10,21 +10,21 @@ setmetatable(Player, {
   end,
 })
 
-local PLAYER_NAME     = "Player"
-local PLAYER_IMAGE = "img/ninja/run1.png"
-local PLAYER_VELOCITY = 1
-local PLAYER_HEALTH   = 1
+local PLAYER_TYPE          = "Player"
+local PLAYER_IMAGE         = "img/ninja/run1.png"
+local PLAYER_VELOCITY      = 1
+local PLAYER_HEALTH        = 1
 local PLAYERSTATE_IDLE     = 0
 local PLAYERSTATE_WALKING  = 1
 local PLAYERSTATE_CLIMBING = 2
 local PLAYERSTATE_DEAD     = 3
-local GRAVITY = 350
+local GRAVITY              = 350
 local PLAYER_FACINGRIGHT   = true
 
 function Player:_init(x, y)
   GameActor:_init(x, y)
 
-  self.name        = PLAYER_NAME
+  self.type        = PLAYER_TYPE
   self.moveUp      = false
   self.moveRight   = false
   self.moveDown    = false
@@ -96,10 +96,17 @@ function Player:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+function Player:isDead()
+end
+
 function Player:notifyCollision(other)
   if other.name == "Tile" then
     print("colidiu com tile")
   end
+end
+
+function Player:is(type)
+  return type == self.type
 end
 
 function Player:getName()

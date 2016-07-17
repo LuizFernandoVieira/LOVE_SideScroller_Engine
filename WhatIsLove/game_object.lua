@@ -22,7 +22,7 @@ end
 function GameObject:update(dt)
 end
 
-function GameObject:render()
+function GameObject:draw()
 end
 
 function GameObject:isDead()
@@ -32,4 +32,5 @@ function GameObject:notifyCollision()
 end
 
 function GameObject:is(type)
+  return type == "GameObject"
 end

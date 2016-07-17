@@ -20,6 +20,8 @@ require("enemy")
 require("item")
 require("map")
 require("tile")
+require("vector")
+require("rect")
 
 function love.load()
   loveConfigurations()

@@ -11,30 +11,32 @@ setmetatable(Player, {
 })
 
 local PLAYER_NAME     = "Player"
+local PLAYER_IMAGE = "img/ninja/run1.png"
 local PLAYER_VELOCITY = 1
 local PLAYER_HEALTH   = 1
-
 local PLAYERSTATE_IDLE     = 0
 local PLAYERSTATE_WALKING  = 1
 local PLAYERSTATE_CLIMBING = 2
 local PLAYERSTATE_DEAD     = 3
+local GRAVITY = 350
+local PLAYER_FACINGRIGHT   = true
 
-function Player:_init(x, y, imgPath, imgWidth, imgHeight)
-  GameActor._init(self, x, y)
+function Player:_init(x, y)
+  GameActor:_init(x, y)
 
   self.name        = PLAYER_NAME
   self.moveUp      = false
   self.moveRight   = false
   self.moveDown    = false
   self.moveLeft    = false
-  self.facingRight = true
+  self.facingRight = PLAYER_FACINGRIGHT
   self.velocity    = PLAYER_VELOCITY
   self.health      = PLAYER_HEALTH
   self.grounded    = false
   self.state       = PLAYERSTATE_IDLE
   self.grounded    = false
-
-  self.sprite = Sprite._init(self, imgPath, 1, imgWidth, imgHeight)
+  self.sprite      = Sprite:_init(PLAYER_IMAGE, 1, 1)
+  self.box         = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
 function Player:update(dt)
@@ -43,17 +45,19 @@ function Player:update(dt)
   if self.moveRight and self.moveLeft then
     self.state = PLAYERSTATE_IDLE
   elseif self.moveRight then
-    self.x = self.x + self.velocity
+    self.box.x = self.box.x + self.velocity
     self.state = PLAYERSTATE_WALKING
   elseif self.moveLeft then
-    self.x = self.x - self.velocity
+    self.box.x = self.box.x - self.velocity
     self.state = PLAYERSTATE_WALKING
   else
     self.state = PLAYERSTATE_IDLE
   end
 
-  print(self.state)
-  
+  if not self.grounded then
+    self.box.y = self.box.y + GRAVITY*dt
+  end
+
   -- IDLE STATE
   if self.state == PLAYERSTATE_IDLE then
   -- WALKING STATE
@@ -69,7 +73,6 @@ function Player:updateIdle(dt)
 end
 
 function Player:updateWalking(dt)
-
 end
 
 function Player:updateClimbing(dt)
@@ -90,7 +93,13 @@ function Player:leaveLadder()
 end
 
 function Player:draw()
-  self.sprite:draw(self.x, self.y, self.image)
+  self.sprite:draw(self.box.x, self.box.y, 0)
+end
+
+function Player:notifyCollision(other)
+  if other.name == "Tile" then
+    print("colidiu com tile")
+  end
 end
 
 function Player:getName()

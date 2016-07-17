@@ -11,29 +11,25 @@ setmetatable(GameObject, {
 })
 
 function GameObject:_init(x, y)
-  self.id = nextId
-  self.x  = x
-  self.y  = y
+  self.id       = nextId
+  self.type     = "GameObject"
+  self.box      = Rect(x, y, 0, 0)
+  self.rotation = 0
 
   nextId = nextId + 1
 end
 
-function GameObject:getId()
-  return self.id
+function GameObject:update(dt)
 end
 
-function GameObject:getX()
-  return self.x
+function GameObject:render()
 end
 
-function GameObject:getY()
-  return self.y
+function GameObject:isDead()
 end
 
-function GameObject:setX(x)
-  self.x = x
+function GameObject:notifyCollision()
 end
 
-function GameObject:setY(y)
-  self.y = y
+function GameObject:is(type)
 end

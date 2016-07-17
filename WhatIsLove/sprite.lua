@@ -1,15 +1,17 @@
 Sprite         = {}
 Sprite.__index = Sprite
 
-function Sprite:_init(image, frameCout, width, height)
+function Sprite:_init(image, frameCout, frameTime)
   local self = setmetatable({}, Sprite)
 
   self.image        = love.graphics.newImage(image)
+  self.scaleX       = 1
+  self.scaleY       = 1
   self.frames       = {}
-  self.frameCout    = frameCout
+  self.frameCout    = frameCout or 1
   self.currentFrame = 1
   self.timeElapsed  = 0
-  self.frameTime    = 1
+  self.frameTime    = frameTime or 1
 
   for i=1, frameCout, 1 do
     self.frames[i] = love.graphics.newQuad(
@@ -27,7 +29,7 @@ end
 function Sprite:update(dt)
   self.timeElapsed = self.timeElapsed + dt
 
-  if self.timeElapsed > 1 then
+  if self.timeElapsed > self.frameTime then
     if self.currentFrame < self.frameCout then
       self.currentFrame = self.currentFrame + 1
     else
@@ -36,18 +38,19 @@ function Sprite:update(dt)
   end
 end
 
-function Sprite:draw(x, y, image)
+function Sprite:draw(x, y, angle)
   love.graphics.draw(
     self.image,
     self.frames[self.currentFrame],
-    x,y
+    x, y, angle,
+    self.scaleX, self.scaleY
   )
 end
 
-function Sprite:getWidth(self)
+function Sprite:getWidth()
   return self.image:getWidth()/self.frameCout
 end
 
-function Sprite:getHeight(self)
+function Sprite:getHeight()
   return self.image:getHeight()
 end

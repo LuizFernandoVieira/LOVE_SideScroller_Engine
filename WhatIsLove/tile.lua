@@ -11,5 +11,7 @@ setmetatable(Player, {
 })
 
 function Tile:_init(x, y)
-  GameActor._init(self, x, y)
+  GameActor:_init(x, y)
+
+  self.name = "Tile"
 end

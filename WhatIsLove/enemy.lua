@@ -10,20 +10,21 @@ setmetatable(Enemy, {
   end,
 })
 
-local ENEMY_NAME     = "Enemy"
+local ENEMY_TYPE     = "Enemy"
+local ENEMY_IMAGE    = "img/sensei/spr_boss_0.png"
 local ENEMY_VELOCITY = 1
 local ENEMY_HEALTH   = 1
 
-function Enemy:_init(x, y, imgPath, imgWidth, imgHeight)
-  GameActor._init(self, x, y)
+function Enemy:_init(x, y)
+  GameActor:_init(x, y)
 
-  self.name        = PLAYER_NAME
+  self.type        = ENEMY_TYPE
   self.facingRight = true
   self.velocity    = PLAYER_VELOCITY
   self.health      = PLAYER_HEALTH
   self.grounded    = false
-
-  self.sprite = Sprite._init(self, imgPath, 1, imgWidth, imgHeight)
+  self.sprite      = Sprite:_init(ENEMY_IMAGE, 1, 1)
+  self.box         = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
 function Enemy:update(dt)
@@ -31,5 +32,5 @@ function Enemy:update(dt)
 end
 
 function Enemy:draw()
-  self.sprite:draw(self.x, self.y, self.image)
+  self.sprite:draw(self.box.x, self.box.y, 0)
 end

@@ -11,5 +11,22 @@ setmetatable(GameActor, {
 })
 
 function GameActor:_init(x, y)
-  GameObject._init(self, x, y)
+  GameObject:_init(x, y)
+
+  self.box = Rect(x, y, 0, 0)
+end
+
+function GameActor:update(dt)
+end
+
+function GameActor:render()
+end
+
+function GameActor:isDead()
+end
+
+function GameActor:notifyCollision()
+end
+
+function GameActor:is(type)
 end

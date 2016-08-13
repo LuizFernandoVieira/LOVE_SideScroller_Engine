@@ -38,7 +38,7 @@ end
 function Enemy:isDead()
 end
 
-function Enemy:notifyCollision()
+function Enemy:notifyCollision(other)
 end
 
 function Enemy:is(type)

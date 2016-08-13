@@ -31,7 +31,10 @@ end
 function Item:isDead()
 end
 
-function Item:notifyCollision()
+function Item:notifyCollision(other)
+  if other.type == "Player" then
+
+  end
 end
 
 function Item:is(type)

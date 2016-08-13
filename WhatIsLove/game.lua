@@ -5,7 +5,7 @@ enemies  = {}
 items    = {}
 
 function gameState:init()
-  player  = Player(200, 200)
+  player = Player(200, 200)
 
   loadEnemies()
   loadItems()
@@ -180,11 +180,16 @@ function handleInputs()
 end
 
 function gameState:draw()
+  love.graphics.push()
+  love.graphics.scale(config.scale)
+
   love.graphics.draw(tilesetBatch)
   player:draw()
 
   drawEnemies()
   drawItems()
+
+  love.graphics.pop()
 end
 
 function drawEnemies()

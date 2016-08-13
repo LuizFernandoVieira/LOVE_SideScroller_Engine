@@ -28,7 +28,7 @@ end
 function GameObject:isDead()
 end
 
-function GameObject:notifyCollision()
+function GameObject:notifyCollision(other)
 end
 
 function GameObject:is(type)

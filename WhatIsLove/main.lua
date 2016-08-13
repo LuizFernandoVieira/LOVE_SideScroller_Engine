@@ -1,6 +1,11 @@
+-- DESENVOLVIMENTO DE JOGOS AVANÇADO
+-- AUTOR: LUIZ FERNANDO VIEIRA DE CASTRO FERREIRA
+-- UNIVERSIDADE NACIONAL DE BRASÍLIA
+
 -- Game States
 splashState    = {}
 menuState      = {}
+optionsState   = {}
 gameState      = {}
 
 -- 3rd party libraries
@@ -9,7 +14,9 @@ suit      = require "suit"
 
 -- Requires
 require("maps.first_map")
+require("config")
 require("splash")
+require("options")
 require("menu")
 require("game")
 require("sprite")
@@ -24,12 +31,11 @@ require("vector")
 require("rect")
 require("geometry_helper")
 
-function love.load()
-  loveConfigurations()
-  Gamestate.registerEvents()
-  Gamestate.switch(gameState)
-end
+WIDTH = 256
+HEIGHT = 200
 
-function loveConfigurations()
-  love.keyboard.setKeyRepeat(false)
+function love.load()
+  loadConfig()
+  Gamestate.registerEvents()
+  Gamestate.switch(menuState)
 end

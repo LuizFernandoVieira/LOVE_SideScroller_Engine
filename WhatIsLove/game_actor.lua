@@ -26,7 +26,7 @@ end
 function GameActor:isDead()
 end
 
-function GameActor:notifyCollision()
+function GameActor:notifyCollision(other)
 end
 
 function GameActor:is(type)

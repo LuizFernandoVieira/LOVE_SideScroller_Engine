@@ -20,6 +20,8 @@ end
 
 function optionsState:draw()
   love.graphics.push()
+
+  setZoom()
   love.graphics.scale(config.scale)
 
   love.graphics.setFont(font.bold)
@@ -43,6 +45,7 @@ function optionsState:draw()
 	love.graphics.print(">", 52, 49+selection*13)
 
   love.graphics.pop()
+  love.graphics.setScissor()
 end
 
 function optionsState:keypressed(key)
@@ -60,6 +63,18 @@ function optionsState:keypressed(key)
         config.scale = math.max(math.min(config.scale + 1, NUMBER_OF_OPTIONS), 1)
       end
       setMode()
+    elseif selection == 2 then
+      if key == "left" then
+        if config.fullscreen > 0 then
+          config.fullscreen = cap(config.fullscreen - 1, 0, 3)
+          setMode()
+        end
+      else
+        if config.fullscreen < 3 then
+          config.fullscreen = cap(config.fullscreen + 1, 0, 3)
+          setMode()
+        end
+      end
     end
   end
 
@@ -68,6 +83,43 @@ function optionsState:keypressed(key)
   end
 
   if key == "space" or key == "enter" or key == "return" then
+    if selection == 6 then
+      Gamestate.switch(menuState)
+    end
+  end
+end
+
+function optionsState:gamepadpressed(joystick, button)
+  if button == "dpdown" then
+    selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
+  elseif button == "dpup" then
+    selection = wrap(selection - 1, 1, NUMBER_OF_OPTIONS)
+  end
+
+  if button == "dpleft" or button == "dpright" then
+    if selection == 1 then
+      if button == "dpleft" then
+        config.scale = math.max(math.min(config.scale - 1, 4), 1)
+      elseif button == "dpright" then
+        config.scale = math.max(math.min(config.scale + 1, 4), 1)
+      end
+      setMode()
+    elseif selection == 2 then
+      if button == "dpleft" then
+        if config.fullscreen > 0 then
+          config.fullscreen = cap(config.fullscreen - 1, 0, 3)
+          setMode()
+        end
+      else
+        if config.fullscreen < 3 then
+          config.fullscreen = cap(config.fullscreen + 1, 0, 3)
+          setMode()
+        end
+      end
+    end
+  end
+
+  if button == "a" then
     if selection == 6 then
       Gamestate.switch(menuState)
     end

@@ -58,10 +58,25 @@ function handleInputs()
   if love.keyboard.isDown('a') then
     player:setMovingLeft(true)
   end
+
+  if not joystick then return end
+  if joystick:isGamepadDown("dpup") then
+    player:setMovingUp(true)
+  elseif joystick:isGamepadDown("dpright") or
+         joystick:getGamepadAxis("leftx") > 0.2 then
+    player:setMovingRight(true)
+  elseif joystick:isGamepadDown("dpdown") then
+    player:setMovingDown(true)
+  elseif joystick:isGamepadDown("dpleft") or
+         joystick:getGamepadAxis("leftx") < -0.2 then
+    player:setMovingLeft(true)
+  end
 end
 
 function gameState:draw()
   love.graphics.push()
+
+  setZoom()
   love.graphics.scale(config.scale)
 
   love.graphics.draw(tilesetBatch)
@@ -70,7 +85,10 @@ function gameState:draw()
   drawEnemies()
   drawItems()
 
+  drawHUD()
+
   love.graphics.pop()
+  love.graphics.setScissor()
 end
 
 function drawEnemies()
@@ -83,6 +101,14 @@ function drawItems()
   for i,v in ipairs(items) do
     v:draw()
   end
+end
+
+function drawHUD()
+  love.graphics.setFont(font.bold)
+  love.graphics.setColor(16,12,9)
+  -- trocar numero depois de items pela var items
+  love.graphics.print("ITEMS: " .. 500,170,8)
+  love.graphics.setColor(255,255,255)
 end
 
 function gameState:keyreleased(key)
@@ -117,5 +143,31 @@ function gameState:keypressed(key)
 
   if key == "escape" then
     Gamestate.switch(menuState)
+  end
+end
+
+function gameState:gamepadreleased(joystick, button)
+  if button == 'dpup' then
+    player:setMovingUp(false)
+  end
+  if button == 'dpright' then
+    player:setMovingRight(false)
+  end
+  if button == 'dpdown' then
+    player:setMovingDown(false)
+  end
+  if button == 'dpleft' then
+    player:setMovingLeft(false)
+  end
+
+  if button == 'leftx' then
+    player:setMovingRight(false)
+    player:setMovingLeft(false)
+  end
+end
+
+function gameState:gamepadpressed(joystick, button)
+  if button == "a" then
+    player:jump()
   end
 end

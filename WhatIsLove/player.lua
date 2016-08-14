@@ -113,13 +113,7 @@ function Player:notifyCollision(other)
     self.box.x = lastX
     self.box.y = lastY
   elseif other.type == "Enemy" then
-    self.grounded = true
-    self.box.x = lastX
-    self.box.y = lastY
   elseif other.type == "Item" then
-    self.grounded = true
-    self.box.x = lastX
-    self.box.y = lastY
   end
 end
 

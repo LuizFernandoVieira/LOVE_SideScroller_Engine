@@ -7,6 +7,8 @@ default_config = {
 function loadConfig()
   love.keyboard.setKeyRepeat(false)
   love.graphics.setDefaultFilter("nearest","nearest")
+  
+  joystick = love.joystick.getJoysticks()[1]
 
 	config = {}
 	for i,v in pairs(default_config) do

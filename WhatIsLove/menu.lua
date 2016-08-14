@@ -18,6 +18,8 @@ end
 
 function menuState:draw()
   love.graphics.push()
+
+  setZoom()
   love.graphics.scale(config.scale)
 
   love.graphics.setFont(font.bold)
@@ -29,6 +31,7 @@ function menuState:draw()
 	end
 
   love.graphics.pop()
+  love.graphics.setScissor()
 end
 
 function menuState:keypressed(key)
@@ -39,6 +42,24 @@ function menuState:keypressed(key)
   end
 
   if key == "space" or key == "enter" or key == "return" then
+    if selection == 1 then
+      Gamestate.switch(gameState)
+    elseif selection == 2 then
+      Gamestate.switch(optionsState)
+    elseif selection == 3 then
+      love.event.quit()
+    end
+  end
+end
+
+function menuState:gamepadpressed(joystick, button)
+  if button == "dpdown" then
+    selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
+  elseif button == "dpup" then
+    selection = wrap(selection - 1, 1, NUMBER_OF_OPTIONS)
+  end
+
+  if button == "a" then
     if selection == 1 then
       Gamestate.switch(gameState)
     elseif selection == 2 then

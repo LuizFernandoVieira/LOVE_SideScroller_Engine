@@ -8,6 +8,9 @@ menuState      = {}
 optionsState   = {}
 gameState      = {}
 
+-- Controls
+joystick = {}
+
 -- 3rd party libraries
 Gamestate = require "hump.gamestate"
 suit      = require "suit"

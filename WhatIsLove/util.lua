@@ -4,6 +4,28 @@ function wrap(val, min, max)
 	return val
 end
 
+function cap(val, min, max)
+	return math.max(math.min(val, max), min)
+end
+
+function setZoom()
+	if config.fullscreen == 1 then
+		local sw = love.graphics.getWidth()/WIDTH/config.scale
+		local sh = love.graphics.getHeight()/HEIGHT/config.scale
+		love.graphics.scale(sw,sh)
+	elseif config.fullscreen == 2 then
+		local sw = love.graphics.getWidth()/WIDTH/config.scale
+		local sh = love.graphics.getHeight()/HEIGHT/config.scale
+		local tx = (love.graphics.getWidth() - WIDTH*config.scale*sh)/2
+		love.graphics.translate(tx, 0)
+		love.graphics.scale(sh, sh)
+		love.graphics.setScissor(tx, 0, WIDTH*config.scale*sh, love.graphics.getHeight())
+	elseif config.fullscreen == 3 then
+		love.graphics.translate(fs_translatex,fs_translatey)
+		love.graphics.setScissor(fs_translatex, fs_translatey, WIDTH*config.scale, HEIGHT*config.scale)
+	end
+end
+
 function checkCollision()
   for i,v in ipairs(tiles) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then

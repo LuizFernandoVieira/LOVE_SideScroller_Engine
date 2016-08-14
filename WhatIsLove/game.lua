@@ -5,7 +5,7 @@ enemies  = {}
 items    = {}
 
 function gameState:init()
-  player = Player(200, 200)
+  player = Player(16, 16)
 
   loadEnemies()
   loadItems()
@@ -14,13 +14,13 @@ function gameState:init()
 end
 
 function loadEnemies()
-  table.insert(enemies, Enemy(400, 400))
-  table.insert(enemies, Enemy(600, 400))
+  table.insert(enemies, Enemy(80, 160))
+  table.insert(enemies, Enemy(150, 150))
 end
 
 function loadItems()
-  table.insert(items, Item(400, 200))
-  table.insert(items, Item(600, 600))
+  table.insert(items, Item(130, 150))
+  table.insert(items, Item(200, 150))
 end
 
 function gameState:update(dt)
@@ -43,125 +43,6 @@ function updateItems(dt)
   for i,v in ipairs(items) do
     v:update(dt)
   end
-end
-
-function checkCollision()
-  for i,v in ipairs(items) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      print("colidiu!!!")
-      player:notifyCollision(items[i])
-      enemies[i]:notifyCollision(player)
-    end
-  end
-end
-
-function isColliding(a, b, angleOfA, angleOfB)
-  local A = {
-    Vector(a.x + 000, a.y + a.h),
-    Vector(a.x + a.w, a.y + a.h),
-    Vector(a.x + a.w, a.y + 000),
-    Vector(a.x + 000, a.y + 000),
-  }
-  local B = {
-    Vector(b.x + 000, b.y + b.h),
-    Vector(b.x + b.w, b.y + b.h),
-    Vector(b.x + b.w, b.y + 000),
-    Vector(b.x + 000, b.y + 000),
-  }
-
-  for _,v in ipairs(A) do
-    local vecSub = subVec(v, a:center())
-    local vecSum = sumVec(rotate(vecSub, angleOfA), a:center())
-    v = vecSum
-  end
-
-  for _,v in ipairs(B) do
-    local vecSub = subVec(v, b:center())
-    local vecSum = sumVec(rotate(vecSub, angleOfB), b:center())
-    v = vecSum
-  end
-
-  local axes = {
-    norm(subVec(A[1], A[2])),
-    norm(subVec(A[2], A[3])),
-    norm(subVec(B[1], B[2])),
-    norm(subVec(B[2], B[3]))
-  }
-
-  for _,axis in ipairs(axes) do
-    local P = {}
-
-    for i=1, 4, 1 do
-      P[i] = dot(A[i], axis)
-    end
-
-    local minA = math.min(P[1], P[2], P[3], P[4])
-    local maxA = math.max(P[1], P[2], P[3], P[4])
-
-    for i=1, 4, 1 do
-      P[i] = dot(B[i], axis)
-    end
-
-    local minB = math.min(P[1], P[2], P[3], P[4])
-    local maxB = math.max(P[1], P[2], P[3], P[4])
-
-    if maxA < minB or minA > minB then
-      return false
-    end
-  end
-
-  return true
-end
-
-function sumVec(v1, v2)
-  local vec = Vector(0, 0)
-  vec.x = v1.x + v2.x
-  vec.y = v1.y + v2.y
-  return vec
-end
-
-function subVec(v1, v2)
-  local vec = Vector(0, 0)
-  vec.x = v1.x - v2.x
-  vec.y = v1.y - v2.y
-  return vec
-end
-
-function multVec(v1, v2)
-  local vec = Vector(0, 0)
-  vec.x = v1.x * v2.x
-  vec.y = v1.y * v2.y
-  return vec
-end
-
-function multVecWithScalar(v, s)
-  local vec = Vector(0, 0)
-  vec.x = v.x * s
-  vec.y = v.y * s
-  return vec
-end
-
-function mag(vec)
-  return math.sqrt(vec.x * vec.x + vec.y + vec.y)
-end
-
-function norm(vec)
-  local bla = mag(vec)
-  local inverseMag = (1 / mag(vec))
-  return multVecWithScalar(vec, inverseMag)
-end
-
-function dot(a, b)
-  return a.x * b.x + a.y * b.y
-end
-
-function rotate(vec, ang)
-  local cs = math.cos(ang)
-  local sn = math.sin(ang)
-  return Vector(
-    vec.x * cs - vec.y * sn,
-    vec.x * sn + vec.y * cs
-  )
 end
 
 function handleInputs()
@@ -220,6 +101,10 @@ function gameState:keyreleased(key)
 end
 
 function gameState:keypressed(key)
+  if key == "space" then
+    player:jump()
+  end
+
   if key == "left" or key == "right" then
     if key == "left" then
       config.scale = math.max(math.min(config.scale - 1, 4), 1)
@@ -228,5 +113,9 @@ function gameState:keypressed(key)
     end
     setMode()
     print(config.scale)
+  end
+
+  if key == "escape" then
+    Gamestate.switch(menuState)
   end
 end

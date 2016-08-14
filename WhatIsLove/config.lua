@@ -1,5 +1,5 @@
 default_config = {
-  scale = 1,
+  scale = 3,
   fullscreen = 0,
   vsync = true,
 }

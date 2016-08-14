@@ -1,7 +1,7 @@
 Tile         = {}
 Tile.__index = Tile
 
-setmetatable(Player, {
+setmetatable(Tile, {
   __index = GameObject,
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
@@ -14,6 +14,7 @@ function Tile:_init(x, y)
   GameActor:_init(x, y)
 
   self.type = "Tile"
+  self.box  = Rect(x, y, 16, 16)
 end
 
 function Tile:update(dt)

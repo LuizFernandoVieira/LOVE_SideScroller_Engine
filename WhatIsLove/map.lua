@@ -4,7 +4,7 @@ Map.__index = Map
 function Map:_init()
     local self = setmetatable({}, Map)
 
-    local file          = love.filesystem.load("maps/first_map.lua")()
+    local file          = love.filesystem.load("maps/test_map.lua")()
     local x             = file.x
     local y             = file.y
     local width         = file.width
@@ -33,7 +33,7 @@ function Map:_init()
     for j=0, height-1 do
       for i=0, width-1 do
         if data[j+y][i+x] == 01 then
-          tiles[i+(j*width)] = Tile:_init(i * tileSize, j * tileSize)
+          table.insert(enemies, Tile(i * tileSize, j * tileSize))
         end
       end
     end

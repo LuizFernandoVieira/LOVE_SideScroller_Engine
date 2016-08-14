@@ -24,7 +24,7 @@ function Enemy:_init(x, y)
   self.health      = PLAYER_HEALTH
   self.grounded    = false
   self.sprite      = Sprite:_init(ENEMY_IMAGE, 1, 1)
-  self.box         = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
+  self.box         = Rect(x, y+3, self.sprite:getWidth(), self.sprite:getHeight()-3)
 end
 
 function Enemy:update(dt)

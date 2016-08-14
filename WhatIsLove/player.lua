@@ -18,8 +18,9 @@ local PLAYERSTATE_IDLE     = 0
 local PLAYERSTATE_WALKING  = 1
 local PLAYERSTATE_CLIMBING = 2
 local PLAYERSTATE_DEAD     = 3
-local GRAVITY              = 350
+local GRAVITY              = 800
 local PLAYER_FACINGRIGHT   = true
+local JUMP_POWER           = 255
 
 function Player:_init(x, y)
   GameActor:_init(x, y)
@@ -36,11 +37,15 @@ function Player:_init(x, y)
   self.state       = PLAYERSTATE_IDLE
   self.grounded    = false
   self.sprite      = Sprite:_init(PLAYER_IMAGE, 1, 1)
-  self.box         = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
+  self.box         = Rect(x, y+5, self.sprite:getWidth(), self.sprite:getHeight()-5)
+  self.yspeed = 0
 end
 
 function Player:update(dt)
   self.sprite:update(dt)
+
+  lastX = self.box.x
+  lastY = self.box.y
 
   if self.moveRight and self.moveLeft then
     self.state = PLAYERSTATE_IDLE
@@ -56,6 +61,8 @@ function Player:update(dt)
 
   if not self.grounded then
     -- self.box.y = self.box.y + GRAVITY*dt
+    self.yspeed = self.yspeed + GRAVITY*dt
+    self.box.y = self.box.y + self.yspeed*dt
   end
 
   -- IDLE STATE
@@ -85,7 +92,8 @@ function Player:jump()
   if self.state == PLAYERSTATE_CLIMBING then
     self:leaveLadder()
   elseif self.grounded == true then
-    -- pula
+    self.grounded = false
+    self.yspeed = -JUMP_POWER
   end
 end
 
@@ -101,11 +109,17 @@ end
 
 function Player:notifyCollision(other)
   if other.type == "Tile" then
-    print("colidiu com tile")
+    self.grounded = true
+    self.box.x = lastX
+    self.box.y = lastY
   elseif other.type == "Enemy" then
-    print("colidiu com enemy")
+    self.grounded = true
+    self.box.x = lastX
+    self.box.y = lastY
   elseif other.type == "Item" then
-    print("colidiu com item")
+    self.grounded = true
+    self.box.x = lastX
+    self.box.y = lastY
   end
 end
 

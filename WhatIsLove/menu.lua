@@ -1,77 +1,50 @@
-local SINGLE_PLAYER_BTN_WIDTH  = 128
-local SINGLE_PLAYER_BTN_HEIGHT = 32
-local OPTIONS_BTN_WIDTH        = 128
-local OPTIONS_BTN_HEIGHT       = 32
-local BACK_BTN_WIDTH           = 128
-local BACK_BTN_HEIGHT          = 32
-local MARGIN_TOP               = 64
+local ARROW_X           = 100
+local MENU_STRING_X     = 108
+local NUMBER_OF_OPTIONS = 3
+
+local MENU_STRINGS = {
+	"PLAY",
+  "OPTIONS",
+  "EXIT"
+}
 
 function menuState:init()
   love.graphics.setBackgroundColor(184,199,145)
+  selection = 1
 end
 
 function menuState:update()
-  updateSuitButtonSinglePlayer()
-  updateSuitButtonOptions()
-  updateSuitButtonBack()
 end
 
 function menuState:draw()
   love.graphics.push()
   love.graphics.scale(config.scale)
 
-  suit.draw()
+  love.graphics.setFont(font.bold)
+	for i=1,NUMBER_OF_OPTIONS do
+		if i == selection then
+			love.graphics.print(">", ARROW_X, 86+i*13)
+		end
+		love.graphics.print(MENU_STRINGS[i], MENU_STRING_X, 86+i*13)
+	end
 
   love.graphics.pop()
 end
 
-function updateSuitButtonSinglePlayer()
-  buttonSinglePlayer = suit.ImageButton(
-    love.graphics.newImage(love.image.newImageData("img/menu/play.png")),
-    love.graphics.getWidth()/2 - BACK_BTN_WIDTH/2,
-    love.graphics.getHeight()/2
-  )
-
-  if buttonSinglePlayer.hit then
-    print "hit"
-    Gamestate.switch(gameState)
+function menuState:keypressed(key)
+  if key == "down" then
+    selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
+  elseif key == "up" then
+    selection = wrap(selection - 1, 1, NUMBER_OF_OPTIONS)
   end
 
-  if buttonSinglePlayer.entered then
-    print "entered"
-  end
-
-  if buttonSinglePlayer.hovered then
-    print "hovered"
-    Gamestate.switch(gameState)
-  end
-
-  if buttonSinglePlayer.left then
-    print "entered"
-  end
-end
-
-function updateSuitButtonOptions()
-  buttonOptions = suit.ImageButton(
-    love.graphics.newImage(love.image.newImageData("img/menu/play.png")),
-    love.graphics.getWidth()/2 - OPTIONS_BTN_WIDTH/2,
-    love.graphics.getHeight()/2 + MARGIN_TOP
-  )
-  if buttonOptions.hit then
-    Gamestate.switch(optionsState)
-  end
-  if buttonOptions.hovered then
-    Gamestate.switch(optionsState)
-  end
-end
-
-function updateSuitButtonBack()
-  buttonBack = suit.ImageButton(
-    love.graphics.newImage(love.image.newImageData("img/menu/back.png")),
-    love.graphics.getWidth()/2 - BACK_BTN_WIDTH/2,
-    love.graphics.getHeight()/2 + MARGIN_TOP + MARGIN_TOP
-  )
-  if buttonBack.hit then
-    Gamestate.switch(menuState)
+  if key == "space" or key == "enter" or key == "return" then
+    if selection == 1 then
+      Gamestate.switch(gameState)
+    elseif selection == 2 then
+      Gamestate.switch(optionsState)
+    elseif selection == 3 then
+      love.event.quit()
+    end
   end
 end

@@ -15,6 +15,7 @@ suit      = require "suit"
 -- Requires
 require("maps.first_map")
 require("config")
+require("resources")
 require("splash")
 require("options")
 require("menu")
@@ -30,12 +31,15 @@ require("tile")
 require("vector")
 require("rect")
 require("geometry_helper")
+require("util")
 
 WIDTH = 256
 HEIGHT = 200
 
 function love.load()
   loadConfig()
+  loadResources()
+  setMode()
   Gamestate.registerEvents()
   Gamestate.switch(menuState)
 end

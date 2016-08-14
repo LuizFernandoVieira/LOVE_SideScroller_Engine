@@ -218,3 +218,15 @@ function gameState:keyreleased(key)
     player:setMovingLeft(false)
   end
 end
+
+function gameState:keypressed(key)
+  if key == "left" or key == "right" then
+    if key == "left" then
+      config.scale = math.max(math.min(config.scale - 1, 4), 1)
+    elseif key == "right" then
+      config.scale = math.max(math.min(config.scale + 1, 4), 1)
+    end
+    setMode()
+    print(config.scale)
+  end
+end

@@ -3,7 +3,7 @@ return {
   y = 1,
   width = 26,
   height = 20,
-  tileSize = 32,
+  tileSize = 16,
   tileDiversity = 4,
   tileset = {
     image = "img/tile_set.png"

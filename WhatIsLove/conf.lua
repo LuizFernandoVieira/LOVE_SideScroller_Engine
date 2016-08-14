@@ -1,9 +1,9 @@
 function love.conf(t)
   t.window.title = "Side Scoller Base"  -- The window title (string)
-  t.window.width = 256*3                -- The window width (number)
-  t.window.height = 200*3               -- The window height (number)
+  t.window.width = 256 * 3              -- The window width (number) 16
+  t.window.height = 200 * 3             -- The window height (number) 12.5
   t.console = false                     -- Attach a console (boolean, Windows only)
-  t.window.resizable = true            -- Let the window be user-resizable (boolean)
+  t.window.resizable = false            -- Let the window be user-resizable (boolean)
   t.window.fullscreen = false           -- Enable fullscreen (boolean)
   t.window.fullscreentype = "desktop"   -- Choose between "desktop" fullscreen or "exclusive" fullscreen mode (string)
   t.window.vsync = true                 -- Enable vertical sync (boolean)

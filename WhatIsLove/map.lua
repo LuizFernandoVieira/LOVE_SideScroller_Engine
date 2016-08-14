@@ -14,7 +14,7 @@ function Map:_init()
     local tileset       = love.graphics.newImage(file.tileset.image)
     local data          = file.data
 
-    tileset:setFilter("nearest", "linear")
+    tileset:setFilter("nearest", "nearest")
 
     tileQuads = {}
     for j=0, 1-1 do

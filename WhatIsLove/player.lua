@@ -50,9 +50,11 @@ function Player:update(dt)
   if self.moveRight and self.moveLeft then
     self.state = PLAYERSTATE_IDLE
   elseif self.moveRight then
+    self.facingRight = true
     self.box.x = self.box.x + self.velocity
     self.state = PLAYERSTATE_WALKING
   elseif self.moveLeft then
+    self.facingRight = false
     self.box.x = self.box.x - self.velocity
     self.state = PLAYERSTATE_WALKING
   else
@@ -97,11 +99,15 @@ function Player:jump()
   end
 end
 
+function Player:shot()
+  table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
+end
+
 function Player:leaveLadder()
 end
 
 function Player:draw()
-  self.sprite:draw(self.box.x, self.box.y, 0)
+  self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
 function Player:isDead()

@@ -33,7 +33,7 @@ end
 
 function Item:notifyCollision(other)
   if other.type == "Player" then
-
+    -- table.insert(particles, )
   end
 end
 

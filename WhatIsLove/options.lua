@@ -75,6 +75,9 @@ function optionsState:keypressed(key)
           setMode()
         end
       end
+    elseif selection == 3 then
+      config.vsync = not config.vsync
+      setMode()
     end
   end
 
@@ -116,6 +119,9 @@ function optionsState:gamepadpressed(joystick, button)
           setMode()
         end
       end
+    elseif selection == 3 then
+      config.vsync = not config.vsync
+      setMode()
     end
   end
 

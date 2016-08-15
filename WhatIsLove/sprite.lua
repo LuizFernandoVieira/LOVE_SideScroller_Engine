@@ -38,13 +38,24 @@ function Sprite:update(dt)
   end
 end
 
-function Sprite:draw(x, y, angle)
-  love.graphics.draw(
-    self.image,
-    self.frames[self.currentFrame],
-    x, y, angle,
-    self.scaleX, self.scaleY
-  )
+function Sprite:draw(x, y, angle, facing)
+  facingRight = facingRight or true
+
+  if facing == true then
+    love.graphics.draw(
+      self.image,
+      self.frames[self.currentFrame],
+      x, y, angle,
+      self.scaleX, self.scaleY
+    )
+  else
+    love.graphics.draw(
+      self.image,
+      self.frames[self.currentFrame],
+      x, y, angle,
+      -self.scaleX, self.scaleY
+    )
+  end
 end
 
 function Sprite:getWidth()

@@ -13,6 +13,7 @@ joystick = {}
 
 -- 3rd party libraries
 Gamestate = require "hump.gamestate"
+Camera    = require "hump.camera"
 suit      = require "suit"
 
 -- Requires
@@ -29,6 +30,7 @@ require("game_actor")
 require("player")
 require("enemy")
 require("item")
+require("bullet")
 require("map")
 require("tile")
 require("vector")

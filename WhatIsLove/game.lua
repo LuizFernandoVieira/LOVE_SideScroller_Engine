@@ -1,11 +1,15 @@
-player   = {}
-tiles    = {}
-map      = {}
-enemies  = {}
-items    = {}
+player    = {}
+tiles     = {}
+map       = {}
+enemies   = {}
+items     = {}
+particles = {}
+bullets   = {}
 
 function gameState:init()
   player = Player(16, 16)
+
+  camera = Camera(player.box.x, player.box.y)
 
   loadEnemies()
   loadItems()
@@ -27,8 +31,13 @@ function gameState:update(dt)
   handleInputs()
   player:update(dt)
 
+  local dx = player.box.x - camera.x
+  local dy = player.box.y - camera.y
+  camera:move(dx/2, dy/2)
+
   updateEnemies(dt)
   updateItems(dt)
+  updateBullets(dt)
 
   checkCollision()
 end
@@ -41,6 +50,12 @@ end
 
 function updateItems(dt)
   for i,v in ipairs(items) do
+    v:update(dt)
+  end
+end
+
+function updateBullets(dt)
+  for _,v in ipairs(bullets) do
     v:update(dt)
   end
 end
@@ -79,11 +94,16 @@ function gameState:draw()
   setZoom()
   love.graphics.scale(config.scale)
 
+  -- camera:attach()
+
   love.graphics.draw(tilesetBatch)
   player:draw()
 
   drawEnemies()
   drawItems()
+  drawBullets()
+
+  -- camera:detach()
 
   drawHUD()
 
@@ -99,6 +119,12 @@ end
 
 function drawItems()
   for i,v in ipairs(items) do
+    v:draw()
+  end
+end
+
+function drawBullets()
+  for _,v in ipairs(bullets) do
     v:draw()
   end
 end
@@ -127,8 +153,12 @@ function gameState:keyreleased(key)
 end
 
 function gameState:keypressed(key)
-  if key == "space" then
+  if key == "w" then
     player:jump()
+  end
+
+  if key == "space" then
+    player:shot()
   end
 
   if key == "left" or key == "right" then
@@ -138,7 +168,6 @@ function gameState:keypressed(key)
       config.scale = math.max(math.min(config.scale + 1, 4), 1)
     end
     setMode()
-    print(config.scale)
   end
 
   if key == "escape" then
@@ -169,5 +198,9 @@ end
 function gameState:gamepadpressed(joystick, button)
   if button == "a" then
     player:jump()
+  end
+
+  if button == "x" then
+    player:shot()
   end
 end

@@ -28,13 +28,40 @@ function Item:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+function Item:drawDebug()
+  love.graphics.setColor(255, 0, 0, 50)
+  love.graphics.rectangle(
+    "fill",
+    self.box.x,
+    self.box.y,
+    16, 16
+  )
+  love.graphics.setColor(255, 0, 0)
+  love.graphics.rectangle(
+    "line",
+    self.box.x,
+    self.box.y,
+    16, 16
+  )
+  love.graphics.setColor(255, 255, 255)
+end
+
 function Item:isDead()
 end
 
 function Item:notifyCollision(other)
-  if other.type == "Player" then
-    -- table.insert(particles, )
-  end
+
+  print("DELETA ESSE ITEMS")
+  --
+  -- if other.type == "Player" then
+  --   -- table.insert(particles, )
+  --   print("DELETA ESSE ITEMS")
+  --   for k, v in pairs(items) do
+  --     if v.id == self.id then
+  --       items[k] = nil
+  --     end
+  --   end
+  -- end
 end
 
 function Item:is(type)

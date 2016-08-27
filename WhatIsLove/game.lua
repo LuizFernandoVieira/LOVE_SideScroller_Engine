@@ -7,7 +7,7 @@ particles = {}
 bullets   = {}
 
 function gameState:init()
-  player = Player(16, 16)
+  player = Player(0, 0)
 
   camera = Camera(player.box.x, player.box.y)
 
@@ -23,7 +23,7 @@ function loadEnemies()
 end
 
 function loadItems()
-  table.insert(items, Item(130, 150))
+  table.insert(items, Item(40, 150))
   table.insert(items, Item(200, 150))
 end
 
@@ -103,6 +103,8 @@ function gameState:draw()
   drawItems()
   drawBullets()
 
+  drawDebug()
+
   -- camera:detach()
 
   drawHUD()
@@ -129,11 +131,22 @@ function drawBullets()
   end
 end
 
+function drawDebug()
+  player:drawDebug()
+  for i,v in ipairs(enemies) do
+    v:drawDebug()
+  end
+  for i,v in ipairs(items) do
+    v:drawDebug()
+  end
+end
+
 function drawHUD()
   love.graphics.setFont(font.bold)
   love.graphics.setColor(16,12,9)
   -- trocar numero depois de items pela var items
-  love.graphics.print("ITEMS: " .. 500,170,8)
+  love.graphics.print("ITEMS: " .. player.items, 170, 8)
+  love.graphics.print("HEALTH: " .. player.health, 170, 20)
   love.graphics.setColor(255,255,255)
 end
 
@@ -202,5 +215,9 @@ function gameState:gamepadpressed(joystick, button)
 
   if button == "x" then
     player:shot()
+  end
+
+  if button == "y" then
+    player:dash()
   end
 end

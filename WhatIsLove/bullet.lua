@@ -43,6 +43,13 @@ function Bullet:isDead()
 end
 
 function Bullet:notifyCollision(other)
+  -- if other.type == "Enemy" then
+  --   for k,v in ipairs(bullets) do
+  --     if v.id == self.id then
+  --       bullets[k] = nil
+  --     end
+  --   end
+  -- end
 end
 
 function Bullet:is(type)

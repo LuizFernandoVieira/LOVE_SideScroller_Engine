@@ -35,9 +35,9 @@ function menuState:draw()
 end
 
 function menuState:keypressed(key)
-  if key == "down" then
+  if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
-  elseif key == "up" then
+  elseif key == "up" or key == "w" then
     selection = wrap(selection - 1, 1, NUMBER_OF_OPTIONS)
   end
 

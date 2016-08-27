@@ -49,27 +49,27 @@ function optionsState:draw()
 end
 
 function optionsState:keypressed(key)
-  if key == "down" then
+  if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
-  elseif key == "up" then
+  elseif key == "up" or key == "w" then
     selection = wrap(selection - 1, 1, NUMBER_OF_OPTIONS)
   end
 
-  if key == "left" or key == "right" then
+  if key == "left" or key == "right"  or key == "a" or key == "d" then
     if selection == 1 then
-      if key == "left" then
+      if key == "left" or key == "a" then
         config.scale = math.max(math.min(config.scale - 1, NUMBER_OF_OPTIONS), 1)
-      elseif key == "right" then
+      elseif key == "right" or key == "d" then
         config.scale = math.max(math.min(config.scale + 1, NUMBER_OF_OPTIONS), 1)
       end
       setMode()
     elseif selection == 2 then
-      if key == "left" then
+      if key == "left" or key == "a" then
         if config.fullscreen > 0 then
           config.fullscreen = cap(config.fullscreen - 1, 0, 3)
           setMode()
         end
-      else
+      elseif key == "right" or key == "d" then
         if config.fullscreen < 3 then
           config.fullscreen = cap(config.fullscreen + 1, 0, 3)
           setMode()

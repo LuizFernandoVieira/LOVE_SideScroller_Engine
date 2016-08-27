@@ -52,7 +52,7 @@ function Sprite:draw(x, y, angle, facing)
     love.graphics.draw(
       self.image,
       self.frames[self.currentFrame],
-      x, y, angle,
+      x + 16, y, angle,
       -self.scaleX, self.scaleY
     )
   end

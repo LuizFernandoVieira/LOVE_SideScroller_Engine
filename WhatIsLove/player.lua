@@ -14,10 +14,12 @@ local PLAYER_TYPE          = "Player"
 local PLAYER_IMAGE         = "img/ninja/run1.png"
 local PLAYER_VELOCITY      = 1
 local PLAYER_HEALTH        = 1
+local PLAYER_ITEMS         = 1
 local PLAYERSTATE_IDLE     = 0
 local PLAYERSTATE_WALKING  = 1
-local PLAYERSTATE_CLIMBING = 2
-local PLAYERSTATE_DEAD     = 3
+local PLAYERSTATE_DASHING  = 2
+local PLAYERSTATE_CLIMBING = 3
+local PLAYERSTATE_DEAD     = 4
 local GRAVITY              = 800
 local PLAYER_FACINGRIGHT   = true
 local JUMP_POWER           = 255
@@ -33,12 +35,15 @@ function Player:_init(x, y)
   self.facingRight = PLAYER_FACINGRIGHT
   self.velocity    = PLAYER_VELOCITY
   self.health      = PLAYER_HEALTH
+  self.items       = PLAYER_ITEMS
   self.grounded    = false
   self.state       = PLAYERSTATE_IDLE
   self.grounded    = false
   self.sprite      = Sprite:_init(PLAYER_IMAGE, 1, 1)
   self.box         = Rect(x, y+5, self.sprite:getWidth(), self.sprite:getHeight()-5)
-  self.yspeed = 0
+  self.yspeed      = 0
+  self.dashDuration = 0
+  self.dashCooldown = 0
 end
 
 function Player:update(dt)
@@ -61,16 +66,20 @@ function Player:update(dt)
     self.state = PLAYERSTATE_IDLE
   end
 
-  if not self.grounded then
-    -- self.box.y = self.box.y + GRAVITY*dt
-    self.yspeed = self.yspeed + GRAVITY*dt
-    self.box.y = self.box.y + self.yspeed*dt
+  self.yspeed = self.yspeed + GRAVITY*dt
+  self.box.y = self.box.y + self.yspeed*dt
+
+  if(self.dashCooldown > 0) then
+    self.dashCooldown = self.dashCooldown - 1
   end
 
   -- IDLE STATE
   if self.state == PLAYERSTATE_IDLE then
   -- WALKING STATE
   elseif self.state == PLAYERSTATE_WALKING then
+  -- DASHING STATE
+  elseif self.state == PLAYERSTATE_DASHING then
+    self.dashDuration = self.dashDuration - dt
   -- CLIMBING STATE
   elseif self.state == PLAYERSTATE_CLIMBING then
   -- DEAD STATE
@@ -100,7 +109,24 @@ function Player:jump()
 end
 
 function Player:shot()
-  table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
+  if self.facingRight then
+    table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
+  else
+    table.insert(bullets, Bullet(self.box.x, self.box.y, -250, 40))
+  end
+end
+
+function Player:dash()
+  if self.dashCooldown <= 0 then
+    print("DASH")
+    self.state = PLAYERSTATE_DASHING
+    self.dashCooldown = 60*1
+    if self.facingRight then
+
+    else
+
+    end
+  end
 end
 
 function Player:leaveLadder()
@@ -110,16 +136,86 @@ function Player:draw()
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
+function Player:drawDebug()
+  love.graphics.setColor(0, 200, 255, 50)
+  love.graphics.rectangle(
+    "fill",
+    self.box.x,
+    self.box.y,
+    16,16
+  )
+  love.graphics.setColor(0, 200, 255)
+  love.graphics.rectangle(
+    "line",
+    self.box.x,
+    self.box.y,
+    16,16
+  )
+  love.graphics.setColor(255, 255, 255)
+end
+
 function Player:isDead()
 end
 
 function Player:notifyCollision(other)
   if other.type == "Tile" then
     self.grounded = true
-    self.box.x = lastX
+    self.yspeed = 0
     self.box.y = lastY
   elseif other.type == "Enemy" then
+    self.health = self.health - 1
   elseif other.type == "Item" then
+    self.items = self.items + 1
+  end
+end
+
+function collideX(self, other)
+  -- esq
+  if (self.box.x <= other.box.x) then
+    if (self.box.x + 16 >= other.box.x) then
+      return true
+    end
+  end
+  -- dir
+  if (other.box.x <= self.box.x)  then
+    if (other.box.x + 16 >= self.box.x) then
+      return true
+    end
+  end
+  return false
+end
+
+function collideX(self, other)
+  -- esq
+  if (self.box.x <= other.box.x) then
+    if (self.box.x + 16 >= other.box.x) then
+      return true
+    end
+  end
+  -- dir
+  if (other.box.x <= self.box.x)  then
+    if (other.box.x + 16 >= self.box.x) then
+      return true
+    end
+  end
+  return false
+end
+
+function collideY(self, other)
+  function collideX(self, other)
+    -- esq
+    if (self.box.y <= other.box.x) then
+      if (self.box.y + 16 >= other.box.y) then
+        return true
+      end
+    end
+    -- dir
+    if (other.box.y <= self.box.y)  then
+      if (other.box.x + 16 >= self.box.y) then
+        return true
+      end
+    end
+    return false
   end
 end
 

@@ -33,7 +33,7 @@ function Map:_init()
     for j=0, height-1 do
       for i=0, width-1 do
         if data[j+y][i+x] == 01 then
-          table.insert(enemies, Tile(i * tileSize, j * tileSize))
+          table.insert(tiles, Tile(i * tileSize, j * tileSize))
         end
       end
     end

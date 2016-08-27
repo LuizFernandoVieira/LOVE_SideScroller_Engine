@@ -29,7 +29,6 @@ end
 function checkCollision()
   for i,v in ipairs(tiles) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      print("colidiu!!!")
       player:notifyCollision(tiles[i])
       tiles[i]:notifyCollision(player)
     end
@@ -37,18 +36,25 @@ function checkCollision()
 
   for i,v in ipairs(items) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      print("colidiu!!!")
       player:notifyCollision(items[i])
-      items[i]:notifyCollision(player)
+      v:notifyCollision(player)
+      items[i] = nil
     end
   end
 
   for i,v in ipairs(enemies) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      print("colidiu!!!")
       player:notifyCollision(enemies[i])
       enemies[i]:notifyCollision(player)
     end
+
+    -- for j,u in ipairs(bullets) do
+    --   print("___COL BUL ENEMY___")
+    --   if isColliding(u.box, v.box, u.rotation, v.rotation) then
+    --     u:notifyCollision(enemies[i])
+    --     v:notifyCollision(bullets[j])
+    --   end
+    -- end
   end
 end
 

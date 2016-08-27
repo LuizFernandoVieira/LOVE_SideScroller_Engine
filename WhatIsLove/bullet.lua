@@ -34,6 +34,24 @@ function Bullet:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+function Bullet:drawDebug()
+  love.graphics.setColor(255, 255, 0, 50)
+  love.graphics.rectangle(
+    "fill",
+    self.box.x,
+    self.box.y,
+    16,16
+  )
+  love.graphics.setColor(255, 255, 0)
+  love.graphics.rectangle(
+    "line",
+    self.box.x,
+    self.box.y,
+    16,16
+  )
+  love.graphics.setColor(255, 255, 255)
+end
+
 function Bullet:isDead()
   if distanceLeft > 0 then
     return false

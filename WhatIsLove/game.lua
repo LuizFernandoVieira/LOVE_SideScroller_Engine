@@ -133,10 +133,16 @@ end
 
 function drawDebug()
   player:drawDebug()
+  for i,v in ipairs(tiles) do
+    v:drawDebug()
+  end
   for i,v in ipairs(enemies) do
     v:drawDebug()
   end
   for i,v in ipairs(items) do
+    v:drawDebug()
+  end
+  for i,v in ipairs(bullets) do
     v:drawDebug()
   end
 end
@@ -172,6 +178,10 @@ function gameState:keypressed(key)
 
   if key == "space" then
     player:shot()
+  end
+
+  if key == "x" then
+    player:dash()
   end
 
   if key == "left" or key == "right" then

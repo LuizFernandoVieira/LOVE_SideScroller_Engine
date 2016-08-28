@@ -135,7 +135,7 @@ end
 
 function Player:shot()
   if self.infected then
-    table.insert(bite, Bite(self.box.x, self.box.y, 32, 32))
+    table.insert(bite, Bite(self.box.x-8, self.box.y-8, 32, 32))
   else
     if self.facingRight then
       table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))

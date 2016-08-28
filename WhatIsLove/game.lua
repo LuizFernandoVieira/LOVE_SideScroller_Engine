@@ -86,15 +86,15 @@ function deleteDeadEntities()
         j = j + 1
     end
   end
-
-  local k=1
-  while k <= #bite do
-    if bite[k]:isDead() then
-        table.remove(bite, k)
-    else
-        k = k + 1
-    end
-  end
+  --
+  -- local k=1
+  -- while k <= #bite do
+  --   if bite[k]:isDead() then
+  --       table.remove(bite, k)
+  --   else
+  --       k = k + 1
+  --   end
+  -- end
 end
 
 function handleInputs()
@@ -139,6 +139,7 @@ function gameState:draw()
   drawEnemies()
   drawItems()
   drawBullets()
+  drawBites()
 
   drawDebug()
 
@@ -168,6 +169,12 @@ function drawBullets()
   end
 end
 
+function drawBites()
+  for _,v in ipairs(bite) do
+    v:draw()
+  end
+end
+
 function drawDebug()
   player:drawDebug()
   for i,v in ipairs(tiles) do
@@ -180,6 +187,9 @@ function drawDebug()
     v:drawDebug()
   end
   for i,v in ipairs(bullets) do
+    v:drawDebug()
+  end
+  for i,v in ipairs(bite) do
     v:drawDebug()
   end
 end

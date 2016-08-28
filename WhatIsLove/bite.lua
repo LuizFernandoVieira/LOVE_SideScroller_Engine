@@ -24,6 +24,22 @@ function Bite:draw()
 end
 
 function Bite:drawDebug()
+  print("rapido")
+  love.graphics.setColor(255, 0, 255, 50)
+  love.graphics.rectangle(
+    "fill",
+    self.box.x,
+    self.box.y,
+    32, 32
+  )
+  love.graphics.setColor(255, 0, 255)
+  love.graphics.rectangle(
+    "line",
+    self.box.x,
+    self.box.y,
+    32, 32
+  )
+  love.graphics.setColor(255, 255, 255)
 end
 
 function Bite:isDead()

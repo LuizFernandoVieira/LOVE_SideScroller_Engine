@@ -17,6 +17,7 @@ function GameObject:_init(x, y)
   self.rotation = 0
 
   nextId = nextId + 1
+  print("PORRA: " .. nextId)
 end
 
 function GameObject:update(dt)

@@ -7,7 +7,7 @@ particles = {}
 bullets   = {}
 
 function gameState:init()
-  player = Player(0, 0)
+  player = Player:_init(0, 0)
 
   camera = Camera(player.box.x, player.box.y)
 
@@ -15,16 +15,22 @@ function gameState:init()
   loadItems()
 
   map = Map:_init()
+
+  print("P: " .. player.id)
+  print("E: " .. enemies[1].id)
+  print("E: " .. enemies[2].id)
+  print("T: " .. tiles[1].id)
 end
 
 function loadEnemies()
-  table.insert(enemies, Enemy(80, 160))
-  table.insert(enemies, Enemy(150, 150))
+  table.insert(enemies, Enemy(70, 0))
+  table.insert(enemies, Enemy(150, 0))
+  table.insert(enemies, Enemy(200, 0))
 end
 
 function loadItems()
-  table.insert(items, Item(40, 150))
-  table.insert(items, Item(200, 150))
+  table.insert(items, Item(20, 150))
+  table.insert(items, Item(0, 150))
 end
 
 function gameState:update(dt)
@@ -40,6 +46,7 @@ function gameState:update(dt)
   updateBullets(dt)
 
   checkCollision()
+  deleteDeadEntities()
 end
 
 function updateEnemies(dt)
@@ -57,6 +64,26 @@ end
 function updateBullets(dt)
   for _,v in ipairs(bullets) do
     v:update(dt)
+  end
+end
+
+function deleteDeadEntities()
+  local i=1
+  while i <= #enemies do
+    if enemies[i]:isDead() then
+        table.remove(enemies, i)
+    else
+        i = i + 1
+    end
+  end
+
+  local j=1
+  while j <= #items do
+    if items[j]:isDead() then
+        table.remove(items, j)
+    else
+        j = j + 1
+    end
   end
 end
 

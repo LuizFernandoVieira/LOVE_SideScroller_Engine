@@ -15,9 +15,10 @@ local ITEM_IMAGE = "img/misc/spr_star_0.png"
 function Item:_init(x, y)
   GameObject:_init(x, y)
 
-  self.type   = "Item"
-  self.sprite = Sprite:_init(ITEM_IMAGE, 1, 1)
-  self.box    = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
+  self.type      = "Item"
+  self.sprite    = Sprite:_init(ITEM_IMAGE, 1, 1)
+  self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
+  self.collected = false
 end
 
 function Item:update(dt)
@@ -47,21 +48,17 @@ function Item:drawDebug()
 end
 
 function Item:isDead()
+  if self.collected then
+    return true
+  end
+  return false
 end
 
 function Item:notifyCollision(other)
-
   print("DELETA ESSE ITEMS")
-  --
-  -- if other.type == "Player" then
-  --   -- table.insert(particles, )
-  --   print("DELETA ESSE ITEMS")
-  --   for k, v in pairs(items) do
-  --     if v.id == self.id then
-  --       items[k] = nil
-  --     end
-  --   end
-  -- end
+  if other.type == "Player" then
+    self.collected = true
+  end
 end
 
 function Item:is(type)

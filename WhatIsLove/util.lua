@@ -34,11 +34,20 @@ function checkCollision()
     end
   end
 
+  for i,v in ipairs(tiles) do
+    for j,u in ipairs(enemies) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(enemies[j])
+        u:notifyCollision(tiles[i])
+      end
+    end
+  end
+
   for i,v in ipairs(items) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
+    if isColliding(v.box, player.box, v.rotation, player.rotation) then      
+      items[i]:notifyCollision(player)
       player:notifyCollision(items[i])
-      v:notifyCollision(player)
-      items[i] = nil
+      print("UTIL ITEMS COL PLAYER")
     end
   end
 
@@ -48,13 +57,15 @@ function checkCollision()
       enemies[i]:notifyCollision(player)
     end
 
-    -- for j,u in ipairs(bullets) do
-    --   print("___COL BUL ENEMY___")
-    --   if isColliding(u.box, v.box, u.rotation, v.rotation) then
-    --     u:notifyCollision(enemies[i])
-    --     v:notifyCollision(bullets[j])
-    --   end
-    -- end
+    for j,u in ipairs(bullets) do
+      -- print("B: " .. "x: " .. u.box.x .. ", y: " .. u.box.y .. ", w: " .. u.box.w)
+      -- print("E: " .. "x: " .. v.box.x .. ", y: " .. v.box.y .. ", w: " .. v.box.w)
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        -- print("___COL BUL ENEMY___")
+        v:notifyCollision(bullets[j])
+        u:notifyCollision(enemies[i])
+      end
+    end
   end
 end
 

@@ -38,12 +38,13 @@ function Player:_init(x, y)
   self.items       = PLAYER_ITEMS
   self.grounded    = false
   self.state       = PLAYERSTATE_IDLE
-  self.grounded    = false
   self.sprite      = Sprite:_init(PLAYER_IMAGE, 1, 1)
-  self.box         = Rect(x, y+5, self.sprite:getWidth(), self.sprite:getHeight()-5)
+  self.box         = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.yspeed      = 0
   self.dashDuration = 0
   self.dashCooldown = 0
+
+  return self
 end
 
 function Player:update(dt)
@@ -166,56 +167,6 @@ function Player:notifyCollision(other)
     self.health = self.health - 1
   elseif other.type == "Item" then
     self.items = self.items + 1
-  end
-end
-
-function collideX(self, other)
-  -- esq
-  if (self.box.x <= other.box.x) then
-    if (self.box.x + 16 >= other.box.x) then
-      return true
-    end
-  end
-  -- dir
-  if (other.box.x <= self.box.x)  then
-    if (other.box.x + 16 >= self.box.x) then
-      return true
-    end
-  end
-  return false
-end
-
-function collideX(self, other)
-  -- esq
-  if (self.box.x <= other.box.x) then
-    if (self.box.x + 16 >= other.box.x) then
-      return true
-    end
-  end
-  -- dir
-  if (other.box.x <= self.box.x)  then
-    if (other.box.x + 16 >= self.box.x) then
-      return true
-    end
-  end
-  return false
-end
-
-function collideY(self, other)
-  function collideX(self, other)
-    -- esq
-    if (self.box.y <= other.box.x) then
-      if (self.box.y + 16 >= other.box.y) then
-        return true
-      end
-    end
-    -- dir
-    if (other.box.y <= self.box.y)  then
-      if (other.box.x + 16 >= self.box.y) then
-        return true
-      end
-    end
-    return false
   end
 end
 

@@ -82,6 +82,9 @@ function Enemy:notifyCollision(other)
     self.box.y = self.lastY
   elseif other.type == "Bullet" then
     self.health = 0
+  elseif other.type == "Bite" then
+    print("BITEBITEBITEI")    
+    self.health = 0
   end
 end
 

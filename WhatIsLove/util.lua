@@ -44,10 +44,10 @@ function checkCollision()
   end
 
   for i,v in ipairs(items) do
-    if isColliding(v.box, player.box, v.rotation, player.rotation) then      
+    if isColliding(v.box, player.box, v.rotation, player.rotation) then
       items[i]:notifyCollision(player)
       player:notifyCollision(items[i])
-      print("UTIL ITEMS COL PLAYER")
+      -- print("UTIL ITEMS COL PLAYER")
     end
   end
 
@@ -64,6 +64,14 @@ function checkCollision()
         -- print("___COL BUL ENEMY___")
         v:notifyCollision(bullets[j])
         u:notifyCollision(enemies[i])
+      end
+    end
+  end
+
+  for i,v in ipairs(enemies) do
+    for j,u in ipairs(bite) do
+      if isColliding(v.box, u.box, v.rotation, u.rotation) then
+        enemies[i]:notifyCollision(bite[j])
       end
     end
   end

@@ -5,6 +5,7 @@ enemies   = {}
 items     = {}
 particles = {}
 bullets   = {}
+bite      = {}
 
 function gameState:init()
   player = Player:_init(0, 0)
@@ -83,6 +84,15 @@ function deleteDeadEntities()
         table.remove(items, j)
     else
         j = j + 1
+    end
+  end
+
+  local k=1
+  while k <= #bite do
+    if bite[k]:isDead() then
+        table.remove(bite, k)
+    else
+        k = k + 1
     end
   end
 end
@@ -179,7 +189,7 @@ function drawHUD()
   love.graphics.setColor(16,12,9)
   -- trocar numero depois de items pela var items
   love.graphics.print("ITEMS: " .. player.items, 170, 8)
-  love.graphics.print("HEALTH: " .. player.health, 170, 20)
+  -- love.graphics.print("HEALTH: " .. player.health, 170, 20)
   love.graphics.setColor(255,255,255)
 end
 

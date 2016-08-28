@@ -13,16 +13,21 @@ setmetatable(Player, {
 local PLAYER_TYPE          = "Player"
 local PLAYER_IMAGE         = "img/ninja/run1.png"
 local PLAYER_VELOCITY      = 1
-local PLAYER_HEALTH        = 1
 local PLAYER_ITEMS         = 1
+
 local PLAYERSTATE_IDLE     = 0
 local PLAYERSTATE_WALKING  = 1
 local PLAYERSTATE_DASHING  = 2
 local PLAYERSTATE_CLIMBING = 3
 local PLAYERSTATE_DEAD     = 4
+
 local GRAVITY              = 800
 local PLAYER_FACINGRIGHT   = true
 local JUMP_POWER           = 255
+
+local INFECTED_BONUS_VELOCITY   = 2.5
+local INFECTED_BONUS_GRAVITY    = 3
+local INFECTED_BONUS_JUMP_POWER = 2.2
 
 function Player:_init(x, y)
   GameActor:_init(x, y)
@@ -34,7 +39,6 @@ function Player:_init(x, y)
   self.moveLeft    = false
   self.facingRight = PLAYER_FACINGRIGHT
   self.velocity    = PLAYER_VELOCITY
-  self.health      = PLAYER_HEALTH
   self.items       = PLAYER_ITEMS
   self.grounded    = false
   self.state       = PLAYERSTATE_IDLE
@@ -44,10 +48,14 @@ function Player:_init(x, y)
   self.dashDuration = 0
   self.dashCooldown = 0
 
+  self.infected    = false
+
   return self
 end
 
 function Player:update(dt)
+  print(self.infected)
+
   self.sprite:update(dt)
 
   lastX = self.box.x
@@ -57,18 +65,30 @@ function Player:update(dt)
     self.state = PLAYERSTATE_IDLE
   elseif self.moveRight then
     self.facingRight = true
-    self.box.x = self.box.x + self.velocity
+    if self.infected then
+      self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
+    else
+      self.box.x = self.box.x + self.velocity
+    end
     self.state = PLAYERSTATE_WALKING
   elseif self.moveLeft then
     self.facingRight = false
-    self.box.x = self.box.x - self.velocity
+    if self.infected then
+      self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
+    else
+      self.box.x = self.box.x - self.velocity
+    end
     self.state = PLAYERSTATE_WALKING
   else
     self.state = PLAYERSTATE_IDLE
   end
 
-  self.yspeed = self.yspeed + GRAVITY*dt
-  self.box.y = self.box.y + self.yspeed*dt
+  if self.infected then
+    self.yspeed = self.yspeed + GRAVITY * dt * INFECTED_BONUS_GRAVITY
+  else
+    self.yspeed = self.yspeed + GRAVITY * dt
+  end
+  self.box.y = self.box.y + self.yspeed * dt
 
   if(self.dashCooldown > 0) then
     self.dashCooldown = self.dashCooldown - 1
@@ -105,15 +125,23 @@ function Player:jump()
     self:leaveLadder()
   elseif self.grounded == true then
     self.grounded = false
-    self.yspeed = -JUMP_POWER
+    if self.infected then
+      self.yspeed = -JUMP_POWER * INFECTED_BONUS_JUMP_POWER
+    else
+      self.yspeed = -JUMP_POWER
+    end
   end
 end
 
 function Player:shot()
-  if self.facingRight then
-    table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
+  if self.infected then
+    table.insert(bite, Bite(self.box.x, self.box.y, 32, 32))
   else
-    table.insert(bullets, Bullet(self.box.x, self.box.y, -250, 40))
+    if self.facingRight then
+      table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
+    else
+      table.insert(bullets, Bullet(self.box.x, self.box.y, -250, 40))
+    end
   end
 end
 
@@ -134,7 +162,11 @@ function Player:leaveLadder()
 end
 
 function Player:draw()
+  if self.infected then
+    love.graphics.setColor(100, 100, 100)
+  end
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+  love.graphics.setColor(255, 255, 255)
 end
 
 function Player:drawDebug()
@@ -164,7 +196,7 @@ function Player:notifyCollision(other)
     self.yspeed = 0
     self.box.y = lastY
   elseif other.type == "Enemy" then
-    self.health = self.health - 1
+    self.infected = true
   elseif other.type == "Item" then
     self.items = self.items + 1
   end
@@ -202,10 +234,6 @@ function Player:getVelocity()
   return self.velocity
 end
 
-function Player:getHealth()
-  return self.health
-end
-
 function Player:setName(name)
   self.name = name
 end
@@ -232,8 +260,4 @@ end
 
 function Player:setVelocity(velocity)
   self.velocity = velocity
-end
-
-function Player:getHealth(health)
-  self.health = health
 end

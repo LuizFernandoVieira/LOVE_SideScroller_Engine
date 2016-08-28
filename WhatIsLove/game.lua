@@ -32,6 +32,7 @@ end
 function loadItems()
   table.insert(items, Item(20, 150))
   table.insert(items, Item(0, 150))
+  table.insert(items, Antidote(110, 150))
 end
 
 function gameState:update(dt)

@@ -24,7 +24,6 @@ function Bite:draw()
 end
 
 function Bite:drawDebug()
-  print("rapido")
   love.graphics.setColor(255, 0, 255, 50)
   love.graphics.rectangle(
     "fill",

@@ -54,8 +54,6 @@ function Player:_init(x, y)
 end
 
 function Player:update(dt)
-  print(self.infected)
-
   self.sprite:update(dt)
 
   lastX = self.box.x
@@ -197,6 +195,9 @@ function Player:notifyCollision(other)
     self.box.y = lastY
   elseif other.type == "Enemy" then
     self.infected = true
+  elseif other.type == "Antidote" then
+    print("PLAYER COLECTED ANTIDOTE")
+    self.infected = false
   elseif other.type == "Item" then
     self.items = self.items + 1
   end

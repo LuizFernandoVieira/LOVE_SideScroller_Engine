@@ -82,26 +82,26 @@ function isColliding(a, b, angleOfA, angleOfB)
     Vector(a.x + 000, a.y + a.h),
     Vector(a.x + a.w, a.y + a.h),
     Vector(a.x + a.w, a.y + 000),
-    Vector(a.x + 000, a.y + 000),
+    Vector(a.x + 000, a.y + 000)
   }
   local B = {
     Vector(b.x + 000, b.y + b.h),
     Vector(b.x + b.w, b.y + b.h),
     Vector(b.x + b.w, b.y + 000),
-    Vector(b.x + 000, b.y + 000),
+    Vector(b.x + 000, b.y + 000)
   }
 
-  for _,v in ipairs(A) do
-    local vecSub = subVec(v, a:center())
-    local vecSum = sumVec(rotate(vecSub, angleOfA), a:center())
-    v = vecSum
-  end
-
-  for _,v in ipairs(B) do
-    local vecSub = subVec(v, b:center())
-    local vecSum = sumVec(rotate(vecSub, angleOfB), b:center())
-    v = vecSum
-  end
+  -- for _,v in ipairs(A) do
+  --   local vecSub = subVec(v, a:center())
+  --   local vecSum = sumVec(rotate(vecSub, angleOfA), a:center())
+  --   v = vecSum
+  -- end
+  --
+  -- for _,v in ipairs(B) do
+  --   local vecSub = subVec(v, b:center())
+  --   local vecSum = sumVec(rotate(vecSub, angleOfB), b:center())
+  --   v = vecSum
+  -- end
 
   local axes = {
     norm(subVec(A[1], A[2])),
@@ -127,7 +127,7 @@ function isColliding(a, b, angleOfA, angleOfB)
     local minB = math.min(P[1], P[2], P[3], P[4])
     local maxB = math.max(P[1], P[2], P[3], P[4])
 
-    if maxA < minB or minA > minB then
+    if maxA < minB or minA > maxB then
       return false
     end
   end

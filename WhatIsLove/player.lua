@@ -11,7 +11,7 @@ setmetatable(Player, {
 })
 
 local PLAYER_TYPE          = "Player"
-local PLAYER_IMAGE         = "img/ninja/run1.png"
+local PLAYER_IMAGE         = "img/ninja/player.png"
 local PLAYER_VELOCITY      = 1
 local PLAYER_ITEMS         = 1
 

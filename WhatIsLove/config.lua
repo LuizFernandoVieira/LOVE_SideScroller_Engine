@@ -5,8 +5,8 @@ default_config = {
 }
 
 android_config = {
-	scale = 1,
-  fullscreen = 0,
+	scale = 4,
+  fullscreen = 1,
   vsync = true,
 }
 
@@ -52,10 +52,12 @@ function setMode()
     -- local ratio = math.min(love.graphics.getWidth()/WIDTH, love.graphics.getHeight()/HEIGHT)
     -- love.graphics.scale(ratio, ratio)
 
-    local bla = love.graphics.getWidth()/love.graphics.getHeight()
-    love.graphics.scale(bla, bla)
+    -- local bla = love.graphics.getWidth()/love.graphics.getHeight()
+    -- love.graphics.scale(bla, bla)
 
     -- love.graphics.scale(530, 530)
+
+    love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {fullscreen=true, vsync=config.vsync})
   else
 		if config.fullscreen == 0 then
 			love.window.setMode(WIDTH*config.scale, HEIGHT*config.scale, {fullscreen=false, vsync=config.vsync})

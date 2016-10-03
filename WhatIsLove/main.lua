@@ -52,11 +52,20 @@ function love.load()
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
-  player:setMovingRight(true)
+  if love.system.getOS() == "Android" then
+    if x < love.graphics.getWidth() / 2 then
+      player:setMovingLeft(true)
+    else
+      player:setMovingRight(true)
+    end
+  end
 end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
-  player:setMovingRight(false)
+  if love.system.getOS() == "Android" then
+    player:setMovingLeft(false)
+    player:setMovingRight(false)
+  end
 end
 
 function love.draw()

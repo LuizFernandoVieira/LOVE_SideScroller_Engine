@@ -7,8 +7,10 @@ particles = {}
 bullets   = {}
 bite      = {}
 
+mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
+
 function gameState:init()
-  player = Player:_init(0, 0)
+  player = Player:_init(132, 116)
 
   camera = Camera(player.box.x, player.box.y)
 
@@ -141,19 +143,20 @@ function gameState:draw()
 
   camera:detach()
 
-  love.graphics.push()
-  setZoom()
-  love.graphics.scale(config.scale)
-
-  drawHUD()
-
   if love.system.getOS() == "Android" then
     local touches = love.touch.getTouches()
     for i, id in ipairs(touches) do
         local x, y = love.touch.getPosition(id)
         love.graphics.circle("fill", x, y, 20)
     end
+      drawMobileControler()
   end
+
+  love.graphics.push()
+  setZoom()
+  love.graphics.scale(config.scale)
+
+  drawHUD()
 
   love.graphics.pop()
   love.graphics.setScissor()
@@ -200,6 +203,10 @@ function drawDebug()
   for i,v in ipairs(bite) do
     v:drawDebug()
   end
+end
+
+function drawMobileControler()
+  love.graphics.draw(mobileCntrl, 25, 500, 0, 1, 1)
 end
 
 function drawHUD()

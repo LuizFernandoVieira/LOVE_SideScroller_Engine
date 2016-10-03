@@ -11,6 +11,10 @@ local MENU_STRINGS = {
 function menuState:init()
   love.graphics.setBackgroundColor(184,199,145)
   selection = 1
+
+  if love.system.getOS() == "Android" then
+    love.system.vibrate(2)
+  end
 end
 
 function menuState:update()
@@ -29,7 +33,7 @@ function menuState:draw()
 		end
 		love.graphics.print(MENU_STRINGS[i], MENU_STRING_X, 86+i*13)
 	end
-
+  
   love.graphics.pop()
   love.graphics.setScissor()
 end

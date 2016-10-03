@@ -127,12 +127,7 @@ function handleInputs()
 end
 
 function gameState:draw()
-  love.graphics.push()
-
-  setZoom()
-  love.graphics.scale(config.scale)
-
-  -- camera:attach()
+  camera:attach(config.scale)
 
   love.graphics.draw(tilesetBatch)
   player:draw()
@@ -144,9 +139,21 @@ function gameState:draw()
 
   drawDebug()
 
-  -- camera:detach()
+  camera:detach()
+
+  love.graphics.push()
+  setZoom()
+  love.graphics.scale(config.scale)
 
   drawHUD()
+
+  if love.system.getOS() == "Android" then
+    local touches = love.touch.getTouches()
+    for i, id in ipairs(touches) do
+        local x, y = love.touch.getPosition(id)
+        love.graphics.circle("fill", x, y, 20)
+    end
+  end
 
   love.graphics.pop()
   love.graphics.setScissor()

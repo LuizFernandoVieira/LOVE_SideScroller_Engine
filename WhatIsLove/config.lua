@@ -1,5 +1,11 @@
 default_config = {
-  scale = 3,
+  scale = 4,
+  fullscreen = 0,
+  vsync = true,
+}
+
+android_config = {
+	scale = 1,
   fullscreen = 0,
   vsync = true,
 }
@@ -11,28 +17,56 @@ function loadConfig()
   joystick = love.joystick.getJoysticks()[1]
 
 	config = {}
-	for i,v in pairs(default_config) do
-		if type(v) == "table" then
-			config[i] = {}
-			for j,w in pairs(v) do
-				config[i][j] = w
+
+	if love.system.getOS() == "Android" then
+			for i,v in pairs(android_config) do
+			if type(v) == "table" then
+				config[i] = {}
+				for j,w in pairs(v) do
+					config[i][j] = w
+				end
+			else
+				config[i] = v
 			end
-		else
-			config[i] = v
+		end
+	else
+		for i,v in pairs(default_config) do
+			if type(v) == "table" then
+				config[i] = {}
+				for j,w in pairs(v) do
+					config[i][j] = w
+				end
+			else
+				config[i] = v
+			end
 		end
 	end
 end
 
 function setMode()
-	if config.fullscreen == 0 then
-		love.window.setMode(WIDTH*config.scale, HEIGHT*config.scale, {fullscreen=false, vsync=config.vsync})
-		love.graphics.setScissor()
-	elseif config.fullscreen > 0 and config.fullscreen <= 3 then
-		love.window.setMode(0,0, {fullscreen=true, vsync=config.vsync})
-		love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {fullscreen=true, vsync=config.vsync})
-	end
-	fs_translatex = (love.graphics.getWidth()-WIDTH*config.scale)/2
-	fs_translatey = (love.graphics.getHeight()-HEIGHT*config.scale)/2
+	local os = love.system.getOS()
+	if  os == "Android" then
+		-- love.window.setMode(0, 0, {fullscreen=true})
+		-- love.graphics.setScissor()
+
+    -- local ratio = math.min(love.graphics.getWidth()/WIDTH, love.graphics.getHeight()/HEIGHT)
+    -- love.graphics.scale(ratio, ratio)
+
+    local bla = love.graphics.getWidth()/love.graphics.getHeight()
+    love.graphics.scale(bla, bla)
+
+    -- love.graphics.scale(530, 530)
+  else
+		if config.fullscreen == 0 then
+			love.window.setMode(WIDTH*config.scale, HEIGHT*config.scale, {fullscreen=false, vsync=config.vsync})
+			love.graphics.setScissor()
+		elseif config.fullscreen > 0 and config.fullscreen <= 3 then
+			love.window.setMode(0,0, {fullscreen=true, vsync=config.vsync})
+			love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {fullscreen=true, vsync=config.vsync})
+		end
+		fs_translatex = (love.graphics.getWidth()-WIDTH*config.scale)/2
+		fs_translatey = (love.graphics.getHeight()-HEIGHT*config.scale)/2
+  end
 end
 
 function toggleVSync()

@@ -48,5 +48,18 @@ function love.load()
   loadResources()
   setMode()
   Gamestate.registerEvents()
-  Gamestate.switch(menuState)
+  Gamestate.switch(gameState)
+end
+
+function love.touchpressed(id, x, y, dx, dy, pressure)
+  player:setMovingRight(true)
+end
+
+function love.touchreleased(id, x, y, dx, dy, pressure)
+  player:setMovingRight(false)
+end
+
+function love.draw()
+  if love.system.getOS() == "Android" then
+  end
 end

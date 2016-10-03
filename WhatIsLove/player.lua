@@ -188,11 +188,32 @@ end
 function Player:isDead()
 end
 
+function colidiuHorizontalmente(player, other)
+  local playerMaxRight = player.box.x + player.sprite:getWidth()
+  local otherMaxRight = other.box.x + 16
+  if playerMaxRight > other.box.x
+  and player.moveRight then
+    return true
+  -- elseif player.box:center().x > other.box:center().x
+  -- and player.moveLeft then
+  --   return true
+  end
+  return false
+end
+
 function Player:notifyCollision(other)
   if other.type == "Tile" then
+
+    -- se colidiu verticalmente
     self.grounded = true
     self.yspeed = 0
     self.box.y = lastY
+
+    -- se colidiu horizontalmente
+    -- if  then
+    --   self.box.x = lastX
+    -- end
+
   elseif other.type == "Enemy" then
     self.infected = true
   elseif other.type == "Antidote" then

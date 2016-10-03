@@ -9,9 +9,6 @@ function splashState:update(dt)
 end
 
 function splashState:draw()
-  love.graphics.push()
-  love.graphics.scale(config.scale)
-
   quad = {}
   local width = love.graphics.getWidth()
   local height = love.graphics.getHeight()
@@ -50,8 +47,6 @@ function splashState:draw()
   else
     Gamestate.switch(menuState)
   end
-
-  love.graphics.pop()
 end
 
 function splashState:keypressed(key)

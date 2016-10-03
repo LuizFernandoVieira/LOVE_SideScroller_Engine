@@ -147,7 +147,9 @@ function gameState:draw()
     local touches = love.touch.getTouches()
     for i, id in ipairs(touches) do
         local x, y = love.touch.getPosition(id)
+        love.graphics.setColor(0, 255, 0)
         love.graphics.circle("fill", x, y, 20)
+        love.graphics.setColor(255, 255, 255)
     end
       drawMobileControler()
   end
@@ -206,7 +208,9 @@ function drawDebug()
 end
 
 function drawMobileControler()
+  love.graphics.setColor( 255, 255, 255, 50 )
   love.graphics.draw(mobileCntrl, 25, 500, 0, 1, 1)
+  love.graphics.setColor( 255, 255, 255, 255 )
 end
 
 function drawHUD()

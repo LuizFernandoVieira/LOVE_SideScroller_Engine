@@ -48,15 +48,24 @@ function love.load()
   loadResources()
   setMode()
   Gamestate.registerEvents()
-  Gamestate.switch(gameState)
+  Gamestate.switch(splashState)
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
   if love.system.getOS() == "Android" then
-    if x < love.graphics.getWidth() / 2 then
+    -- clicou esquerda
+    if x > 100 and x < 220
+    and y > 840 and y < 940 then
       player:setMovingLeft(true)
-    else
+    -- clicou direita
+    elseif x > 590 and x < 710
+    and y > 830 and y < 950 then
       player:setMovingRight(true)
+    -- clicou para pular
+    elseif x > love.graphics.getWidth()/2 then
+      player:jump()
+    -- outros
+    else
     end
   end
 end
@@ -70,5 +79,9 @@ end
 
 function love.draw()
   if love.system.getOS() == "Android" then
+    love.graphics.circle("fill", 410, 635, 100, 100)
+    love.graphics.circle("fill", 410, 1150, 100, 100)
+    love.graphics.circle("fill", 160, 890, 100, 100)
+    love.graphics.circle("fill", 650, 890, 100, 100)
   end
 end

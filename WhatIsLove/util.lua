@@ -57,6 +57,13 @@ function checkCollision()
     end
   end
 
+  for i,v in ipairs(weapons) do
+    if isColliding(v.box, player.box, v.rotation, player.rotation) then
+      weapons[i]:notifyCollision(player)
+      player:notifyCollision(weapons[i])
+    end
+  end
+
   for i,v in ipairs(enemies) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
       player:notifyCollision(enemies[i])

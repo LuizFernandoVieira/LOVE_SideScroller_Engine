@@ -49,17 +49,26 @@ function Player:_init(x, y)
   self.dashCooldown = 0
   self.canClimb     = false
   self.infected     = false
-  self.animIdle         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
-  self.animIdleInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
-  self.sprite           = self.animIdle
-  self.box              = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 
-  -- self.animRun 	    = newAnimation(img.player_running, 16, 22, 0.12, 4)
-	-- self.animThrow      = newAnimation(img.player_throw, 16,32, 0.12, 4)
-	-- self.animClimb      = newAnimation(img.player_climb_down, 14, 23, 0.12, 4)
-	-- self.animCarryLeft  = newAnimation(img.human_1_carry_left,  22, 32, 0.12, 4)
-	-- self.animCarryRight = newAnimation(img.human_1_carry_right, 22, 32, 0.12, 4)
-	-- self.anim = self.animRun
+  self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
+  self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.animWalking         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
+  self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.animJumping         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
+  self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
+  self.animFallingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.sprite              = self.animIdle
+
+  self.boxIdle            = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
+  self.boxIdleInfected    = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
+  self.boxWalking         = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
+  self.boxWalkingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
+  self.boxJumping         = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
+  self.boxJumpingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
+  self.boxFalling         = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
+  self.boxFallingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
+  self.box                = self.boxIdle
 
   return self
 end
@@ -204,11 +213,7 @@ function Player:leaveLadder()
 end
 
 function Player:draw()
-  if self.infected then
-    -- love.graphics.setColor(100, 100, 100)
-  end
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
-  love.graphics.setColor(255, 255, 255)
 end
 
 function Player:drawDebug()
@@ -263,9 +268,15 @@ function Player:notifyCollision(other)
   elseif other.type == "Enemy" then
     self.infected = true
     self.sprite = self.animIdleInfected
+    self.boxIdleInfected.x = self.box.x
+    self.boxIdleInfected.y = self.box.y
+    self.box = self.boxIdleInfected
   elseif other.type == "Antidote" then
     self.infected = false
     self.sprite = self.animIdle
+    self.boxIdle.x = self.box.x
+    self.boxIdle.y = self.box.y
+    self.box = self.boxIdle
   elseif other.type == "Item" then
     self.items = self.items + 1
   elseif other.type == "Ladder" then

@@ -7,6 +7,7 @@ particles = {}
 bullets   = {}
 bite      = {}
 ladders   = {}
+weapons   = {}
 
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 
@@ -14,7 +15,6 @@ mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 -- Called once on game state change
 function gameState:init()
   player = Player:_init(132, 116)
-
   camera = Camera(player.box.x, player.box.y)
 
   loadEnemies()
@@ -34,6 +34,7 @@ function loadItems()
   table.insert(items, Item(0, 150))
   table.insert(items, Antidote(110, 150))
   table.insert(ladders, Ladder(230, 100))
+  table.insert(weapons, Weapon(200, 100))
 end
 
 --- Updates all entities that belong to the first level
@@ -47,66 +48,38 @@ function gameState:update(dt)
   local dy = player.box.y - camera.y
   camera:move(dx/2, dy/2)
 
-  updateEnemies(dt)
-  updateItems(dt)
-  updateBullets(dt)
-  updateLadders(dt)
+  updateGameObjects(dt, enemies)
+  updateGameObjects(dt, items)
+  updateGameObjects(dt, bullets)
+  updateGameObjects(dt, ladders)
+  updateGameObjects(dt, weapons)
 
   checkCollision()
   deleteDeadEntities()
 end
 
-function updateEnemies(dt)
-  for i,v in ipairs(enemies) do
-    v:update(dt)
-  end
-end
-
-function updateItems(dt)
-  for i,v in ipairs(items) do
-    v:update(dt)
-  end
-end
-
-function updateBullets(dt)
-  for _,v in ipairs(bullets) do
-    v:update(dt)
-  end
-end
-
-function updateLadders(dt)
-  for _,v in ipairs(ladders) do
+function updateGameObjects(dt, gameObjects)
+  for _,v in ipairs(gameObjects) do
     v:update(dt)
   end
 end
 
 function deleteDeadEntities()
+  deleteDead(enemies)
+  deleteDead(items)
+  deleteDead(bite)
+  deleteDead(weapons)
+end
+
+function deleteDead(gameObject)
   local i=1
-  while i <= #enemies do
-    if enemies[i]:isDead() then
-        table.remove(enemies, i)
+  while i <= #gameObject do
+    if gameObject[i]:isDead() then
+        table.remove(gameObject, i)
     else
         i = i + 1
     end
   end
-
-  local j=1
-  while j <= #items do
-    if items[j]:isDead() then
-        table.remove(items, j)
-    else
-        j = j + 1
-    end
-  end
-  --
-  -- local k=1
-  -- while k <= #bite do
-  --   if bite[k]:isDead() then
-  --       table.remove(bite, k)
-  --   else
-  --       k = k + 1
-  --   end
-  -- end
 end
 
 --- Captures all inputs that depend on the user pressing a key
@@ -145,11 +118,12 @@ function gameState:draw()
   love.graphics.draw(tilesetBatch)
   player:draw()
 
-  drawEnemies()
-  drawItems()
-  drawLadders()
-  drawBullets()
-  drawBites()
+  drawGameObjects(enemies)
+  drawGameObjects(items)
+  drawGameObjects(ladders)
+  drawGameObjects(bullets)
+  drawGameObjects(bite)
+  drawGameObjects(weapons)
 
   drawDebug()
 
@@ -176,52 +150,30 @@ function gameState:draw()
   love.graphics.setScissor()
 end
 
-function drawEnemies()
-  for i,v in ipairs(enemies) do
-    v:draw()
-  end
-end
-
-function drawItems()
-  for i,v in ipairs(items) do
-    v:draw()
-  end
-end
-
-function drawLadders()
-  for i,v in ipairs(ladders) do
-    v:draw()
-  end
-end
-
-function drawBullets()
-  for _,v in ipairs(bullets) do
-    v:draw()
-  end
-end
-
-function drawBites()
-  for _,v in ipairs(bite) do
+function drawGameObjects(gameObjects)
+  for _,v in ipairs(gameObjects) do
     v:draw()
   end
 end
 
 function drawDebug()
-  player:drawDebug()
-  for i,v in ipairs(tiles) do
-    v:drawDebug()
-  end
-  for i,v in ipairs(enemies) do
-    v:drawDebug()
-  end
-  for i,v in ipairs(items) do
-    v:drawDebug()
-  end
-  for i,v in ipairs(bullets) do
-    v:drawDebug()
-  end
-  for i,v in ipairs(bite) do
-    v:drawDebug()
+  if debug then
+    player:drawDebug()
+    for i,v in ipairs(tiles) do
+      v:drawDebug()
+    end
+    for i,v in ipairs(enemies) do
+      v:drawDebug()
+    end
+    for i,v in ipairs(items) do
+      v:drawDebug()
+    end
+    for i,v in ipairs(bullets) do
+      v:drawDebug()
+    end
+    for i,v in ipairs(bite) do
+      v:drawDebug()
+    end
   end
 end
 
@@ -234,8 +186,8 @@ end
 function drawHUD()
   love.graphics.setFont(font.bold)
   love.graphics.setColor(16,12,9)
-  -- trocar numero depois de items pela var items
   love.graphics.print("ITEMS: " .. player.items, 170, 8)
+  love.graphics.print("WEAPON: " .. "1", 170, 20)
   -- love.graphics.print("HEALTH: " .. player.health, 170, 20)
   love.graphics.setColor(255,255,255)
 end

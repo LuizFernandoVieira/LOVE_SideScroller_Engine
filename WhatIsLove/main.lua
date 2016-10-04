@@ -37,6 +37,7 @@ require("ladder")
 require("antidote")
 require("bullet")
 require("bite")
+require("weapon")
 require("map")
 require("tile")
 require("vector")
@@ -46,13 +47,24 @@ require("util")
 
 WIDTH = 256
 HEIGHT = 200
+debug = false
 
-function love.load()
+function love.load(arg)
+  loadDebug()
   loadConfig()
   loadResources()
   setMode()
   Gamestate.registerEvents()
   Gamestate.switch(gameState)
+end
+
+function loadDebug()
+  if arg[2] == "debug" or
+     arg[2] == "Debug" or
+     arg[2] == "DEBUG" then
+    print("Debug Mode On ...")
+    debug = true
+  end
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)

@@ -46,17 +46,6 @@ end
 function setMode()
 	local os = love.system.getOS()
 	if  os == "Android" then
-		-- love.window.setMode(0, 0, {fullscreen=true})
-		-- love.graphics.setScissor()
-
-    -- local ratio = math.min(love.graphics.getWidth()/WIDTH, love.graphics.getHeight()/HEIGHT)
-    -- love.graphics.scale(ratio, ratio)
-
-    -- local bla = love.graphics.getWidth()/love.graphics.getHeight()
-    -- love.graphics.scale(bla, bla)
-
-    -- love.graphics.scale(530, 530)
-
     love.window.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {fullscreen=true, vsync=config.vsync})
   else
 		if config.fullscreen == 0 then

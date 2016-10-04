@@ -34,7 +34,9 @@ function loadItems()
   table.insert(items, Item(0, 150))
   table.insert(items, Antidote(110, 150))
   table.insert(ladders, Ladder(230, 100))
-  table.insert(weapons, Weapon(200, 100))
+  table.insert(weapons, Gun(50, 100))
+  table.insert(weapons, Shotgun(100, 100))
+  table.insert(weapons, Lasergun(150, 100))
 end
 
 --- Updates all entities that belong to the first level
@@ -98,6 +100,12 @@ function handleInputs()
     player:setMovingLeft(true)
   end
 
+  if love.keyboard.isDown("space") then
+    if player.weapon == 1 then
+      player:shot()
+    end
+  end
+
   if not joystick then return end
   if joystick:isGamepadDown("dpup") then
     player:setMovingUp(true)
@@ -110,13 +118,17 @@ function handleInputs()
          joystick:getGamepadAxis("leftx") < -0.2 then
     player:setMovingLeft(true)
   end
+  if joystick:isGamepadDown("x") then
+    if player.weapon == 1 then
+      player:shot()
+    end
+  end
 end
 
 function gameState:draw()
   camera:attach(config.scale)
 
   love.graphics.draw(tilesetBatch)
-  player:draw()
 
   drawGameObjects(enemies)
   drawGameObjects(items)
@@ -124,6 +136,8 @@ function gameState:draw()
   drawGameObjects(bullets)
   drawGameObjects(bite)
   drawGameObjects(weapons)
+
+  player:draw()
 
   drawDebug()
 

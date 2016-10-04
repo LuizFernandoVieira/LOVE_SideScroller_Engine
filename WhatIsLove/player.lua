@@ -10,21 +10,25 @@ setmetatable(Player, {
   end,
 })
 
-local PLAYER_TYPE          = "Player"
-local PLAYER_ANIM_IDLE     = "img/Player_NormalV2.png"
-local PLAYER_ANIM_INF_IDLE = "img/Player_RaivosoV2.png"
-local PLAYER_VELOCITY      = 1
-local PLAYER_ITEMS         = 1
+local PLAYER_TYPE           = "Player"
+local PLAYER_ANIM_IDLE      = "img/Player_NormalV2.png"
+local PLAYER_ANIM_INF_IDLE  = "img/Player_RaivosoV2.png"
+local PLAYER_VELOCITY       = 1
+local PLAYER_ITEMS          = 1
 
-local PLAYERSTATE_IDLE     = 0
-local PLAYERSTATE_WALKING  = 1
-local PLAYERSTATE_DASHING  = 2
-local PLAYERSTATE_CLIMBING = 3
-local PLAYERSTATE_DEAD     = 4
+local PLAYERSTATE_IDLE      = 0
+local PLAYERSTATE_WALKING   = 1
+local PLAYERSTATE_DASHING   = 2
+local PLAYERSTATE_CLIMBING  = 3
+local PLAYERSTATE_DEAD      = 4
 
-local GRAVITY              = 800
-local PLAYER_FACINGRIGHT   = true
-local JUMP_POWER           = 255
+local PLAYERWEAPON_GUN      = 0
+local PLAYERWEAPON_SHOTGUN  = 1
+local PLAYERWEAPON_LASERGUN = 2
+
+local GRAVITY               = 800
+local PLAYER_FACINGRIGHT    = true
+local JUMP_POWER            = 255
 
 local INFECTED_BONUS_VELOCITY   = 2.5
 local INFECTED_BONUS_GRAVITY    = 3
@@ -33,22 +37,24 @@ local INFECTED_BONUS_JUMP_POWER = 2.2
 function Player:_init(x, y)
   GameActor:_init(x, y)
 
-  self.type         = PLAYER_TYPE
-  self.moveUp       = false
-  self.moveRight    = false
-  self.moveDown     = false
-  self.moveLeft     = false
-  self.facingRight  = PLAYER_FACINGRIGHT
-  self.velocity     = PLAYER_VELOCITY
-  self.items        = PLAYER_ITEMS
-  self.grounded     = false
-  self.state        = PLAYERSTATE_IDLE
-  self.xspeed       = 0
-  self.yspeed       = 0
-  self.dashDuration = 0
-  self.dashCooldown = 0
-  self.canClimb     = false
-  self.infected     = false
+  self.type            = PLAYER_TYPE
+  self.moveUp          = false
+  self.moveRight       = false
+  self.moveDown        = false
+  self.moveLeft        = false
+  self.facingRight     = PLAYER_FACINGRIGHT
+  self.velocity        = PLAYER_VELOCITY
+  self.items           = PLAYER_ITEMS
+  self.grounded        = false
+  self.state           = PLAYERSTATE_IDLE
+  self.xspeed          = 0
+  self.yspeed          = 0
+  self.dashDuration    = 0
+  self.dashCooldown    = 0
+  self.canClimb        = false
+  self.infected        = false
+  self.weapon          = PLAYERWEAPON_GUN
+  self.shotgunCooldown = 0
 
   self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
@@ -189,10 +195,24 @@ function Player:shot()
   if self.infected then
     table.insert(bite, Bite(self.box.x-8, self.box.y-8, 32, 32))
   else
-    if self.facingRight then
-      table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
-    else
-      table.insert(bullets, Bullet(self.box.x, self.box.y, -250, 40))
+    if self.weapon == PLAYERWEAPON_GUN then
+      if self.facingRight then
+        table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 40))
+      else
+        table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 40))
+      end
+    elseif self.weapon == PLAYERWEAPON_SHOTGUN then
+      if self.shotgunCooldown <= 0 then
+        self.shotgunCooldown = 0.3
+        if self.facingRight then
+          table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
+        else
+          table.insert(bullets, Bullet(self.box.x, self.box.y, -250, 40))
+        end
+      else
+        self.shotgunCooldown = self.shotgunCooldown - 0.05
+      end
+    elseif self.weapon == PLAYERWEAPON_LASERGUN then
     end
   end
 end
@@ -281,6 +301,12 @@ function Player:notifyCollision(other)
     self.items = self.items + 1
   elseif other.type == "Ladder" then
     self.canClimb = true
+  elseif other.type == "Gun" then
+    self.weapon = PLAYERWEAPON_GUN
+  elseif other.type == "Shotgun" then
+    self.weapon = PLAYERWEAPON_SHOTGUN
+  elseif other.type == "Lasergun" then
+    self.weapon = PLAYERWEAPON_LASERGUN
   end
 end
 

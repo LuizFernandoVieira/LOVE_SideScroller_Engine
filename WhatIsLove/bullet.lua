@@ -10,7 +10,7 @@ setmetatable(Bullet, {
   end,
 })
 
-local BULLET_IMAGE = "img/misc/spr_star_0.png"
+local BULLET_IMAGE = "img/tiro.png"
 
 function Bullet:_init(x, y, speed, distanceLeft)
   GameObject:_init(x, y)

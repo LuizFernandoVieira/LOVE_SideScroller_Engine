@@ -34,6 +34,13 @@ function checkCollision()
     end
   end
 
+  for i,v in ipairs(ladders) do
+    if isColliding(player.box, v.box, player.rotation, v.rotation) then
+      player:notifyCollision(ladders[i])
+      ladders[i]:notifyCollision(player)
+    end
+  end
+
   for i,v in ipairs(tiles) do
     for j,u in ipairs(enemies) do
       if isColliding(u.box, v.box, u.rotation, v.rotation) then
@@ -47,7 +54,6 @@ function checkCollision()
     if isColliding(v.box, player.box, v.rotation, player.rotation) then
       items[i]:notifyCollision(player)
       player:notifyCollision(items[i])
-      -- print("UTIL ITEMS COL PLAYER")
     end
   end
 
@@ -58,10 +64,7 @@ function checkCollision()
     end
 
     for j,u in ipairs(bullets) do
-      -- print("B: " .. "x: " .. u.box.x .. ", y: " .. u.box.y .. ", w: " .. u.box.w)
-      -- print("E: " .. "x: " .. v.box.x .. ", y: " .. v.box.y .. ", w: " .. v.box.w)
       if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        -- print("___COL BUL ENEMY___")
         v:notifyCollision(bullets[j])
         u:notifyCollision(enemies[i])
       end
@@ -91,17 +94,17 @@ function isColliding(a, b, angleOfA, angleOfB)
     Vector(b.x + 000, b.y + 000)
   }
 
-  -- for _,v in ipairs(A) do
-  --   local vecSub = subVec(v, a:center())
-  --   local vecSum = sumVec(rotate(vecSub, angleOfA), a:center())
-  --   v = vecSum
-  -- end
-  --
-  -- for _,v in ipairs(B) do
-  --   local vecSub = subVec(v, b:center())
-  --   local vecSum = sumVec(rotate(vecSub, angleOfB), b:center())
-  --   v = vecSum
-  -- end
+  for _,v in ipairs(A) do
+    local vecSub = subVec(v, a:center())
+    local vecSum = sumVec(rotate(vecSub, angleOfA), a:center())
+    v = vecSum
+  end
+
+  for _,v in ipairs(B) do
+    local vecSub = subVec(v, b:center())
+    local vecSum = sumVec(rotate(vecSub, angleOfB), b:center())
+    v = vecSum
+  end
 
   local axes = {
     norm(subVec(A[1], A[2])),

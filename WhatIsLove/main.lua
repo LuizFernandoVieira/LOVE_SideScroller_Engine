@@ -1,12 +1,14 @@
 -- DESENVOLVIMENTO DE JOGOS AVANÇADO
--- AUTOR: LUIZ FERNANDO VIEIRA DE CASTRO FERREIRA
--- UNIVERSIDADE NACIONAL DE BRASÍLIA
+-- Universidade Nacional de Brasília - UnB
+-- @author Luiz Fernando Vieira de Castro Ferreira
 
 -- Game States
 splashState    = {}
 menuState      = {}
 optionsState   = {}
 gameState      = {}
+secondLevel    = {}
+thirdLevel     = {}
 
 -- Controls
 joystick = {}
@@ -24,12 +26,14 @@ require("splash")
 require("options")
 require("menu")
 require("game")
+require("second_level")
 require("sprite")
 require("game_object")
 require("game_actor")
 require("player")
 require("enemy")
 require("item")
+require("ladder")
 require("antidote")
 require("bullet")
 require("bite")
@@ -48,7 +52,7 @@ function love.load()
   loadResources()
   setMode()
   Gamestate.registerEvents()
-  Gamestate.switch(splashState)
+  Gamestate.switch(gameState)
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)

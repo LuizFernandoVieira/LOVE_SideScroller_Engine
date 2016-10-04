@@ -6,9 +6,12 @@ items     = {}
 particles = {}
 bullets   = {}
 bite      = {}
+ladders   = {}
 
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 
+--- Initializes objects that belong to the first level
+-- Called once on game state change
 function gameState:init()
   player = Player:_init(132, 116)
 
@@ -18,11 +21,6 @@ function gameState:init()
   loadItems()
 
   map = Map:_init()
-
-  print("P: " .. player.id)
-  print("E: " .. enemies[1].id)
-  print("E: " .. enemies[2].id)
-  print("T: " .. tiles[1].id)
 end
 
 function loadEnemies()
@@ -35,8 +33,12 @@ function loadItems()
   table.insert(items, Item(20, 150))
   table.insert(items, Item(0, 150))
   table.insert(items, Antidote(110, 150))
+  table.insert(ladders, Ladder(230, 100))
 end
 
+--- Updates all entities that belong to the first level
+-- Called once once each love.update
+-- @param dt Time passed since last update
 function gameState:update(dt)
   handleInputs()
   player:update(dt)
@@ -48,6 +50,7 @@ function gameState:update(dt)
   updateEnemies(dt)
   updateItems(dt)
   updateBullets(dt)
+  updateLadders(dt)
 
   checkCollision()
   deleteDeadEntities()
@@ -67,6 +70,12 @@ end
 
 function updateBullets(dt)
   for _,v in ipairs(bullets) do
+    v:update(dt)
+  end
+end
+
+function updateLadders(dt)
+  for _,v in ipairs(ladders) do
     v:update(dt)
   end
 end
@@ -100,6 +109,8 @@ function deleteDeadEntities()
   -- end
 end
 
+--- Captures all inputs that depend on the user pressing a key
+-- Called once once each love.update
 function handleInputs()
   if love.keyboard.isDown('w') then
     player:setMovingUp(true)
@@ -136,6 +147,7 @@ function gameState:draw()
 
   drawEnemies()
   drawItems()
+  drawLadders()
   drawBullets()
   drawBites()
 
@@ -172,6 +184,12 @@ end
 
 function drawItems()
   for i,v in ipairs(items) do
+    v:draw()
+  end
+end
+
+function drawLadders()
+  for i,v in ipairs(ladders) do
     v:draw()
   end
 end
@@ -286,6 +304,9 @@ end
 
 function gameState:gamepadpressed(joystick, button)
   if button == "a" then
+    if player.state == PLAYERSTATE_CLIMBING then
+      player.state = PLAYERSTATE_WALKING
+    end
     player:jump()
   end
 
@@ -293,7 +314,7 @@ function gameState:gamepadpressed(joystick, button)
     player:shot()
   end
 
-  if button == "y" then
+  if button == "b" then
     player:dash()
   end
 end

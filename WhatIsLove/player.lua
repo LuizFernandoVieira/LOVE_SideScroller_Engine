@@ -11,7 +11,8 @@ setmetatable(Player, {
 })
 
 local PLAYER_TYPE          = "Player"
-local PLAYER_IMAGE         = "img/ninja/player.png"
+local PLAYER_ANIM_IDLE     = "img/Player_NormalV2.png"
+local PLAYER_ANIM_INF_IDLE = "img/Player_RaivosoV2.png"
 local PLAYER_VELOCITY      = 1
 local PLAYER_ITEMS         = 1
 
@@ -32,23 +33,33 @@ local INFECTED_BONUS_JUMP_POWER = 2.2
 function Player:_init(x, y)
   GameActor:_init(x, y)
 
-  self.type        = PLAYER_TYPE
-  self.moveUp      = false
-  self.moveRight   = false
-  self.moveDown    = false
-  self.moveLeft    = false
-  self.facingRight = PLAYER_FACINGRIGHT
-  self.velocity    = PLAYER_VELOCITY
-  self.items       = PLAYER_ITEMS
-  self.grounded    = false
-  self.state       = PLAYERSTATE_IDLE
-  self.sprite      = Sprite:_init(PLAYER_IMAGE, 1, 1)
-  self.box         = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
-  self.yspeed      = 0
+  self.type         = PLAYER_TYPE
+  self.moveUp       = false
+  self.moveRight    = false
+  self.moveDown     = false
+  self.moveLeft     = false
+  self.facingRight  = PLAYER_FACINGRIGHT
+  self.velocity     = PLAYER_VELOCITY
+  self.items        = PLAYER_ITEMS
+  self.grounded     = false
+  self.state        = PLAYERSTATE_IDLE
+  self.xspeed       = 0
+  self.yspeed       = 0
   self.dashDuration = 0
   self.dashCooldown = 0
+  self.canClimb     = false
+  self.infected     = false
+  self.animIdle         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
+  self.animIdleInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.sprite           = self.animIdle
+  self.box              = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 
-  self.infected    = false
+  -- self.animRun 	    = newAnimation(img.player_running, 16, 22, 0.12, 4)
+	-- self.animThrow      = newAnimation(img.player_throw, 16,32, 0.12, 4)
+	-- self.animClimb      = newAnimation(img.player_climb_down, 14, 23, 0.12, 4)
+	-- self.animCarryLeft  = newAnimation(img.human_1_carry_left,  22, 32, 0.12, 4)
+	-- self.animCarryRight = newAnimation(img.human_1_carry_right, 22, 32, 0.12, 4)
+	-- self.anim = self.animRun
 
   return self
 end
@@ -59,6 +70,31 @@ function Player:update(dt)
   lastX = self.box.x
   lastY = self.box.y
 
+  -- IDLE STATE
+  if self.state == PLAYERSTATE_IDLE then
+    self:updateWalking(dt)
+    self:updateGravity(dt)
+    self:checkIfStartedClimbing(dt)
+  -- WALKING STATE
+  elseif self.state == PLAYERSTATE_WALKING then
+    self:updateWalking(dt)
+    self:updateGravity(dt)
+    self:checkIfStartedClimbing(dt)
+  -- DASHING STATE
+  elseif self.state == PLAYERSTATE_DASHING then
+    self:updateDashing(dt)
+  -- CLIMBING STATE
+  elseif self.state == PLAYERSTATE_CLIMBING then
+    self:updateClimbing(dt)
+  -- DEAD STATE
+  elseif self.state == PLAYERSTATE_DEAD then
+  end
+end
+
+function Player:updateIdle(dt)
+end
+
+function Player:updateWalking(dt)
   if self.moveRight and self.moveLeft then
     self.state = PLAYERSTATE_IDLE
   elseif self.moveRight then
@@ -80,39 +116,48 @@ function Player:update(dt)
   else
     self.state = PLAYERSTATE_IDLE
   end
+end
 
+function Player:updateGravity(dt)
   if self.infected then
     self.yspeed = self.yspeed + GRAVITY * dt * INFECTED_BONUS_GRAVITY
   else
     self.yspeed = self.yspeed + GRAVITY * dt
   end
   self.box.y = self.box.y + self.yspeed * dt
+end
 
-  if(self.dashCooldown > 0) then
-    self.dashCooldown = self.dashCooldown - 1
-  end
+function Player:updateDashing(dt)
+  self.dashCooldown = self.dashCooldown - dt * 200
+  self.box.x = self.box.x + self.xspeed * dt*5
 
-  -- IDLE STATE
-  if self.state == PLAYERSTATE_IDLE then
-  -- WALKING STATE
-  elseif self.state == PLAYERSTATE_WALKING then
-  -- DASHING STATE
-  elseif self.state == PLAYERSTATE_DASHING then
-    self.dashDuration = self.dashDuration - dt
-  -- CLIMBING STATE
-  elseif self.state == PLAYERSTATE_CLIMBING then
-  -- DEAD STATE
-  elseif self.state == PLAYERSTATE_DEAD then
+  if self.dashCooldown <= 0 then
+    self.dashCooldown = 0
+    self.state = PLAYERSTATE_IDLE
   end
 end
 
-function Player:updateIdle(dt)
-end
-
-function Player:updateWalking(dt)
+function Player:checkIfStartedClimbing(dt)
+  if self.moveUp then
+    for i,v in ipairs(ladders) do
+      if isColliding(player.box, v.box, player.rotation, v.rotation) then
+        self.state = PLAYERSTATE_CLIMBING
+      end
+    end
+  end
 end
 
 function Player:updateClimbing(dt)
+  if self.moveUp then
+    self.box.y = self.box.y - 2
+  elseif self.moveDown then
+    self.box.y = self.box.y + 2
+  end
+
+  -- if not joystick then return
+  if love.keyboard.isDown('space') then
+    self:jump()
+  end
 end
 
 function Player:updateDead(dt)
@@ -145,13 +190,12 @@ end
 
 function Player:dash()
   if self.dashCooldown <= 0 then
-    print("DASH")
     self.state = PLAYERSTATE_DASHING
     self.dashCooldown = 60*1
     if self.facingRight then
-
+      self.xspeed = 30
     else
-
+      self.xspeed = -30
     end
   end
 end
@@ -161,7 +205,7 @@ end
 
 function Player:draw()
   if self.infected then
-    love.graphics.setColor(100, 100, 100)
+    -- love.graphics.setColor(100, 100, 100)
   end
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
   love.graphics.setColor(255, 255, 255)
@@ -173,14 +217,16 @@ function Player:drawDebug()
     "fill",
     self.box.x,
     self.box.y,
-    16,16
+    self.box.w,
+    self.box.h
   )
   love.graphics.setColor(0, 200, 255)
   love.graphics.rectangle(
     "line",
     self.box.x,
     self.box.y,
-    16,16
+    self.box.w,
+    self.box.h
   )
   love.graphics.setColor(255, 255, 255)
 end
@@ -216,11 +262,14 @@ function Player:notifyCollision(other)
 
   elseif other.type == "Enemy" then
     self.infected = true
+    self.sprite = self.animIdleInfected
   elseif other.type == "Antidote" then
-    print("PLAYER COLECTED ANTIDOTE")
     self.infected = false
+    self.sprite = self.animIdle
   elseif other.type == "Item" then
     self.items = self.items + 1
+  elseif other.type == "Ladder" then
+    self.canClimb = true
   end
 end
 

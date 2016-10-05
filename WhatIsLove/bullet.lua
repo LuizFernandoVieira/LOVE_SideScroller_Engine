@@ -14,6 +14,10 @@ local BULLET_IMAGE = "img/tiro.png"
 
 ---
 --
+-- @param x
+-- @param y
+-- @param speed
+-- @param distanceLeft
 function Bullet:_init(x, y, speed, distanceLeft)
   GameObject:_init(x, y)
 
@@ -24,8 +28,9 @@ function Bullet:_init(x, y, speed, distanceLeft)
   self.box          = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
----
---
+--- Updates the bullet object
+-- Called once once each love.update
+-- @param dt Time passed since last update
 function Bullet:update(dt)
   self.sprite:update(dt)
 
@@ -43,25 +48,21 @@ end
 ---
 --
 function Bullet:drawDebug()
-  love.graphics.setColor(255, 255, 0, 50)
-  love.graphics.rectangle(
-    "fill",
-    self.box.x,
-    self.box.y,
-    16,16
-  )
-  love.graphics.setColor(255, 255, 0)
-  love.graphics.rectangle(
-    "line",
-    self.box.x,
-    self.box.y,
-    16,16
-  )
-  love.graphics.setColor(255, 255, 255)
+  local lg = love.graphics
+  local x  = self.box.x
+  local y  = self.box.y
+  local w  = self.box.w
+  local h  = self.box.h
+  lg.setColor(255, 255, 0, 50)
+  lg.rectangle("fill", x, y, w, h)
+  lg.setColor(255, 255, 0)
+  lg.rectangle("line", x, y, w, h)
+  lg.setColor(255, 255, 255)
 end
 
 ---
 --
+-- @return boolean
 function Bullet:isDead()
   if distanceLeft > 0 then
     return false
@@ -72,6 +73,7 @@ end
 
 ---
 --
+-- @param other
 function Bullet:notifyCollision(other)
   if other.type == "Enemy" then
     for k,v in ipairs(bullets) do
@@ -83,7 +85,9 @@ function Bullet:notifyCollision(other)
 end
 
 ---
--- 
+--
+-- @param type
+-- @return boolean
 function Bullet:is(type)
   return type == self.type
 end

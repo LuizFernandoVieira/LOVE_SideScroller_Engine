@@ -46,6 +46,7 @@ end
 
 ---
 --
+-- @param key
 function menuState:keypressed(key)
   if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
@@ -65,7 +66,9 @@ function menuState:keypressed(key)
 end
 
 ---
--- 
+--
+-- @param joystick
+-- @param button
 function menuState:gamepadpressed(joystick, button)
   if button == "dpdown" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)

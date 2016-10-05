@@ -50,13 +50,3 @@ function Map:_init()
     end
     tilesetBatch:flush()
 end
-
----
---
-function Map:update(dt)
-end
-
----
--- 
-function Map:draw()
-end

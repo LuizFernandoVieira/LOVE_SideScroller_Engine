@@ -1,5 +1,9 @@
 ---
 --
+-- @param val
+-- @param min
+-- @param max
+-- @return number
 function wrap(val, min, max)
 	if val < min then val = max end
 	if val > max then val = min end
@@ -8,6 +12,10 @@ end
 
 ---
 --
+-- @param val
+-- @param min
+-- @param max
+-- @return number
 function cap(val, min, max)
 	return math.max(math.min(val, max), min)
 end
@@ -95,8 +103,12 @@ function checkCollision()
   end
 end
 
----
---
+--- Checks if two objects are colliding.
+-- @param a
+-- @param b
+-- @param angleOfA
+-- @param angleOfB
+-- @return boolean
 function isColliding(a, b, angleOfA, angleOfB)
   local A = {
     Vector(a.x + 000, a.y + a.h),
@@ -157,6 +169,9 @@ end
 
 ---
 --
+-- @param v1
+-- @param v2
+-- @return table
 function sumVec(v1, v2)
   local vec = Vector(0, 0)
   vec.x = v1.x + v2.x
@@ -166,6 +181,9 @@ end
 
 ---
 --
+-- @param v1
+-- @param v2
+-- @return table
 function subVec(v1, v2)
   local vec = Vector(0, 0)
   vec.x = v1.x - v2.x
@@ -175,6 +193,9 @@ end
 
 ---
 --
+-- @param v1
+-- @param v2
+-- @return table
 function multVec(v1, v2)
   local vec = Vector(0, 0)
   vec.x = v1.x * v2.x
@@ -184,6 +205,9 @@ end
 
 ---
 --
+-- @param v
+-- @param s
+-- @return table
 function multVecWithScalar(v, s)
   local vec = Vector(0, 0)
   vec.x = v.x * s
@@ -193,12 +217,16 @@ end
 
 ---
 --
+-- @param vec
+-- @return number
 function mag(vec)
   return math.sqrt(vec.x * vec.x + vec.y + vec.y)
 end
 
 ---
 --
+-- @param vec
+-- @return table
 function norm(vec)
   local bla = mag(vec)
   local inverseMag = (1 / mag(vec))
@@ -207,12 +235,18 @@ end
 
 ---
 --
+-- @param a
+-- @param b
+-- @return number
 function dot(a, b)
   return a.x * b.x + a.y * b.y
 end
 
 ---
--- 
+--
+-- @param vec
+-- @param ang
+-- @return table
 function rotate(vec, ang)
   local cs = math.cos(ang)
   local sn = math.sin(ang)

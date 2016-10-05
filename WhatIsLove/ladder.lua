@@ -14,6 +14,8 @@ local LADDER_IMAGE = "img/ladder.png"
 
 ---
 --
+-- @param x
+-- @param y
 function Ladder:_init(x, y)
   GameObject:_init(x, y)
 
@@ -24,6 +26,7 @@ end
 
 ---
 --
+-- @param dt Time passed since last update
 function Ladder:update(dt)
   self.sprite:update(dt)
 end
@@ -41,17 +44,21 @@ end
 
 ---
 --
+-- @return boolean
 function Ladder:isDead()
   return false
 end
 
 ---
 --
+-- @param other
 function Ladder:notifyCollision(other)
 end
 
 ---
 --
+-- @param type
+-- @return boolean
 function Ladder:is(type)
   return type == self.type
 end

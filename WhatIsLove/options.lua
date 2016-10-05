@@ -19,6 +19,7 @@ end
 
 ---
 --
+-- @param dt Time passed since last update
 function optionsState:update(dt)
 end
 
@@ -56,6 +57,7 @@ end
 
 ---
 --
+-- @param key
 function optionsState:keypressed(key)
   if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
@@ -102,6 +104,8 @@ end
 
 ---
 --
+-- @param joystick
+-- @param button
 function optionsState:gamepadpressed(joystick, button)
   if button == "dpdown" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)

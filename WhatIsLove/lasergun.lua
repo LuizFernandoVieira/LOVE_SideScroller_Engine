@@ -14,6 +14,8 @@ local LASERGUN_IMAGE = "img/misc/spr_smoke_4.png"
 
 ---
 --
+-- @param x
+-- @param y
 function Lasergun:_init(x, y)
   Weapon:_init(x, y)
 
@@ -25,6 +27,7 @@ end
 
 ---
 --
+-- @param dt Time passed since last update
 function Lasergun:update(dt)
   self.sprite:update(dt)
 end
@@ -38,27 +41,21 @@ end
 ---
 --
 function Lasergun:drawDebug()
-  love.graphics.setColor(255, 0, 0, 50)
-  love.graphics.rectangle(
-    "fill",
-    self.box.x,
-    self.box.y,
-    self.box.w,
-    self.box.h
-  )
-  love.graphics.setColor(255, 0, 0)
-  love.graphics.rectangle(
-    "line",
-    self.box.x,
-    self.box.y,
-    self.box.w,
-    self.box.h
-  )
-  love.graphics.setColor(255, 255, 255)
+  local lg = love.graphics
+  local x  = self.box.x
+  local y  = self.box.y
+  local w  = self.box.w
+  local h  = self.box.h
+  lg.setColor(255, 0, 0, 50)
+  lg.rectangle("fill", x, y, w, h)
+  lg.setColor(255, 0, 0)
+  lg.rectangle("line", x, y, w, h)
+  lg.setColor(255, 255, 255)
 end
 
 ---
 --
+-- @return boolean
 function Lasergun:isDead()
   if self.collected then
     return true
@@ -68,6 +65,7 @@ end
 
 ---
 --
+-- @param other
 function Lasergun:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
@@ -75,7 +73,9 @@ function Lasergun:notifyCollision(other)
 end
 
 ---
--- 
+--
+-- @param type
+-- @return boolean
 function Lasergun:is(type)
   return type == self.type
 end

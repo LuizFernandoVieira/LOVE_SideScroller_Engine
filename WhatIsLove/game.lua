@@ -9,6 +9,7 @@ bite      = {}
 ladders   = {}
 weapons   = {}
 
+psystem = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 sound = love.audio.newSource("audio/teste.mp3")
 
@@ -22,10 +23,10 @@ function gameState:init()
   loadItems()
 
   map = Map:_init()
-  sound:play()
+  -- sound:play()
 end
 
----
+--- Initializes enemies
 --
 function loadEnemies()
   table.insert(enemies, Enemy(70, 0))
@@ -33,7 +34,7 @@ function loadEnemies()
   table.insert(enemies, Enemy(200, 0))
 end
 
----
+--- Initializes items
 --
 function loadItems()
   table.insert(items, Item(20, 150))
@@ -43,6 +44,17 @@ function loadItems()
   table.insert(weapons, Gun(50, 100))
   table.insert(weapons, Shotgun(100, 100))
   table.insert(weapons, Lasergun(150, 100))
+end
+
+--- Initializes particles
+--
+function loadParticles()
+  local img = love.graphics.newImage('img/rain.png')
+  psystem = love.graphics.newParticleSystem(img, 32)
+  psystem:setParticleLifetime(2, 5)
+  psystem:setEmissionRate(50)
+  psystem:setSizeVariation(1)
+  psystem:setLinearAcceleration(-1000, 0, 1000, 1000)
 end
 
 --- Updates all entities that belong to the first level
@@ -55,6 +67,8 @@ function gameState:update(dt)
   local dx = player.box.x - camera.x
   local dy = player.box.y - camera.y
   camera:move(dx/2, dy/2)
+
+  -- psystem:update(dt)
 
   updateGameObjects(dt, enemies)
   updateGameObjects(dt, items)
@@ -156,6 +170,8 @@ function gameState:draw()
   drawDebug()
 
   camera:detach()
+
+  -- love.graphics.draw(psystem, love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5)
 
   if love.system.getOS() == "Android" then
     local touches = love.touch.getTouches()
@@ -297,7 +313,7 @@ function gameState:gamepadreleased(joystick, button)
 end
 
 ---
--- 
+--
 function gameState:gamepadpressed(joystick, button)
   if button == "a" then
     if player.state == PLAYERSTATE_CLIMBING then

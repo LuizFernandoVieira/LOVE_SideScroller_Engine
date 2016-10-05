@@ -19,6 +19,10 @@ local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
 local ENEMYSTATE_WALKING = 1
 
+---
+--
+-- @param x
+-- @param y
 function Enemy:_init(x, y)
   GameActor:_init(x, y)
 
@@ -36,6 +40,9 @@ function Enemy:_init(x, y)
   self.lastY       = y
 end
 
+--- Updates the enemy object
+-- Called once once each love.update
+-- @param dt Time passed since last update
 function Enemy:update(dt)
   self.lastY = self.box.y
 
@@ -45,28 +52,30 @@ function Enemy:update(dt)
   self.sprite:update(dt)
 end
 
+---
+--
 function Enemy:draw()
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
+---
+--
 function Enemy:drawDebug()
-  love.graphics.setColor(255, 0, 0, 50)
-  love.graphics.rectangle(
-    "fill",
-    self.box.x,
-    self.box.y,
-    16, 16
-  )
-  love.graphics.setColor(255, 0, 0)
-  love.graphics.rectangle(
-    "line",
-    self.box.x,
-    self.box.y,
-    16, 16
-  )
-  love.graphics.setColor(255, 255, 255)
+  local lg = love.graphics
+  local x  = self.box.x
+  local y  = self.box.y
+  local w  = self.box.w
+  local h  = self.box.h
+  lg.setColor(255, 0, 0, 50)
+  lg.rectangle("fill", x, y, w, h)
+  lg.setColor(255, 0, 0)
+  lg.rectangle("line", x, y, w, h)
+  lg.setColor(255, 255, 255)
 end
 
+---
+--
+-- @return boolean
 function Enemy:isDead()
   if self.health == 0 then
     return true
@@ -75,6 +84,9 @@ function Enemy:isDead()
   end
 end
 
+---
+--
+-- @param other
 function Enemy:notifyCollision(other)
   if other.type == "Tile" then
     self.grounded = true
@@ -87,6 +99,10 @@ function Enemy:notifyCollision(other)
   end
 end
 
+---
+--
+-- @param type
+-- @return boolean
 function Enemy:is(type)
   return type == self.type
 end

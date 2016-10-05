@@ -13,13 +13,16 @@ PI = 3.14
 
 ---
 --
+-- @param x
+-- @param y
 function Vector:_init(x, y)
   self.x = x
   self.y = y
 end
 
 ---
--- 
+--
+-- @param angle
 function Vector:rotate(angle)
   angle = angle * PI / 180
   local curX = self.x

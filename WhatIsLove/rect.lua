@@ -11,6 +11,10 @@ setmetatable(Rect, {
 
 ---
 --
+-- @param x
+-- @param y
+-- @param w
+-- @param h
 function Rect:_init(x, y, w, h)
   self.x = x
   self.y = y
@@ -26,6 +30,8 @@ end
 
 ---
 --
+-- @param vector
+-- @return boolean
 function Rect:isInside(vector)
   if (vector.x >= self.x
   and vector.x <= self.x + self.w

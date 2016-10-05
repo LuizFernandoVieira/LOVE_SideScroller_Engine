@@ -52,19 +52,20 @@ WIDTH = 256
 HEIGHT = 200
 debug = false
 
----
---
+--- Initializes the hole game
+-- First function called when love2d initializes
+-- @param arg Argument passed in the command link
 function love.load(arg)
   loadDebug()
   loadConfig()
   loadResources()
   setMode()
   Gamestate.registerEvents()
-  Gamestate.switch(gameState)
+  Gamestate.switch(splashState)
 end
 
----
---
+--- Check if debug has been passed as a command line parameter
+-- If so it makes the game run on debug mode
 function loadDebug()
   if arg[2] == "debug" or
      arg[2] == "Debug" or
@@ -74,8 +75,14 @@ function loadDebug()
   end
 end
 
----
---
+--- Checks if touch pressed and act on those commands
+-- Only works on mobile devices
+-- @param id
+-- @param x
+-- @param y
+-- @param dx
+-- @param dy
+-- @param pressure
 function love.touchpressed(id, x, y, dx, dy, pressure)
   if love.system.getOS() == "Android" then
     -- clicou esquerda
@@ -89,14 +96,18 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
     -- clicou para pular
     elseif x > love.graphics.getWidth()/2 then
       player:jump()
-    -- outros
-    else
     end
   end
 end
 
----
---
+--- Checks if touch released and act on those releases
+-- Only works on mobile devices
+-- @param id
+-- @param x
+-- @param y
+-- @param dx
+-- @param dy
+-- @param pressure
 function love.touchreleased(id, x, y, dx, dy, pressure)
   if love.system.getOS() == "Android" then
     player:setMovingLeft(false)
@@ -104,8 +115,9 @@ function love.touchreleased(id, x, y, dx, dy, pressure)
   end
 end
 
----
--- 
+--- Draws objects
+-- Handle the drowing of adicional controller
+-- if running on mobile devices
 function love.draw()
   if love.system.getOS() == "Android" then
     love.graphics.circle("fill", 410, 635, 100, 100)

@@ -10,8 +10,10 @@ setmetatable(GameObject, {
   end,
 })
 
----
+--- Initializes game object
 --
+-- @param x
+-- @param y
 function GameObject:_init(x, y)
   self.id       = nextId
   self.type     = "GameObject"
@@ -21,8 +23,9 @@ function GameObject:_init(x, y)
   nextId = nextId + 1
 end
 
----
---
+--- Updates the game object
+-- Called once once each love.update
+-- @param dt Time passed since last update
 function GameObject:update(dt)
 end
 
@@ -38,11 +41,14 @@ end
 
 ---
 --
+-- @param other
 function GameObject:notifyCollision(other)
 end
 
 ---
--- 
+--
+-- @param type
+-- @return boolean
 function GameObject:is(type)
   return type == "GameObject"
 end

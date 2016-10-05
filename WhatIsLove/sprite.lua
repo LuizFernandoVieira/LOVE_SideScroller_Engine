@@ -3,6 +3,9 @@ Sprite.__index = Sprite
 
 ---
 --
+-- @param image
+-- @param frameCout
+-- @param frameTime
 function Sprite:_init(image, frameCout, frameTime)
   local self = setmetatable({}, Sprite)
 
@@ -30,6 +33,7 @@ end
 
 ---
 --
+-- @param dt Time passed since last update
 function Sprite:update(dt)
   self.timeElapsed = self.timeElapsed + dt
 
@@ -44,6 +48,10 @@ end
 
 ---
 --
+-- @param x
+-- @param y
+-- @param angle
+-- @param facing
 function Sprite:draw(x, y, angle, facing)
   facingRight = facingRight or true
 
@@ -66,12 +74,14 @@ end
 
 ---
 --
+-- @return number
 function Sprite:getWidth()
   return self.image:getWidth()/self.frameCout
 end
 
 ---
--- 
+--
+-- @return number
 function Sprite:getHeight()
   return self.image:getHeight()
 end

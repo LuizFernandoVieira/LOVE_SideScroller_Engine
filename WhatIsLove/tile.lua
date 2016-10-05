@@ -12,6 +12,8 @@ setmetatable(Tile, {
 
 ---
 --
+-- @param x
+-- @param y
 function Tile:_init(x, y)
   GameActor:_init(x, y)
 
@@ -21,6 +23,7 @@ end
 
 ---
 --
+-- @param dt Time passed since last update
 function Tile:update(dt)
 end
 
@@ -32,20 +35,15 @@ end
 ---
 --
 function Tile:drawDebug()
+  local lg = love.graphics
+  local x  = self.box.x
+  local y  = self.box.y
+  local w  = self.box.w
+  local h  = self.box.h
   love.graphics.setColor(0, 255, 0, 50)
-  love.graphics.rectangle(
-    "fill",
-    self.box.x,
-    self.box.y,
-    16,16
-  )
+  love.graphics.rectangle("fill", x, y, w, h)
   love.graphics.setColor(0, 255, 0)
-  love.graphics.rectangle(
-    "line",
-    self.box.x,
-    self.box.y,
-    16,16
-  )
+  love.graphics.rectangle("line", x, y, w , h)
   love.graphics.setColor(255, 255, 255)
 end
 
@@ -60,7 +58,9 @@ function Item:notifyCollision()
 end
 
 ---
--- 
+--
+-- @param type
+-- @return boolean
 function Item:is(type)
   return type == self.type
 end

@@ -1,4 +1,4 @@
-Player         = {}
+ Player         = {}
 Player.__index = Player
 
 setmetatable(Player, {
@@ -34,6 +34,10 @@ local INFECTED_BONUS_VELOCITY   = 2.5
 local INFECTED_BONUS_GRAVITY    = 3
 local INFECTED_BONUS_JUMP_POWER = 2.2
 
+---
+--
+-- @param x
+-- @param y
 function Player:_init(x, y)
   GameActor:_init(x, y)
 
@@ -79,6 +83,9 @@ function Player:_init(x, y)
   return self
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:update(dt)
   self.sprite:update(dt)
 
@@ -106,9 +113,15 @@ function Player:update(dt)
   end
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:updateIdle(dt)
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:updateWalking(dt)
   if self.moveRight and self.moveLeft then
     self.state = PLAYERSTATE_IDLE
@@ -133,6 +146,9 @@ function Player:updateWalking(dt)
   end
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:updateGravity(dt)
   if self.infected then
     self.yspeed = self.yspeed + GRAVITY * dt * INFECTED_BONUS_GRAVITY
@@ -142,6 +158,9 @@ function Player:updateGravity(dt)
   self.box.y = self.box.y + self.yspeed * dt
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:updateDashing(dt)
   self.dashCooldown = self.dashCooldown - dt * 200
   self.box.x = self.box.x + self.xspeed * dt*5
@@ -152,6 +171,9 @@ function Player:updateDashing(dt)
   end
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:checkIfStartedClimbing(dt)
   if self.moveUp then
     for i,v in ipairs(ladders) do
@@ -162,6 +184,9 @@ function Player:checkIfStartedClimbing(dt)
   end
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:updateClimbing(dt)
   if self.moveUp then
     self.box.y = self.box.y - 2
@@ -175,9 +200,14 @@ function Player:updateClimbing(dt)
   end
 end
 
+---
+--
+-- @param dt Time passed since last update
 function Player:updateDead(dt)
 end
 
+---
+--
 function Player:jump()
   if self.state == PLAYERSTATE_CLIMBING then
     self:leaveLadder()
@@ -191,6 +221,8 @@ function Player:jump()
   end
 end
 
+---
+--
 function Player:shot()
   if self.infected then
     table.insert(bite, Bite(self.box.x-8, self.box.y-8, 32, 32))
@@ -217,6 +249,8 @@ function Player:shot()
   end
 end
 
+---
+--
 function Player:dash()
   if self.dashCooldown <= 0 then
     self.state = PLAYERSTATE_DASHING
@@ -229,36 +263,42 @@ function Player:dash()
   end
 end
 
+---
+--
 function Player:leaveLadder()
 end
 
+---
+--
 function Player:draw()
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
+---
+--
 function Player:drawDebug()
-  love.graphics.setColor(0, 200, 255, 50)
-  love.graphics.rectangle(
-    "fill",
-    self.box.x,
-    self.box.y,
-    self.box.w,
-    self.box.h
-  )
-  love.graphics.setColor(0, 200, 255)
-  love.graphics.rectangle(
-    "line",
-    self.box.x,
-    self.box.y,
-    self.box.w,
-    self.box.h
-  )
-  love.graphics.setColor(255, 255, 255)
+  local lg = love.graphics
+  local x  = self.x
+  local y  = self.y
+  local w  = self.w
+  local h  = self.h
+  lg.setColor(0, 200, 255, 50)
+  lg.rectangle("fill", x, y, w, h)
+  lg.setColor(0, 200, 255)
+  lg.rectangle("line", x, y, w, h)
+  lg.setColor(255, 255, 255)
 end
 
+---
+--
 function Player:isDead()
 end
 
+---
+--
+-- @param player
+-- @param other
+-- @return boolean
 function colidiuHorizontalmente(player, other)
   local playerMaxRight = player.box.x + player.sprite:getWidth()
   local otherMaxRight = other.box.x + 16
@@ -272,6 +312,9 @@ function colidiuHorizontalmente(player, other)
   return false
 end
 
+---
+--
+-- @param other
 function Player:notifyCollision(other)
   if other.type == "Tile" then
 
@@ -310,62 +353,94 @@ function Player:notifyCollision(other)
   end
 end
 
+---
+--
+-- @param type
+-- @return boolean
 function Player:is(type)
   return type == self.type
 end
 
+--- Gets player name.
+-- @return string
 function Player:getName()
   return self.name
 end
 
+--- Gets if the player is moving up.
+-- @return boolean
 function Player:isMovingUp()
   return self.moveUp
 end
 
+--- Gets if the player is moving right.
+-- @return boolean
 function Player:isMovingRight()
   return self.moveRight
 end
 
+--- Gets if the playeris moving down.
+-- @return boolean
 function Player:isMovingDown()
   return self.moveDown
 end
 
+--- Gets if the player is moving left.
+-- @return boolean
 function Player:isMovingLeft()
   return self.moveLeft
 end
 
+--- Gets if the player is facing right.
+-- @return boolean
 function Player:isFacingRight()
   return self.facingRight
 end
 
+--- Gets player velocity.
+-- @return number
 function Player:getVelocity()
   return self.velocity
 end
 
+--- Sets the player name
+-- @param name
 function Player:setName(name)
   self.name = name
 end
 
+--- Sets the player moveUp
+-- @param moveUp
 function Player:setMovingUp(moveUp)
   self.moveUp = moveUp
 end
 
+--- Sets the player moveRight
+-- @param moveRight
 function Player:setMovingRight(moveRight)
   self.moveRight = moveRight
 end
 
+--- Sets the player moveDown
+-- @param moveDown
 function Player:setMovingDown(moveDown)
   self.moveDown = moveDown
 end
 
+--- Sets the player moveLeft
+-- @param moveLeft
 function Player:setMovingLeft(moveLeft)
   self.moveLeft = moveLeft
 end
 
+--- Sets the player facingRight
+-- @param facingRight
 function Player:setFacingRight(facingRight)
   self.facingRight = facingRight
 end
 
+--- Sets the player velocity
+-- @param velocity
 function Player:setVelocity(velocity)
   self.velocity = velocity
 end

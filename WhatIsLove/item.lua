@@ -14,6 +14,8 @@ local ITEM_IMAGE = "img/misc/spr_star_0.png"
 
 ---
 --
+-- @param x
+-- @param y
 function Item:_init(x, y)
   GameObject:_init(x, y)
 
@@ -25,6 +27,7 @@ end
 
 ---
 --
+-- @param dt Time passed since last update
 function Item:update(dt)
   self.sprite:update(dt)
 end
@@ -38,25 +41,21 @@ end
 ---
 --
 function Item:drawDebug()
-  love.graphics.setColor(255, 0, 0, 50)
-  love.graphics.rectangle(
-    "fill",
-    self.box.x,
-    self.box.y,
-    16, 16
-  )
-  love.graphics.setColor(255, 0, 0)
-  love.graphics.rectangle(
-    "line",
-    self.box.x,
-    self.box.y,
-    16, 16
-  )
-  love.graphics.setColor(255, 255, 255)
+  local lg = love.graphics
+  local x  = self.box.x
+  local y  = self.box.y
+  local w  = self.box.w
+  local h  = self.box.h
+  lg.setColor(255, 0, 0, 50)
+  lg.rectangle("fill", x, y, w, h)
+  lg.setColor(255, 0, 0)
+  lg.rectangle("line", x, y, w, h)
+  lg.setColor(255, 255, 255)
 end
 
 ---
 --
+-- @return boolean
 function Item:isDead()
   if self.collected then
     return true
@@ -66,6 +65,7 @@ end
 
 ---
 --
+-- @param other
 function Item:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
@@ -73,7 +73,9 @@ function Item:notifyCollision(other)
 end
 
 ---
--- 
+--
+-- @param type
+-- @return boolean
 function Item:is(type)
   return type == self.type
 end

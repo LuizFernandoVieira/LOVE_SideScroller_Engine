@@ -1,13 +1,19 @@
+---
+--
 function wrap(val, min, max)
 	if val < min then val = max end
 	if val > max then val = min end
 	return val
 end
 
+---
+--
 function cap(val, min, max)
 	return math.max(math.min(val, max), min)
 end
 
+---
+--
 function setZoom()
 	if config.fullscreen == 1 then
 		local sw = love.graphics.getWidth()/WIDTH/config.scale
@@ -26,6 +32,8 @@ function setZoom()
 	end
 end
 
+---
+--
 function checkCollision()
   for i,v in ipairs(tiles) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
@@ -87,6 +95,8 @@ function checkCollision()
   end
 end
 
+---
+--
 function isColliding(a, b, angleOfA, angleOfB)
   local A = {
     Vector(a.x + 000, a.y + a.h),
@@ -145,6 +155,8 @@ function isColliding(a, b, angleOfA, angleOfB)
   return true
 end
 
+---
+--
 function sumVec(v1, v2)
   local vec = Vector(0, 0)
   vec.x = v1.x + v2.x
@@ -152,6 +164,8 @@ function sumVec(v1, v2)
   return vec
 end
 
+---
+--
 function subVec(v1, v2)
   local vec = Vector(0, 0)
   vec.x = v1.x - v2.x
@@ -159,6 +173,8 @@ function subVec(v1, v2)
   return vec
 end
 
+---
+--
 function multVec(v1, v2)
   local vec = Vector(0, 0)
   vec.x = v1.x * v2.x
@@ -166,6 +182,8 @@ function multVec(v1, v2)
   return vec
 end
 
+---
+--
 function multVecWithScalar(v, s)
   local vec = Vector(0, 0)
   vec.x = v.x * s
@@ -173,20 +191,28 @@ function multVecWithScalar(v, s)
   return vec
 end
 
+---
+--
 function mag(vec)
   return math.sqrt(vec.x * vec.x + vec.y + vec.y)
 end
 
+---
+--
 function norm(vec)
   local bla = mag(vec)
   local inverseMag = (1 / mag(vec))
   return multVecWithScalar(vec, inverseMag)
 end
 
+---
+--
 function dot(a, b)
   return a.x * b.x + a.y * b.y
 end
 
+---
+-- 
 function rotate(vec, ang)
   local cs = math.cos(ang)
   local sn = math.sin(ang)

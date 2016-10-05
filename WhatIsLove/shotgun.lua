@@ -12,6 +12,8 @@ setmetatable(Shotgun, {
 
 local SHOTGUN_IMAGE = "img/misc/spr_smoke_1.png"
 
+---
+--
 function Shotgun:_init(x, y)
   Weapon:_init(x, y)
 
@@ -21,14 +23,20 @@ function Shotgun:_init(x, y)
   self.collected = false
 end
 
+---
+--
 function Shotgun:update(dt)
   self.sprite:update(dt)
 end
 
+---
+--
 function Shotgun:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+---
+--
 function Shotgun:drawDebug()
   love.graphics.setColor(255, 0, 0, 50)
   love.graphics.rectangle(
@@ -49,6 +57,8 @@ function Shotgun:drawDebug()
   love.graphics.setColor(255, 255, 255)
 end
 
+---
+--
 function Shotgun:isDead()
   if self.collected then
     return true
@@ -56,12 +66,16 @@ function Shotgun:isDead()
   return false
 end
 
+---
+--
 function Shotgun:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
   end
 end
 
+---
+-- 
 function Shotgun:is(type)
   return type == self.type
 end

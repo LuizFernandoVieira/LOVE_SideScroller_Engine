@@ -10,6 +10,8 @@ setmetatable(Tile, {
   end,
 })
 
+---
+--
 function Tile:_init(x, y)
   GameActor:_init(x, y)
 
@@ -17,12 +19,18 @@ function Tile:_init(x, y)
   self.box  = Rect(x, y, 16, 16)
 end
 
+---
+--
 function Tile:update(dt)
 end
 
+---
+--
 function Tile:draw()
 end
 
+---
+--
 function Tile:drawDebug()
   love.graphics.setColor(0, 255, 0, 50)
   love.graphics.rectangle(
@@ -41,12 +49,18 @@ function Tile:drawDebug()
   love.graphics.setColor(255, 255, 255)
 end
 
+---
+--
 function Item:isDead()
 end
 
+---
+--
 function Item:notifyCollision()
 end
 
+---
+-- 
 function Item:is(type)
   return type == self.type
 end

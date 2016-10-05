@@ -10,6 +10,8 @@ android_config = {
   vsync = true,
 }
 
+---
+--
 function loadConfig()
   love.keyboard.setKeyRepeat(false)
   love.graphics.setDefaultFilter("nearest","nearest")
@@ -43,6 +45,8 @@ function loadConfig()
 	end
 end
 
+---
+--
 function setMode()
 	local os = love.system.getOS()
 	if  os == "Android" then
@@ -60,6 +64,8 @@ function setMode()
   end
 end
 
+---
+-- 
 function toggleVSync()
 	config.vsync = not config.vsync
 	setMode()

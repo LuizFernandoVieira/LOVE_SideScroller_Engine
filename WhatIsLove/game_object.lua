@@ -10,6 +10,8 @@ setmetatable(GameObject, {
   end,
 })
 
+---
+--
 function GameObject:_init(x, y)
   self.id       = nextId
   self.type     = "GameObject"
@@ -19,18 +21,28 @@ function GameObject:_init(x, y)
   nextId = nextId + 1
 end
 
+---
+--
 function GameObject:update(dt)
 end
 
+---
+--
 function GameObject:draw()
 end
 
+---
+--
 function GameObject:isDead()
 end
 
+---
+--
 function GameObject:notifyCollision(other)
 end
 
+---
+-- 
 function GameObject:is(type)
   return type == "GameObject"
 end

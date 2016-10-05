@@ -12,6 +12,8 @@ setmetatable(Gun, {
 
 local GUN_IMAGE = "img/misc/spr_smoke_2.png"
 
+---
+--
 function Gun:_init(x, y)
   Weapon:_init(x, y)
 
@@ -21,14 +23,20 @@ function Gun:_init(x, y)
   self.collected = false
 end
 
+---
+--
 function Gun:update(dt)
   self.sprite:update(dt)
 end
 
+---
+--
 function Gun:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+---
+--
 function Gun:drawDebug()
   love.graphics.setColor(255, 0, 0, 50)
   love.graphics.rectangle(
@@ -49,6 +57,8 @@ function Gun:drawDebug()
   love.graphics.setColor(255, 255, 255)
 end
 
+---
+--
 function Gun:isDead()
   if self.collected then
     return true
@@ -56,12 +66,16 @@ function Gun:isDead()
   return false
 end
 
+---
+--
 function Gun:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
   end
 end
 
+---
+-- 
 function Gun:is(type)
   return type == self.type
 end

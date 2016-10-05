@@ -12,6 +12,8 @@ setmetatable(Bullet, {
 
 local BULLET_IMAGE = "img/tiro.png"
 
+---
+--
 function Bullet:_init(x, y, speed, distanceLeft)
   GameObject:_init(x, y)
 
@@ -22,6 +24,8 @@ function Bullet:_init(x, y, speed, distanceLeft)
   self.box          = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
+---
+--
 function Bullet:update(dt)
   self.sprite:update(dt)
 
@@ -30,10 +34,14 @@ function Bullet:update(dt)
   self.distanceLeft = self.distanceLeft - math.abs(previousX)
 end
 
+---
+--
 function Bullet:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+---
+--
 function Bullet:drawDebug()
   love.graphics.setColor(255, 255, 0, 50)
   love.graphics.rectangle(
@@ -52,6 +60,8 @@ function Bullet:drawDebug()
   love.graphics.setColor(255, 255, 255)
 end
 
+---
+--
 function Bullet:isDead()
   if distanceLeft > 0 then
     return false
@@ -60,6 +70,8 @@ function Bullet:isDead()
   end
 end
 
+---
+--
 function Bullet:notifyCollision(other)
   if other.type == "Enemy" then
     for k,v in ipairs(bullets) do
@@ -70,6 +82,8 @@ function Bullet:notifyCollision(other)
   end
 end
 
+---
+-- 
 function Bullet:is(type)
   return type == self.type
 end

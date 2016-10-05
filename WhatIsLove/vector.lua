@@ -11,11 +11,15 @@ setmetatable(Vector, {
 
 PI = 3.14
 
+---
+--
 function Vector:_init(x, y)
   self.x = x
   self.y = y
 end
 
+---
+-- 
 function Vector:rotate(angle)
   angle = angle * PI / 180
   local curX = self.x

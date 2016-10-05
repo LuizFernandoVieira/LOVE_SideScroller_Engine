@@ -205,9 +205,9 @@ function Player:shot()
       if self.shotgunCooldown <= 0 then
         self.shotgunCooldown = 0.3
         if self.facingRight then
-          table.insert(bullets, Bullet(self.box.x, self.box.y, 250, 40))
+          table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 40))
         else
-          table.insert(bullets, Bullet(self.box.x, self.box.y, -250, 40))
+          table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 40))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05

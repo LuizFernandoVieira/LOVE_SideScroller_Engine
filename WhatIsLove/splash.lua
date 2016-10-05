@@ -1,13 +1,19 @@
 local transitionTime
 
+---
+--
 function splashState:init()
   transitionTime = 0
 end
 
+---
+--
 function splashState:update(dt)
   transitionTime = transitionTime + dt
 end
 
+---
+--
 function splashState:draw()
   quad = {}
   local width = love.graphics.getWidth()
@@ -49,6 +55,8 @@ function splashState:draw()
   end
 end
 
+---
+-- 
 function splashState:keypressed(key)
   if key == 'space'  or
      key == 'return' or

@@ -1,6 +1,8 @@
 Map         = {}
 Map.__index = Map
 
+---
+--
 function Map:_init()
     local self = setmetatable({}, Map)
 
@@ -49,8 +51,12 @@ function Map:_init()
     tilesetBatch:flush()
 end
 
+---
+--
 function Map:update(dt)
 end
 
+---
+-- 
 function Map:draw()
 end

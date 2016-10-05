@@ -10,6 +10,7 @@ ladders   = {}
 weapons   = {}
 
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
+sound = love.audio.newSource("audio/teste.mp3")
 
 --- Initializes objects that belong to the first level
 -- Called once on game state change
@@ -21,14 +22,19 @@ function gameState:init()
   loadItems()
 
   map = Map:_init()
+  sound:play()
 end
 
+---
+--
 function loadEnemies()
   table.insert(enemies, Enemy(70, 0))
   table.insert(enemies, Enemy(150, 0))
   table.insert(enemies, Enemy(200, 0))
 end
 
+---
+--
 function loadItems()
   table.insert(items, Item(20, 150))
   table.insert(items, Item(0, 150))
@@ -60,12 +66,16 @@ function gameState:update(dt)
   deleteDeadEntities()
 end
 
+---
+--
 function updateGameObjects(dt, gameObjects)
   for _,v in ipairs(gameObjects) do
     v:update(dt)
   end
 end
 
+---
+--
 function deleteDeadEntities()
   deleteDead(enemies)
   deleteDead(items)
@@ -73,6 +83,8 @@ function deleteDeadEntities()
   deleteDead(weapons)
 end
 
+---
+--
 function deleteDead(gameObject)
   local i=1
   while i <= #gameObject do
@@ -125,6 +137,8 @@ function handleInputs()
   end
 end
 
+---
+--
 function gameState:draw()
   camera:attach(config.scale)
 
@@ -164,12 +178,16 @@ function gameState:draw()
   love.graphics.setScissor()
 end
 
+---
+--
 function drawGameObjects(gameObjects)
   for _,v in ipairs(gameObjects) do
     v:draw()
   end
 end
 
+---
+--
 function drawDebug()
   if debug then
     player:drawDebug()
@@ -191,12 +209,16 @@ function drawDebug()
   end
 end
 
+---
+--
 function drawMobileControler()
   love.graphics.setColor( 255, 255, 255, 50 )
   love.graphics.draw(mobileCntrl, 25, 500, 0, 1, 1)
   love.graphics.setColor( 255, 255, 255, 255 )
 end
 
+---
+--
 function drawHUD()
   love.graphics.setFont(font.bold)
   love.graphics.setColor(16,12,9)
@@ -206,6 +228,8 @@ function drawHUD()
   love.graphics.setColor(255,255,255)
 end
 
+---
+--
 function gameState:keyreleased(key)
   if key == 'w' then
     player:setMovingUp(false)
@@ -221,6 +245,8 @@ function gameState:keyreleased(key)
   end
 end
 
+---
+--
 function gameState:keypressed(key)
   if key == "w" then
     player:jump()
@@ -248,6 +274,8 @@ function gameState:keypressed(key)
   end
 end
 
+---
+--
 function gameState:gamepadreleased(joystick, button)
   if button == 'dpup' then
     player:setMovingUp(false)
@@ -268,6 +296,8 @@ function gameState:gamepadreleased(joystick, button)
   end
 end
 
+---
+-- 
 function gameState:gamepadpressed(joystick, button)
   if button == "a" then
     if player.state == PLAYERSTATE_CLIMBING then

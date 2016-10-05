@@ -9,6 +9,8 @@ setmetatable(Rect, {
   end,
 })
 
+---
+--
 function Rect:_init(x, y, w, h)
   self.x = x
   self.y = y
@@ -16,15 +18,14 @@ function Rect:_init(x, y, w, h)
   self.h = h
 end
 
+---
+--
 function Rect:center()
   return Vector(self.x + self.w/2, self.y + self.h/2)
 end
 
--- function Rect:center(x, y)
---   x = self.x + self.w / 2
---   y = self.y + self.h / 2
--- end
-
+---
+--
 function Rect:isInside(vector)
   if (vector.x >= self.x
   and vector.x <= self.x + self.w

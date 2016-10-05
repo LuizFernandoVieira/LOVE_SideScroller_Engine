@@ -12,6 +12,8 @@ setmetatable(Lasergun, {
 
 local LASERGUN_IMAGE = "img/misc/spr_smoke_4.png"
 
+---
+--
 function Lasergun:_init(x, y)
   Weapon:_init(x, y)
 
@@ -21,14 +23,20 @@ function Lasergun:_init(x, y)
   self.collected = false
 end
 
+---
+--
 function Lasergun:update(dt)
   self.sprite:update(dt)
 end
 
+---
+--
 function Lasergun:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+---
+--
 function Lasergun:drawDebug()
   love.graphics.setColor(255, 0, 0, 50)
   love.graphics.rectangle(
@@ -49,6 +57,8 @@ function Lasergun:drawDebug()
   love.graphics.setColor(255, 255, 255)
 end
 
+---
+--
 function Lasergun:isDead()
   if self.collected then
     return true
@@ -56,12 +66,16 @@ function Lasergun:isDead()
   return false
 end
 
+---
+--
 function Lasergun:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
   end
 end
 
+---
+-- 
 function Lasergun:is(type)
   return type == self.type
 end

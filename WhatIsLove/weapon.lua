@@ -12,6 +12,8 @@ setmetatable(Weapon, {
 
 local WEAPON_IMAGE = "img/misc/spr_smoke_2.png"
 
+---
+--
 function Weapon:_init(x, y)
   Item:_init(x, y)
 
@@ -21,14 +23,20 @@ function Weapon:_init(x, y)
   self.collected = false
 end
 
+---
+--
 function Weapon:update(dt)
   self.sprite:update(dt)
 end
 
+---
+--
 function Weapon:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+---
+--
 function Weapon:drawDebug()
   love.graphics.setColor(255, 0, 0, 50)
   love.graphics.rectangle(
@@ -49,6 +57,8 @@ function Weapon:drawDebug()
   love.graphics.setColor(255, 255, 255)
 end
 
+---
+--
 function Weapon:isDead()
   if self.collected then
     return true
@@ -56,12 +66,16 @@ function Weapon:isDead()
   return false
 end
 
+---
+--
 function Weapon:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
   end
 end
 
+---
+-- 
 function Weapon:is(type)
   return type == self.type
 end

@@ -12,6 +12,8 @@ setmetatable(Ladder, {
 
 local LADDER_IMAGE = "img/ladder.png"
 
+---
+--
 function Ladder:_init(x, y)
   GameObject:_init(x, y)
 
@@ -20,25 +22,36 @@ function Ladder:_init(x, y)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
+---
+--
 function Ladder:update(dt)
   self.sprite:update(dt)
 end
 
+---
+--
 function Ladder:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+---
+--
 function Ladder:drawDebug()
 end
 
+---
+--
 function Ladder:isDead()
   return false
 end
 
+---
+--
 function Ladder:notifyCollision(other)
-  
 end
 
+---
+--
 function Ladder:is(type)
   return type == self.type
 end

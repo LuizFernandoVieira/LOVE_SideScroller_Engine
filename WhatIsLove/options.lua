@@ -11,13 +11,19 @@ local OPTIONS_STRINGS = {
   "BACK"
 }
 
+---
+--
 function optionsState:init()
   selection = 1
 end
 
+---
+--
 function optionsState:update(dt)
 end
 
+---
+--
 function optionsState:draw()
   love.graphics.push()
 
@@ -48,6 +54,8 @@ function optionsState:draw()
   love.graphics.setScissor()
 end
 
+---
+--
 function optionsState:keypressed(key)
   if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
@@ -92,6 +100,8 @@ function optionsState:keypressed(key)
   end
 end
 
+---
+--
 function optionsState:gamepadpressed(joystick, button)
   if button == "dpdown" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)

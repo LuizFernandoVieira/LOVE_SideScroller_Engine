@@ -12,6 +12,8 @@ setmetatable(Antidote, {
 
 local ANTIDOTE_IMAGE = "img/misc/spr_cannondown_0.png"
 
+---
+-- 
 function Antidote:_init(x, y)
   Item:_init(x, y)
 
@@ -21,14 +23,20 @@ function Antidote:_init(x, y)
   self.collected = false
 end
 
+---
+--
 function Antidote:update(dt)
   self.sprite:update(dt)
 end
 
+---
+--
 function Antidote:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
+---
+--
 function Antidote:drawDebug()
   love.graphics.setColor(255, 0, 0, 50)
   love.graphics.rectangle(
@@ -47,6 +55,8 @@ function Antidote:drawDebug()
   love.graphics.setColor(255, 255, 255)
 end
 
+---
+--
 function Antidote:isDead()
   if self.collected then
     return true
@@ -54,12 +64,16 @@ function Antidote:isDead()
   return false
 end
 
+---
+--
 function Antidote:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
   end
 end
 
+---
+--
 function Antidote:is(type)
   return type == self.type
 end

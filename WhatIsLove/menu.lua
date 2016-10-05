@@ -8,6 +8,8 @@ local MENU_STRINGS = {
   "EXIT"
 }
 
+---
+--
 function menuState:init()
   love.graphics.setBackgroundColor(184,199,145)
   selection = 1
@@ -17,9 +19,13 @@ function menuState:init()
   end
 end
 
+---
+--
 function menuState:update()
 end
 
+---
+--
 function menuState:draw()
   love.graphics.push()
 
@@ -33,11 +39,13 @@ function menuState:draw()
 		end
 		love.graphics.print(MENU_STRINGS[i], MENU_STRING_X, 86+i*13)
 	end
-  
+
   love.graphics.pop()
   love.graphics.setScissor()
 end
 
+---
+--
 function menuState:keypressed(key)
   if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
@@ -56,6 +64,8 @@ function menuState:keypressed(key)
   end
 end
 
+---
+-- 
 function menuState:gamepadpressed(joystick, button)
   if button == "dpdown" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)

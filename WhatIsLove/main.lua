@@ -52,6 +52,8 @@ WIDTH = 256
 HEIGHT = 200
 debug = false
 
+---
+--
 function love.load(arg)
   loadDebug()
   loadConfig()
@@ -61,6 +63,8 @@ function love.load(arg)
   Gamestate.switch(gameState)
 end
 
+---
+--
 function loadDebug()
   if arg[2] == "debug" or
      arg[2] == "Debug" or
@@ -70,6 +74,8 @@ function loadDebug()
   end
 end
 
+---
+--
 function love.touchpressed(id, x, y, dx, dy, pressure)
   if love.system.getOS() == "Android" then
     -- clicou esquerda
@@ -89,6 +95,8 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
   end
 end
 
+---
+--
 function love.touchreleased(id, x, y, dx, dy, pressure)
   if love.system.getOS() == "Android" then
     player:setMovingLeft(false)
@@ -96,6 +104,8 @@ function love.touchreleased(id, x, y, dx, dy, pressure)
   end
 end
 
+---
+-- 
 function love.draw()
   if love.system.getOS() == "Android" then
     love.graphics.circle("fill", 410, 635, 100, 100)

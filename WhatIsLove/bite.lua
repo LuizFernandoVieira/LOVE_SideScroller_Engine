@@ -10,6 +10,8 @@ setmetatable(Bite, {
   end,
 })
 
+local BITE_IMAGE = "img/Bite.png"
+
 --- Initializes a bite.
 -- Bite's are created every time a infected player tries to attack.
 -- @param x Position in the x axis that this object will be placed
@@ -20,6 +22,7 @@ function Bite:_init(x, y, w, h)
   GameObject:_init(x, y)
 
   self.type         = "Bite"
+  self.sprite       = Sprite:_init(BITE_IMAGE, 3, 0)
   self.box          = Rect(x, y, w, h)
 end
 
@@ -27,11 +30,15 @@ end
 -- Called once once each love.update.
 -- @param dt Time passed since last update
 function Bite:update(dt)
+  print("bbbbbb")
+  self.sprite:update(dt)
 end
 
 --- Draws the antidote object.
 -- Called once once each love.draw.
 function Bite:draw()
+  print("aeaseaeaea")
+  self.sprite:draw(self.box.x, self.box.y)
 end
 
 --- Draws the bite outline and collision area.

@@ -77,6 +77,7 @@ function gameState:update(dt)
   updateGameObjects(dt, bullets)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
+  updateGameObjects(dt, bite)
 
   checkCollision()
   deleteDeadEntities()

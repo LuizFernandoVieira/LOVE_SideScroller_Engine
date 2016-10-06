@@ -130,9 +130,8 @@ function Player:updateWalking(dt)
     if self.infected then
       self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
     else
-      -- local vel = handleCollision(x, y, vel);
-  		-- self.box.x = self.box.x + vel
-      self.box.x = self.box.x + self.velocity
+      local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
+      self.box.x = self.box.x + vel
     end
     self.state = PLAYERSTATE_WALKING
   elseif self.moveLeft then
@@ -140,6 +139,8 @@ function Player:updateWalking(dt)
     if self.infected then
       self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
     else
+      -- local vel = handleCollision(x, y, self.velocity, dt)
+      -- self.box.x = self.box.x - vel
       self.box.x = self.box.x - self.velocity
     end
     self.state = PLAYERSTATE_WALKING

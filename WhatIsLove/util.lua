@@ -45,9 +45,42 @@ end
 -- @param y
 -- @param vel
 -- @return correctPosition
-function handleCollision(x, y, vel)
+function handleCollision(x, y, vel, dt)
+  for _,t in ipairs(tiles) do
 
+    local nextBox = {}
+    nextBox = Rect(player.box.x + player.velocity, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+
+    if isColliding(nextBox, t.box) then
+      print("IA COLIDIR")
+      for vx=0, vel, 0.1 do
+        local auxX = x + vel;
+        if isColliding(
+          Rect:_init(auxX,player.box.y,player.sprite:getWidth(), player.sprite:getHeight()),
+          t.box) then
+          return math.max(vx-0.1,0)
+        end
+      end
+      return 0
+    end
+    return vel
+  end
 end
+--
+-- function checkCOllision(x,y,vel,dt)
+-- 	for _,t in pairs(tile) do
+-- 		if inScreen() then
+-- 			if iamcolliding(t,x,y) do
+-- 				for (vx = 0,vel,0.1) do
+-- 					local auxX = x+vx*dt;
+-- 					if iamNotcolliding() then
+-- 						return math.max(vel-0.1,0)
+-- 					end
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- end
 
 --- Checks collision for all objects in the game.
 -- Notify those objects that collided.

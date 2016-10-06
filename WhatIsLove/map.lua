@@ -5,7 +5,7 @@ Map.__index = Map
 function Map:_init()
     local self = setmetatable({}, Map)
 
-    local file          = love.filesystem.load("maps/test_map.lua")()
+    local file          = love.filesystem.load("maps/first_map.lua")()
     local x             = file.x
     local y             = file.y
     local width         = file.width
@@ -21,19 +21,20 @@ function Map:_init()
     for j=0, 1-1 do
       for i=0, tileDiversity-1 do
         tileQuads[i+(j*5)] = love.graphics.newQuad(
-          math.floor(i * tileSize),
-          math.floor(j * tileSize),
-          math.floor(tileSize),
-          math.floor(tileSize),
-          math.floor(tileset:getWidth()),
-          math.floor(tileset:getHeight())
+          i * tileSize,
+          j * tileSize,
+          tileSize,
+          tileSize,
+          tileset:getWidth(),
+          tileset:getHeight()
         )
       end
     end
 
     for j=0, height-1 do
       for i=0, width-1 do
-        if data[j+y][i+x] == 01 then
+        if data[j+y][i+x] == 01
+        or data[j+y][i+x] == 02 then
           table.insert(tiles, Tile(i * tileSize, j * tileSize))
         end
       end

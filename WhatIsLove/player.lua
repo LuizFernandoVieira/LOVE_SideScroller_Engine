@@ -12,9 +12,10 @@ setmetatable(Player, {
 
 local PLAYER_TYPE           = "Player"
 
-local PLAYER_ANIM_IDLE      = "img/Player_NormalV2.png"
-local PLAYER_ANIM_INF_IDLE  = "img/Player_RaivosoV2.png"
-local PLAYER_ANIM_WALKING   = "img/PlayerNormal_Walking.png"
+local PLAYER_ANIM_IDLE        = "img/Player_NormalV2.png"
+local PLAYER_ANIM_INF_IDLE    = "img/Player_RaivosoV2.png"
+local PLAYER_ANIM_WALKING     = "img/PlayerNormal_Walking.png"
+local PLAYER_ANIM_INF_WALKING = "img/PlayerAngry_Walking.png"
 
 local PLAYER_VELOCITY       = 1
 local PLAYER_ITEMS          = 1
@@ -65,7 +66,7 @@ function Player:_init(x, y)
   self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
   self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING, 4, 0.1)
-  self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_WALKING, 3, 0.15)
   self.animJumping         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
   self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
@@ -128,10 +129,15 @@ end
 function Player:updateWalking(dt)
   if self.moveRight and self.moveLeft then
     self.state = PLAYERSTATE_IDLE
-    self.sprite = self.animIdle
+    if self.infected then
+      self.sprite = self.animIdleInfected
+    else
+      self.sprite = self.animIdle
+    end
   elseif self.moveRight then
     self.facingRight = true
     if self.infected then
+      self.sprite = self.animWalkingInfected
       self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
     else
       self.sprite = self.animWalking
@@ -141,18 +147,23 @@ function Player:updateWalking(dt)
     self.state = PLAYERSTATE_WALKING
   elseif self.moveLeft then
     self.facingRight = false
-    self.sprite = self.animWalking
     if self.infected then
+        self.sprite = self.animWalkingInfected
       self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
     else
       -- local vel = handleCollision(x, y, self.velocity, dt)
       -- self.box.x = self.box.x - vel
+      self.sprite = self.animWalking
       self.box.x = self.box.x - self.velocity
     end
     self.state = PLAYERSTATE_WALKING
   else
     self.state = PLAYERSTATE_IDLE
-    self.sprite = self.animIdle
+    if self.infected then
+      self.sprite = self.animIdleInfected
+    else
+      self.sprite = self.animIdle
+    end
   end
 end
 
@@ -283,10 +294,10 @@ end
 -- Called once once each love.draw if debug parameter passed.
 function Player:drawDebug()
   local lg = love.graphics
-  local x  = self.x
-  local y  = self.y
-  local w  = self.w
-  local h  = self.h
+  local x  = self.box.x
+  local y  = self.box.y
+  local w  = self.sprite:getWidth()
+  local h  = self.sprite:getHeight()
   lg.setColor(0, 200, 255, 50)
   lg.rectangle("fill", x, y, w, h)
   lg.setColor(0, 200, 255)

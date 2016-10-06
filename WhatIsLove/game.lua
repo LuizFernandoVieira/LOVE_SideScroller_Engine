@@ -21,6 +21,7 @@ function gameState:init()
 
   loadEnemies()
   loadItems()
+  loadBackgroundObjects()
   loadAudio()
 
   map = Map:_init()
@@ -33,7 +34,7 @@ function loadEnemies()
   table.insert(enemies, Enemy(200, 0))
 end
 
---- Initializes items
+--- Initializes items.
 function loadItems()
   table.insert(items, Item(20, 150))
   table.insert(items, Item(0, 150))
@@ -44,12 +45,16 @@ function loadItems()
   table.insert(weapons, Lasergun(150, 100))
 end
 
---- Initializes audio
+-- Initializes background objects.
+function loadBackgroundObjects()
+end
+
+--- Initializes audio.
 function loadAudio()
   -- sound:play()
 end
 
---- Initializes particles
+--- Initializes particles.
 function loadParticles()
   local img = love.graphics.newImage('img/rain.png')
   psystem = love.graphics.newParticleSystem(img, 32)
@@ -78,7 +83,6 @@ function gameState:update(dt)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
   updateGameObjects(dt, bite)
-
   checkCollision()
   deleteDeadEntities()
 end

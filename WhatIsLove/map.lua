@@ -1,8 +1,7 @@
 Map         = {}
 Map.__index = Map
 
----
---
+--- Initializes map.
 function Map:_init()
     local self = setmetatable({}, Map)
 
@@ -22,12 +21,12 @@ function Map:_init()
     for j=0, 1-1 do
       for i=0, tileDiversity-1 do
         tileQuads[i+(j*5)] = love.graphics.newQuad(
-          i * tileSize,
-          j * tileSize,
-          tileSize,
-          tileSize,
-          tileset:getWidth(),
-          tileset:getHeight()
+          math.floor(i * tileSize),
+          math.floor(j * tileSize),
+          math.floor(tileSize),
+          math.floor(tileSize),
+          math.floor(tileset:getWidth()),
+          math.floor(tileset:getHeight())
         )
       end
     end

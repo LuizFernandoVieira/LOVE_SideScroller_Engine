@@ -13,21 +13,20 @@ psystem = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 sound = love.audio.newSource("audio/teste.mp3")
 
---- Initializes objects that belong to the first level
--- Called once on game state change
+--- Initializes objects that belong to the first level.
+-- Called once on game state change.
 function gameState:init()
   player = Player:_init(132, 116)
   camera = Camera(player.box.x, player.box.y)
 
   loadEnemies()
   loadItems()
+  loadAudio()
 
   map = Map:_init()
-  -- sound:play()
 end
 
---- Initializes enemies
---
+--- Initializes enemies.
 function loadEnemies()
   table.insert(enemies, Enemy(70, 0))
   table.insert(enemies, Enemy(150, 0))
@@ -35,7 +34,6 @@ function loadEnemies()
 end
 
 --- Initializes items
---
 function loadItems()
   table.insert(items, Item(20, 150))
   table.insert(items, Item(0, 150))
@@ -46,8 +44,12 @@ function loadItems()
   table.insert(weapons, Lasergun(150, 100))
 end
 
+--- Initializes audio
+function loadAudio()
+  -- sound:play()
+end
+
 --- Initializes particles
---
 function loadParticles()
   local img = love.graphics.newImage('img/rain.png')
   psystem = love.graphics.newParticleSystem(img, 32)
@@ -57,8 +59,8 @@ function loadParticles()
   psystem:setLinearAcceleration(-1000, 0, 1000, 1000)
 end
 
---- Updates all entities that belong to the first level
--- Called once once each love.update
+--- Updates all entities that belong to the first level.
+-- Called once once each love.update.
 -- @param dt Time passed since last update
 function gameState:update(dt)
   handleInputs()
@@ -80,16 +82,17 @@ function gameState:update(dt)
   deleteDeadEntities()
 end
 
----
---
+--- Updates gameObjects passed as a parameter.
+-- Called each love.update for each entity type.
+-- @param dt Time passed since last update
+-- @param gameObjects List of game objects
 function updateGameObjects(dt, gameObjects)
   for _,v in ipairs(gameObjects) do
     v:update(dt)
   end
 end
 
----
---
+--- Deletes entities marked as dead.
 function deleteDeadEntities()
   deleteDead(enemies)
   deleteDead(items)
@@ -97,8 +100,8 @@ function deleteDeadEntities()
   deleteDead(weapons)
 end
 
----
---
+--- Delete game object if that object is dead.
+-- @param gameObject A game object
 function deleteDead(gameObject)
   local i=1
   while i <= #gameObject do
@@ -110,23 +113,17 @@ function deleteDead(gameObject)
   end
 end
 
---- Captures all inputs that depend on the user pressing a key
--- Called once once each love.update
+--- Captures all inputs that depend on the user pressing a key.
+-- Called once once each love.update.
 function handleInputs()
-  if love.keyboard.isDown('w') then
-    player:setMovingUp(true)
-  end
-  if love.keyboard.isDown('d') then
-    player:setMovingRight(true)
-  end
-  if love.keyboard.isDown('s') then
-    player:setMovingDown(true)
-  end
-  if love.keyboard.isDown('a') then
-    player:setMovingLeft(true)
-  end
+  local lk = love.keyboard
 
-  if love.keyboard.isDown("space") then
+  if lk.isDown('w') then player:setMovingUp(true)    end
+  if lk.isDown('d') then player:setMovingRight(true) end
+  if lk.isDown('s') then player:setMovingDown(true)  end
+  if lk.isDown('a') then player:setMovingLeft(true)  end
+
+  if lk.isDown("space") then
     if player.weapon == 1 then
       player:shot()
     end
@@ -144,6 +141,7 @@ function handleInputs()
          joystick:getGamepadAxis("leftx") < -0.2 then
     player:setMovingLeft(true)
   end
+
   if joystick:isGamepadDown("x") then
     if player.weapon == 1 then
       player:shot()
@@ -151,8 +149,8 @@ function handleInputs()
   end
 end
 
----
---
+--- Draws all game objects that belong to the first level.
+-- Called once once each love.draw.
 function gameState:draw()
   camera:attach(config.scale)
 
@@ -177,9 +175,10 @@ function gameState:draw()
     local touches = love.touch.getTouches()
     for i, id in ipairs(touches) do
         local x, y = love.touch.getPosition(id)
-        love.graphics.setColor(0, 255, 0)
-        love.graphics.circle("fill", x, y, 20)
-        love.graphics.setColor(255, 255, 255)
+        local lg = love.graphics
+        lg.setColor(0, 255, 0)
+        lg.circle("fill", x, y, 20)
+        lg.setColor(255, 255, 255)
     end
       drawMobileControler()
   end
@@ -194,16 +193,17 @@ function gameState:draw()
   love.graphics.setScissor()
 end
 
----
---
+--- Draws game objects received as parameter.
+-- Called one for each type of object.
+-- @param gameObjects List of game objects
 function drawGameObjects(gameObjects)
   for _,v in ipairs(gameObjects) do
     v:draw()
   end
 end
 
----
---
+--- Draws all game objects outline and collision area.
+-- Called once once each love.draw if debug parameter passed.
 function drawDebug()
   if debug then
     player:drawDebug()
@@ -225,44 +225,35 @@ function drawDebug()
   end
 end
 
----
---
+--- Draws a controler on mobile devices
+-- so the player can see where he should
+-- click to activate ingame player actions.
 function drawMobileControler()
   love.graphics.setColor( 255, 255, 255, 50 )
   love.graphics.draw(mobileCntrl, 25, 500, 0, 1, 1)
   love.graphics.setColor( 255, 255, 255, 255 )
 end
 
----
---
+--- Draws all graphics that act as a head-up display.
 function drawHUD()
   love.graphics.setFont(font.bold)
   love.graphics.setColor(16,12,9)
   love.graphics.print("ITEMS: " .. player.items, 170, 8)
   love.graphics.print("WEAPON: " .. "1", 170, 20)
-  -- love.graphics.print("HEALTH: " .. player.health, 170, 20)
   love.graphics.setColor(255,255,255)
 end
 
----
---
+--- Checks for key release events.
+-- @param key Keyboard key that has been released
 function gameState:keyreleased(key)
-  if key == 'w' then
-    player:setMovingUp(false)
-  end
-  if key == 'd' then
-    player:setMovingRight(false)
-  end
-  if key == 's' then
-    player:setMovingDown(false)
-  end
-  if key == 'a' then
-    player:setMovingLeft(false)
-  end
+  if key == 'w' then player:setMovingUp(false)    end
+  if key == 'd' then player:setMovingRight(false) end
+  if key == 's' then player:setMovingDown(false)  end
+  if key == 'a' then player:setMovingLeft(false)  end
 end
 
----
---
+--- Checks for key press events.
+-- @param key Keyboard key that has been pressed
 function gameState:keypressed(key)
   if key == "w" then
     player:jump()
@@ -278,9 +269,11 @@ function gameState:keypressed(key)
 
   if key == "left" or key == "right" then
     if key == "left" then
-      config.scale = math.max(math.min(config.scale - 1, 4), 1)
+      local min = math.min(config.scale - 1, 4)
+      config.scale = math.max(min, 1)
     elseif key == "right" then
-      config.scale = math.max(math.min(config.scale + 1, 4), 1)
+      local min = math.min(config.scale + 1, 4)
+      config.scale = math.max(min, 1)
     end
     setMode()
   end
@@ -290,21 +283,14 @@ function gameState:keypressed(key)
   end
 end
 
----
---
+--- Checks for gamepad release events.
+-- @param joystick
+-- @param button
 function gameState:gamepadreleased(joystick, button)
-  if button == 'dpup' then
-    player:setMovingUp(false)
-  end
-  if button == 'dpright' then
-    player:setMovingRight(false)
-  end
-  if button == 'dpdown' then
-    player:setMovingDown(false)
-  end
-  if button == 'dpleft' then
-    player:setMovingLeft(false)
-  end
+  if button == 'dpup' then player:setMovingUp(false)       end
+  if button == 'dpright' then player:setMovingRight(false) end
+  if button == 'dpdown' then player:setMovingDown(false)   end
+  if button == 'dpleft' then player:setMovingLeft(false)   end
 
   if button == 'leftx' then
     player:setMovingRight(false)
@@ -312,8 +298,9 @@ function gameState:gamepadreleased(joystick, button)
   end
 end
 
----
---
+--- Checks for gamepad press events.
+-- @param joystick
+-- @param button
 function gameState:gamepadpressed(joystick, button)
   if button == "a" then
     if player.state == PLAYERSTATE_CLIMBING then
@@ -322,11 +309,6 @@ function gameState:gamepadpressed(joystick, button)
     player:jump()
   end
 
-  if button == "x" then
-    player:shot()
-  end
-
-  if button == "b" then
-    player:dash()
-  end
+  if button == "x" then player:shot() end
+  if button == "b" then player:dash() end
 end

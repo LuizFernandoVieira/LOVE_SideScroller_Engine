@@ -1,8 +1,7 @@
 Sprite         = {}
 Sprite.__index = Sprite
 
----
---
+--- Initializes sprite.
 -- @param image
 -- @param frameCout
 -- @param frameTime

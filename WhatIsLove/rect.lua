@@ -9,12 +9,11 @@ setmetatable(Rect, {
   end,
 })
 
----
---
--- @param x
--- @param y
--- @param w
--- @param h
+--- Initializes rect.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
+-- @param w Width of the rect
+-- @param h Height of the rect
 function Rect:_init(x, y, w, h)
   self.x = x
   self.y = y
@@ -22,14 +21,13 @@ function Rect:_init(x, y, w, h)
   self.h = h
 end
 
----
---
+--- Gets the center of this rectangle.
+-- @return table
 function Rect:center()
   return Vector(self.x + self.w/2, self.y + self.h/2)
 end
 
----
---
+--- Checks if a vector is inside this rectangle.
 -- @param vector
 -- @return boolean
 function Rect:isInside(vector)

@@ -12,10 +12,9 @@ setmetatable(Item, {
 
 local ITEM_IMAGE = "img/misc/spr_star_0.png"
 
----
---
--- @param x
--- @param y
+--- Initializes item.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Item:_init(x, y)
   GameObject:_init(x, y)
 
@@ -25,21 +24,21 @@ function Item:_init(x, y)
   self.collected = false
 end
 
----
---
+--- Updates the item object.
+-- Called once once each love.update.
 -- @param dt Time passed since last update
 function Item:update(dt)
   self.sprite:update(dt)
 end
 
----
---
+--- Draws the item object.
+-- Called once once each love.draw.
 function Item:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
----
---
+--- Draws the item outline and collision area.
+-- Called once once each love.draw if debug parameter passed.
 function Item:drawDebug()
   local lg = love.graphics
   local x  = self.box.x
@@ -53,8 +52,8 @@ function Item:drawDebug()
   lg.setColor(255, 255, 255)
 end
 
----
---
+--- Checks if item has been collected.
+-- Once the item has been collected it shoud be destroyed.
 -- @return boolean
 function Item:isDead()
   if self.collected then
@@ -63,8 +62,9 @@ function Item:isDead()
   return false
 end
 
----
---
+--- Notifies the item that a collision involving himself had ocurred.
+-- The item (subject) had previously subscribed
+-- to the collision system (observer).
 -- @param other
 function Item:notifyCollision(other)
   if other.type == "Player" then
@@ -72,8 +72,7 @@ function Item:notifyCollision(other)
   end
 end
 
----
---
+--- Specifies the type of that object.
 -- @param type
 -- @return boolean
 function Item:is(type)

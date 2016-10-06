@@ -34,10 +34,9 @@ local INFECTED_BONUS_VELOCITY   = 2.5
 local INFECTED_BONUS_GRAVITY    = 3
 local INFECTED_BONUS_JUMP_POWER = 2.2
 
----
---
--- @param x
--- @param y
+--- Initializes player.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Player:_init(x, y)
   GameActor:_init(x, y)
 
@@ -83,8 +82,8 @@ function Player:_init(x, y)
   return self
 end
 
----
---
+--- Updates the player object.
+-- Called once once each love.update.
 -- @param dt Time passed since last update
 function Player:update(dt)
   self.sprite:update(dt)
@@ -111,16 +110,17 @@ function Player:update(dt)
   -- DEAD STATE
   elseif self.state == PLAYERSTATE_DEAD then
   end
+
+  self.box.x = math.floor(self.box.x)
+  self.box.y = math.floor(self.box.y)
 end
 
----
---
+--- Updates the player object when his state is idle.
 -- @param dt Time passed since last update
 function Player:updateIdle(dt)
 end
 
----
---
+--- Updates the player object when his state is walking.
 -- @param dt Time passed since last update
 function Player:updateWalking(dt)
   if self.moveRight and self.moveLeft then
@@ -130,6 +130,8 @@ function Player:updateWalking(dt)
     if self.infected then
       self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
     else
+      -- local vel = handleCollision(x, y, vel);
+  		-- self.box.x = self.box.x + vel
       self.box.x = self.box.x + self.velocity
     end
     self.state = PLAYERSTATE_WALKING
@@ -146,8 +148,7 @@ function Player:updateWalking(dt)
   end
 end
 
----
---
+--- Updates the player object when he is not climbing.
 -- @param dt Time passed since last update
 function Player:updateGravity(dt)
   if self.infected then
@@ -158,8 +159,7 @@ function Player:updateGravity(dt)
   self.box.y = self.box.y + self.yspeed * dt
 end
 
----
---
+--- Updates the player object when his state is dashing.
 -- @param dt Time passed since last update
 function Player:updateDashing(dt)
   self.dashCooldown = self.dashCooldown - dt * 200
@@ -171,8 +171,7 @@ function Player:updateDashing(dt)
   end
 end
 
----
---
+--- Checks if the player started climbing.
 -- @param dt Time passed since last update
 function Player:checkIfStartedClimbing(dt)
   if self.moveUp then
@@ -184,8 +183,7 @@ function Player:checkIfStartedClimbing(dt)
   end
 end
 
----
---
+--- Updates the player when his state is climbing.
 -- @param dt Time passed since last update
 function Player:updateClimbing(dt)
   if self.moveUp then
@@ -200,14 +198,13 @@ function Player:updateClimbing(dt)
   end
 end
 
----
---
+--- Updates the player when his state is dead.
 -- @param dt Time passed since last update
 function Player:updateDead(dt)
 end
 
----
---
+--- Apply impulse in the y axis.
+-- Player can't jump on air.
 function Player:jump()
   if self.state == PLAYERSTATE_CLIMBING then
     self:leaveLadder()
@@ -221,8 +218,8 @@ function Player:jump()
   end
 end
 
----
---
+--- Fires a projectile depending on the
+-- current weapon that the player is using.
 function Player:shot()
   if self.infected then
     table.insert(bite, Bite(self.box.x-8, self.box.y-8, 32, 32))
@@ -249,8 +246,9 @@ function Player:shot()
   end
 end
 
----
---
+--- Apply impulse in the x axis.
+-- You lose control of the player for
+-- the full duration of the dash.
 function Player:dash()
   if self.dashCooldown <= 0 then
     self.state = PLAYERSTATE_DASHING
@@ -263,19 +261,18 @@ function Player:dash()
   end
 end
 
----
---
+--- Makes the player leave the ladder.
 function Player:leaveLadder()
 end
 
----
---
+--- Draws the player object.
+-- Called once once each love.draw.
 function Player:draw()
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
----
---
+--- Draws the player outline and collision area.
+-- Called once once each love.draw if debug parameter passed.
 function Player:drawDebug()
   local lg = love.graphics
   local x  = self.x
@@ -289,13 +286,12 @@ function Player:drawDebug()
   lg.setColor(255, 255, 255)
 end
 
----
---
+--- Checks if player health is more than zero.
+-- @return boolean
 function Player:isDead()
 end
 
----
---
+--- Checks horizontal collision
 -- @param player
 -- @param other
 -- @return boolean
@@ -312,8 +308,9 @@ function colidiuHorizontalmente(player, other)
   return false
 end
 
----
---
+--- Notifies the player that a collision involving himself had ocurred.
+-- The player (subject) had previously subscribed
+-- to the collision system (observer).
 -- @param other
 function Player:notifyCollision(other)
   if other.type == "Tile" then
@@ -353,8 +350,7 @@ function Player:notifyCollision(other)
   end
 end
 
----
---
+--- Specifies the type of that object.
 -- @param type
 -- @return boolean
 function Player:is(type)

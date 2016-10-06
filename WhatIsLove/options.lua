@@ -11,52 +11,51 @@ local OPTIONS_STRINGS = {
   "BACK"
 }
 
----
---
+--- Initializes the options state.
 function optionsState:init()
   selection = 1
 end
 
----
---
+--- Updates the options state.
+-- Called once once each love.update.
 -- @param dt Time passed since last update
 function optionsState:update(dt)
 end
 
----
---
+--- Draws all gui that belong to the options state screen.
+-- Called once once each love.draw.
 function optionsState:draw()
-  love.graphics.push()
+  local lg = love.graphics
+  lg.push()
 
   setZoom()
-  love.graphics.scale(config.scale)
+  lg.scale(config.scale)
 
-  love.graphics.setFont(font.bold)
+  lg.setFont(font.bold)
 
-  love.graphics.print("SCALE:", 65, 63)
-  love.graphics.print(config.scale, 167, 63)
+  lg.print("SCALE:", 65, 63)
+  lg.print(config.scale, 167, 63)
 
-	love.graphics.print("FULLSCREEN:", 65, 76)
-	if config.fullscreen == 0 then		  love.graphics.print("OFF", 167, 76)
-	elseif config.fullscreen == 1 then	love.graphics.print("FILL", 167, 76)
-	elseif config.fullscreen == 2 then	love.graphics.print("ZOOM", 167, 76)
-	else								                love.graphics.print("SCALE", 167, 76) end
+	lg.print("FULLSCREEN:", 65, 76)
+	if     config.fullscreen == 0 then lg.print("OFF", 167, 76)
+	elseif config.fullscreen == 1 then lg.print("FILL", 167, 76)
+	elseif config.fullscreen == 2 then lg.print("ZOOM", 167, 76)
+	else								               lg.print("SCALE", 167, 76) end
 
-	love.graphics.print("VSYNC:", 65, 89)
-  love.graphics.print(config.vsync and "ON" or "OFF", 167, 89)
+	lg.print("VSYNC:", 65, 89)
+  lg.print(config.vsync and "ON" or "OFF", 167, 89)
 
-	love.graphics.print("SOUND VOL:", 65, 102)
-	love.graphics.print("MUSIC VOL:", 65, 115)
-	love.graphics.print("BACK", 65, 128)
+	lg.print("SOUND VOL:", 65, 102)
+	lg.print("MUSIC VOL:", 65, 115)
+	lg.print("BACK", 65, 128)
 
-	love.graphics.print(">", 52, 49+selection*13)
+	lg.print(">", 52, 49+selection*13)
 
-  love.graphics.pop()
-  love.graphics.setScissor()
+  lg.pop()
+  lg.setScissor()
 end
 
----
---
+--- Checks for keyboard presses.
 -- @param key
 function optionsState:keypressed(key)
   if key == "down" or key == "s" then
@@ -68,9 +67,11 @@ function optionsState:keypressed(key)
   if key == "left" or key == "right"  or key == "a" or key == "d" then
     if selection == 1 then
       if key == "left" or key == "a" then
-        config.scale = math.max(math.min(config.scale - 1, NUMBER_OF_OPTIONS), 1)
+        local min = math.min(config.scale - 1, NUMBER_OF_OPTIONS)
+        config.scale = math.max(min, 1)
       elseif key == "right" or key == "d" then
-        config.scale = math.max(math.min(config.scale + 1, NUMBER_OF_OPTIONS), 1)
+        local min = math.min(config.scale + 1, NUMBER_OF_OPTIONS)
+        config.scale = math.max(min, 1)
       end
       setMode()
     elseif selection == 2 then
@@ -102,8 +103,7 @@ function optionsState:keypressed(key)
   end
 end
 
----
---
+--- Checks for gamepad presses.
 -- @param joystick
 -- @param button
 function optionsState:gamepadpressed(joystick, button)
@@ -116,9 +116,11 @@ function optionsState:gamepadpressed(joystick, button)
   if button == "dpleft" or button == "dpright" then
     if selection == 1 then
       if button == "dpleft" then
-        config.scale = math.max(math.min(config.scale - 1, 4), 1)
+        local min = math.min(config.scale - 1, 4)
+        config.scale = math.max(min, 1)
       elseif button == "dpright" then
-        config.scale = math.max(math.min(config.scale + 1, 4), 1)
+        local min = math.min(config.scale + 1, 4)
+        config.scale = math.max(min, 1)
       end
       setMode()
     elseif selection == 2 then

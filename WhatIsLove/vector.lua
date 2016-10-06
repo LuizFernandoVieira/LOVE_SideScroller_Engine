@@ -11,17 +11,15 @@ setmetatable(Vector, {
 
 PI = 3.14
 
----
---
--- @param x
--- @param y
+--- Initializes vector.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Vector:_init(x, y)
   self.x = x
   self.y = y
 end
 
----
---
+--- Rotates a vector.
 -- @param angle
 function Vector:rotate(angle)
   angle = angle * PI / 180

@@ -11,7 +11,7 @@ setmetatable(Enemy, {
 })
 
 local ENEMY_TYPE         = "Enemy"
-local ENEMY_IMAGE        = "img/Player_Raiva.png" --"img/sensei/spr_boss_0.png"
+local ENEMY_IMAGE        = "img/Player_Raiva.png"
 local ENEMY_VELOCITY     = 1
 local ENEMY_HEALTH       = 1
 local ENEMY_GRAVITY      = 800
@@ -19,10 +19,9 @@ local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
 local ENEMYSTATE_WALKING = 1
 
----
---
--- @param x
--- @param y
+--- Initializes a enemy.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Enemy:_init(x, y)
   GameActor:_init(x, y)
 
@@ -40,8 +39,8 @@ function Enemy:_init(x, y)
   self.lastY       = y
 end
 
---- Updates the enemy object
--- Called once once each love.update
+--- Updates the enemy object.
+-- Called once once each love.update.
 -- @param dt Time passed since last update
 function Enemy:update(dt)
   self.lastY = self.box.y
@@ -52,14 +51,14 @@ function Enemy:update(dt)
   self.sprite:update(dt)
 end
 
----
---
+--- Draws the enemy object.
+-- Called once once each love.draw.
 function Enemy:draw()
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
----
---
+--- Draws the enemy outline and collision area.
+-- Called once once each love.draw if debug parameter passed.
 function Enemy:drawDebug()
   local lg = love.graphics
   local x  = self.box.x
@@ -73,8 +72,8 @@ function Enemy:drawDebug()
   lg.setColor(255, 255, 255)
 end
 
----
---
+--- Check if enemy still have health.
+-- If not it should be destroyed.
 -- @return boolean
 function Enemy:isDead()
   if self.health == 0 then
@@ -84,8 +83,9 @@ function Enemy:isDead()
   end
 end
 
----
---
+--- Notifies the enemy that a collision involving himself had ocurred.
+-- The enemy (subject) had previously subscribed
+-- to the collision system (observer).
 -- @param other
 function Enemy:notifyCollision(other)
   if other.type == "Tile" then
@@ -99,8 +99,7 @@ function Enemy:notifyCollision(other)
   end
 end
 
----
---
+--- Specifies the type of that object.
 -- @param type
 -- @return boolean
 function Enemy:is(type)

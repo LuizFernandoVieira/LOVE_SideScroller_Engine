@@ -10,10 +10,9 @@ setmetatable(Tile, {
   end,
 })
 
----
---
--- @param x
--- @param y
+--- Initializes tile.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Tile:_init(x, y)
   GameActor:_init(x, y)
 
@@ -49,18 +48,19 @@ end
 
 ---
 --
-function Item:isDead()
+function Tile:isDead()
 end
 
----
---
-function Item:notifyCollision()
+--- Notifies the tile that a collision involving himself had ocurred.
+-- The tile (subject) had previously subscribed
+-- to the collision system (observer).
+-- @param other
+function Tile:notifyCollision(other)
 end
 
----
---
+--- Specifies the type of that object.
 -- @param type
 -- @return boolean
-function Item:is(type)
+function Tile:is(type)
   return type == self.type
 end

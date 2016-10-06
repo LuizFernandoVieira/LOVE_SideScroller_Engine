@@ -8,8 +8,7 @@ local MENU_STRINGS = {
   "EXIT"
 }
 
----
---
+--- Initializes the menu state.
 function menuState:init()
   love.graphics.setBackgroundColor(184,199,145)
   selection = 1
@@ -19,13 +18,14 @@ function menuState:init()
   end
 end
 
----
---
-function menuState:update()
+--- Updates the menu state.
+-- Called once once each love.update.
+-- @param dt Time passed since last update
+function menuState:update(dt)
 end
 
----
---
+--- Draws all gui that belong to the menu state screen.
+-- Called once once each love.draw.
 function menuState:draw()
   love.graphics.push()
 
@@ -44,8 +44,7 @@ function menuState:draw()
   love.graphics.setScissor()
 end
 
----
---
+--- Checks for keyboard presses.
 -- @param key
 function menuState:keypressed(key)
   if key == "down" or key == "s" then
@@ -65,8 +64,7 @@ function menuState:keypressed(key)
   end
 end
 
----
---
+--- Checks for gamepad presses.
 -- @param joystick
 -- @param button
 function menuState:gamepadpressed(joystick, button)

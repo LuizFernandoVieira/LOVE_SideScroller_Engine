@@ -12,10 +12,9 @@ setmetatable(Weapon, {
 
 local WEAPON_IMAGE = "img/misc/spr_smoke_2.png"
 
----
---
--- @param x
--- @param y
+--- Initializes weapon.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Weapon:_init(x, y)
   Item:_init(x, y)
 
@@ -63,8 +62,9 @@ function Weapon:isDead()
   return false
 end
 
----
---
+--- Notifies the weapon that a collision involving himself had ocurred.
+-- The weapon (subject) had previously subscribed
+-- to the collision system (observer).
 -- @param other
 function Weapon:notifyCollision(other)
   if other.type == "Player" then
@@ -72,8 +72,7 @@ function Weapon:notifyCollision(other)
   end
 end
 
----
---
+--- Specifies the type of that object.
 -- @param type
 -- @return boolean
 function Weapon:is(type)

@@ -25,7 +25,9 @@ end
 -- @param v2
 -- @return number
 function distance(v1, v2)
-  return math.sqrt(math.pow(v1.x-v1.x, 2) + math.pow(v2.y-v2.y, 2))
+  local powX = math.pow(v1.x-v1.x, 2)
+  local powY = math.pow(v2.y-v2.y, 2)
+  return math.sqrt(powX + powY)
 end
 
 --- Calculates the inclination angle between
@@ -34,7 +36,10 @@ end
 -- @param v2
 -- @return number
 function lineInclination(v1, v2)
-  angle = math.atan((v2.y-v1.y) / (v2.x-v1.x)) * 180 / math.pi
+  local subY = (v2.y-v1.y)
+  local subX = (v2.x-v1.x)
+  local arcTan = math.atan(subY / subX)
+  angle = arcTan * 180 / math.pi
   if v1.x > v2.x then
     return angle + 180
   end

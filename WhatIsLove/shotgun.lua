@@ -12,10 +12,9 @@ setmetatable(Shotgun, {
 
 local SHOTGUN_IMAGE = "img/misc/spr_smoke_1.png"
 
----
---
--- @param x
--- @param y
+--- Initializes shotgun.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Shotgun:_init(x, y)
   Weapon:_init(x, y)
 
@@ -25,21 +24,21 @@ function Shotgun:_init(x, y)
   self.collected = false
 end
 
----
---
+--- Updates the shotgun object.
+-- Called once once each love.update.
 -- @param dt Time passed since last update
 function Shotgun:update(dt)
   self.sprite:update(dt)
 end
 
----
---
+--- Draws the shotgun object.
+-- Called once once each love.draw.
 function Shotgun:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
----
---
+--- Draws the shotgun outline and collision area.
+-- Called once once each love.draw if debug parameter passed.
 function Shotgun:drawDebug()
   local lg = love.graphics
   local x  = self.box.x
@@ -53,8 +52,8 @@ function Shotgun:drawDebug()
   lg.setColor(255, 255, 255)
 end
 
----
---
+--- Checks if shotgun has been collected.
+-- Once the shotgun has been collected it shoud be destroyed.
 -- @return boolean
 function Shotgun:isDead()
   if self.collected then
@@ -63,8 +62,9 @@ function Shotgun:isDead()
   return false
 end
 
----
---
+--- Notifies the shotgun that a collision involving himself had ocurred.
+-- The shotgun (subject) had previously subscribed
+-- to the collision system (observer).
 -- @param other
 function Shotgun:notifyCollision(other)
   if other.type == "Player" then
@@ -72,8 +72,7 @@ function Shotgun:notifyCollision(other)
   end
 end
 
----
---
+--- Specifies the type of that object.
 -- @return boolean
 -- @param type
 function Shotgun:is(type)

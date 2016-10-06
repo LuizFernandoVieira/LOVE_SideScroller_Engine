@@ -40,8 +40,17 @@ function setZoom()
 	end
 end
 
----
---
+--- Handle collision.
+-- @param x
+-- @param y
+-- @param vel
+-- @return correctPosition
+function handleCollision(x, y, vel)
+
+end
+
+--- Checks collision for all objects in the game.
+-- Notify those objects that collided.
 function checkCollision()
   for i,v in ipairs(tiles) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
@@ -103,13 +112,27 @@ function checkCollision()
   end
 end
 
+
 --- Checks if two objects are colliding.
+-- @param a
+-- @param b
+-- @return boolean
+function isColliding(a, b)
+  if a.x < b.x + b.w and a.x + a.w > b.x
+  and a.y < b.y + b.h and a.y + a.h > b.y then
+    return true
+  end
+  return false
+end
+
+--- Checks if two objects are colliding considering their
+-- position and their rotation.
 -- @param a
 -- @param b
 -- @param angleOfA
 -- @param angleOfB
 -- @return boolean
-function isColliding(a, b, angleOfA, angleOfB)
+function complexIsColliding(a, b, angleOfA, angleOfB)
   local A = {
     Vector(a.x + 000, a.y + a.h),
     Vector(a.x + a.w, a.y + a.h),
@@ -167,8 +190,7 @@ function isColliding(a, b, angleOfA, angleOfB)
   return true
 end
 
----
---
+--- Sum two vectors.
 -- @param v1
 -- @param v2
 -- @return table
@@ -179,8 +201,7 @@ function sumVec(v1, v2)
   return vec
 end
 
----
---
+--- Subtract two vectors.
 -- @param v1
 -- @param v2
 -- @return table
@@ -191,8 +212,7 @@ function subVec(v1, v2)
   return vec
 end
 
----
---
+--- Multiply two vector.
 -- @param v1
 -- @param v2
 -- @return table
@@ -203,8 +223,7 @@ function multVec(v1, v2)
   return vec
 end
 
----
---
+--- Multiply vector with scalar.
 -- @param v
 -- @param s
 -- @return table
@@ -215,16 +234,14 @@ function multVecWithScalar(v, s)
   return vec
 end
 
----
---
+--- Calculates the magniture of a vector.
 -- @param vec
 -- @return number
 function mag(vec)
   return math.sqrt(vec.x * vec.x + vec.y + vec.y)
 end
 
----
---
+--- Normalizes a vector.
 -- @param vec
 -- @return table
 function norm(vec)
@@ -234,7 +251,6 @@ function norm(vec)
 end
 
 ---
---
 -- @param a
 -- @param b
 -- @return number
@@ -242,8 +258,7 @@ function dot(a, b)
   return a.x * b.x + a.y * b.y
 end
 
----
---
+--- Rotates a vector.
 -- @param vec
 -- @param ang
 -- @return table

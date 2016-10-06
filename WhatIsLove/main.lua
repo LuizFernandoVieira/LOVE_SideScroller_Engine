@@ -61,7 +61,7 @@ function love.load(arg)
   loadResources()
   setMode()
   Gamestate.registerEvents()
-  Gamestate.switch(splashState)
+  Gamestate.switch(gameState)
 end
 
 --- Check if debug has been passed as a command line parameter
@@ -89,12 +89,16 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
     if x > 100 and x < 220
     and y > 840 and y < 940 then
       player:setMovingLeft(true)
+    end
+
     -- clicou direita
-    elseif x > 590 and x < 710
+    if x > 590 and x < 710
     and y > 830 and y < 950 then
       player:setMovingRight(true)
+    end
+
     -- clicou para pular
-    elseif x > love.graphics.getWidth()/2 then
+    if x > love.graphics.getWidth()/2 then
       player:jump()
     end
   end

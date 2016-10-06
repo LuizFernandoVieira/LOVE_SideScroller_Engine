@@ -13,8 +13,8 @@ setmetatable(Antidote, {
 local ANTIDOTE_IMAGE = "img/misc/spr_cannondown_0.png"
 
 --- Initializes antidote.
--- @param x Position in the x axis that these object will be placed
--- @param y Position in the y axis that these object will be placed
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Antidote:_init(x, y)
   Item:_init(x, y)
 
@@ -63,7 +63,8 @@ function Antidote:isDead()
 end
 
 --- Notifies the antidote that a collision involving himself had ocurred.
--- The antidote (subject) had previously subscribed to the collision system (observer).
+-- The antidote (subject) had previously subscribed
+-- to the collision system (observer).
 -- @param other Object that collided with the antidote
 function Antidote:notifyCollision(other)
   if other.type == "Player" then

@@ -12,10 +12,9 @@ setmetatable(Lasergun, {
 
 local LASERGUN_IMAGE = "img/misc/spr_smoke_4.png"
 
----
---
--- @param x
--- @param y
+--- Initializes laser gun.
+-- @param x Position in the x axis that this object will be placed
+-- @param y Position in the y axis that this object will be placed
 function Lasergun:_init(x, y)
   Weapon:_init(x, y)
 
@@ -25,21 +24,21 @@ function Lasergun:_init(x, y)
   self.collected = false
 end
 
----
---
+--- Updates the laser gun object.
+-- Called once once each love.update.
 -- @param dt Time passed since last update
 function Lasergun:update(dt)
   self.sprite:update(dt)
 end
 
----
---
+--- Draws the laser gun object.
+-- Called once once each love.draw.
 function Lasergun:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
----
---
+--- Draws the laser gun outline and collision area.
+-- Called once once each love.draw if debug parameter passed.
 function Lasergun:drawDebug()
   local lg = love.graphics
   local x  = self.box.x
@@ -53,8 +52,8 @@ function Lasergun:drawDebug()
   lg.setColor(255, 255, 255)
 end
 
----
---
+--- Checks if laser gun has been collected.
+-- Once the laser gun has been collected it shoud be destroyed.
 -- @return boolean
 function Lasergun:isDead()
   if self.collected then
@@ -63,8 +62,9 @@ function Lasergun:isDead()
   return false
 end
 
----
---
+--- Notifies the laser gun that a collision involving himself had ocurred.
+-- The lase gun (subject) had previously subscribed
+-- to the collision system (observer).
 -- @param other
 function Lasergun:notifyCollision(other)
   if other.type == "Player" then
@@ -72,8 +72,7 @@ function Lasergun:notifyCollision(other)
   end
 end
 
----
---
+--- Specifies the type of that object.
 -- @param type
 -- @return boolean
 function Lasergun:is(type)

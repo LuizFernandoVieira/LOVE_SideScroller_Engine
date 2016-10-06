@@ -42,6 +42,7 @@ function Sprite:update(dt)
     else
       self.currentFrame = 1
     end
+    self.timeElapsed = 0
   end
 end
 

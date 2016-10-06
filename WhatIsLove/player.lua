@@ -11,8 +11,11 @@ setmetatable(Player, {
 })
 
 local PLAYER_TYPE           = "Player"
+
 local PLAYER_ANIM_IDLE      = "img/Player_NormalV2.png"
 local PLAYER_ANIM_INF_IDLE  = "img/Player_RaivosoV2.png"
+local PLAYER_ANIM_WALKING   = "img/PlayerNormal_Walking.png"
+
 local PLAYER_VELOCITY       = 1
 local PLAYER_ITEMS          = 1
 
@@ -61,7 +64,7 @@ function Player:_init(x, y)
 
   self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
-  self.animWalking         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
+  self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING, 4, 0.1)
   self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
   self.animJumping         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
@@ -125,17 +128,20 @@ end
 function Player:updateWalking(dt)
   if self.moveRight and self.moveLeft then
     self.state = PLAYERSTATE_IDLE
+    self.sprite = self.animIdle
   elseif self.moveRight then
     self.facingRight = true
     if self.infected then
       self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
     else
+      self.sprite = self.animWalking
       local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
       self.box.x = self.box.x + vel
     end
     self.state = PLAYERSTATE_WALKING
   elseif self.moveLeft then
     self.facingRight = false
+    self.sprite = self.animWalking
     if self.infected then
       self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
     else
@@ -146,6 +152,7 @@ function Player:updateWalking(dt)
     self.state = PLAYERSTATE_WALKING
   else
     self.state = PLAYERSTATE_IDLE
+    self.sprite = self.animIdle
   end
 end
 

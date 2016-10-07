@@ -12,10 +12,11 @@ setmetatable(Player, {
 
 local PLAYER_TYPE           = "Player"
 
-local PLAYER_ANIM_IDLE        = "img/Player_NormalV2.png"
+local PLAYER_ANIM_IDLE        = "img/PlayerNormal_Idle.png"
 local PLAYER_ANIM_INF_IDLE    = "img/Player_RaivosoV2.png"
 local PLAYER_ANIM_WALKING     = "img/PlayerNormal_Walking.png"
 local PLAYER_ANIM_INF_WALKING = "img/PlayerAngry_Walking.png"
+local PLAYER_ANIM_JUMPING     = "img/PlayerNormal_Jupming.png"
 
 local PLAYER_VELOCITY       = 1
 local PLAYER_ITEMS          = 1
@@ -25,6 +26,7 @@ local PLAYERSTATE_WALKING   = 1
 local PLAYERSTATE_DASHING   = 2
 local PLAYERSTATE_CLIMBING  = 3
 local PLAYERSTATE_DEAD      = 4
+local PLAYERSTATE_JUMPING   = 5
 
 local PLAYERWEAPON_GUN      = 0
 local PLAYERWEAPON_SHOTGUN  = 1
@@ -67,7 +69,7 @@ function Player:_init(x, y)
   self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
   self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING, 4, 0.1)
   self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_WALKING, 3, 0.15)
-  self.animJumping         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
+  self.animJumping         = Sprite:_init(PLAYER_ANIM_JUMPING, 1, 1)
   self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
   self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animFallingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
@@ -102,7 +104,6 @@ function Player:update(dt)
     self:checkIfStartedClimbing(dt)
   -- WALKING STATE
   elseif self.state == PLAYERSTATE_WALKING then
-
     self:updateGravity(dt)
     self:updateWalking(dt)
     self:checkIfStartedClimbing(dt)
@@ -114,6 +115,9 @@ function Player:update(dt)
     self:updateClimbing(dt)
   -- DEAD STATE
   elseif self.state == PLAYERSTATE_DEAD then
+  elseif self.state == PLAYERSTATE_JUMPING then
+    self:updateWalking(dt)
+    self:updateGravity(dt)
   end
 
   self.box.x = math.floor(self.box.x)
@@ -128,41 +132,73 @@ end
 --- Updates the player object when his state is walking.
 -- @param dt Time passed since last update
 function Player:updateWalking(dt)
+  -- clica para esquerda e direita
   if self.moveRight and self.moveLeft then
-    self.state = PLAYERSTATE_IDLE
-    if self.infected then
-      self.sprite = self.animIdleInfected
-    else
-      self.sprite = self.animIdle
+    if self.state ~= PLAYERSTATE_JUMPING then
+      self.state = PLAYERSTATE_IDLE
+      if self.infected then
+        self.sprite = self.animIdleInfected
+      else
+        self.sprite = self.animIdle
+      end
     end
+  -- clica para direita
   elseif self.moveRight then
     self.facingRight = true
-    if self.infected then
-      self.sprite = self.animWalkingInfected
-      self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
+    -- jumping
+    if self.state == PLAYERSTATE_JUMPING then
+      if self.infected then
+        self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
+      else
+        local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
+        self.box.x = self.box.x + vel
+      end
+    -- not jumping
     else
-      self.sprite = self.animWalking
-      local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
-      self.box.x = self.box.x + vel
+      if self.infected then
+        self.sprite = self.animWalkingInfected
+        self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
+      else
+        self.sprite = self.animWalking
+        local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
+        self.box.x = self.box.x + vel
+      end
+      self.state = PLAYERSTATE_WALKING
     end
-    self.state = PLAYERSTATE_WALKING
+  -- clica para esquerda
   elseif self.moveLeft then
     self.facingRight = false
-    if self.infected then
-        self.sprite = self.animWalkingInfected
-      self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
+    -- jumping
+    if self.state == PLAYERSTATE_JUMPING then
+      if self.infected then
+        self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
+      else
+        local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
+        self.box.x = self.box.x - vel
+      end
+    -- not jumping
     else
-      self.sprite = self.animWalking
-      local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
-      self.box.x = self.box.x - vel
+      if self.state ~= PLAYERSTATE_JUMPING then
+        if self.infected then
+          self.sprite = self.animWalkingInfected
+          self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
+        else
+          self.sprite = self.animWalking
+          local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
+          self.box.x = self.box.x - vel
+        end
+        self.state = PLAYERSTATE_WALKING
+      end
     end
-    self.state = PLAYERSTATE_WALKING
+  -- nao clica nada
   else
-    self.state = PLAYERSTATE_IDLE
-    if self.infected then
-      self.sprite = self.animIdleInfected
-    else
-      self.sprite = self.animIdle
+    if self.state ~= PLAYERSTATE_JUMPING then
+      self.state = PLAYERSTATE_IDLE
+      if self.infected then
+        self.sprite = self.animIdleInfected
+      else
+        self.sprite = self.animIdle
+      end
     end
   end
 end
@@ -228,10 +264,12 @@ function Player:jump()
   if self.state == PLAYERSTATE_CLIMBING then
     self:leaveLadder()
   elseif self.grounded == true then
+    self.state = PLAYERSTATE_JUMPING
     self.grounded = false
     if self.infected then
       self.yspeed = -JUMP_POWER * INFECTED_BONUS_JUMP_POWER
     else
+      self.sprite = self.animJumping
       self.yspeed = -JUMP_POWER
     end
   end
@@ -338,6 +376,8 @@ function Player:notifyCollision(other)
     self.grounded = true
     self.yspeed = 0
     self.box.y = lastY
+
+    self.state = PLAYERSTATE_IDLE
 
     -- se colidiu horizontalmente
     -- if  then

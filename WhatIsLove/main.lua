@@ -129,8 +129,10 @@ end
 -- @param pressure
 function love.touchreleased(id, x, y, dx, dy, pressure)
   if love.system.getOS() == "Android" then
-    player:setMovingLeft(false)
-    player:setMovingRight(false)
+    if x < love.graphics:getWidth()/2 then
+      player:setMovingLeft(false)
+      player:setMovingRight(false)
+    end
   end
 end
 

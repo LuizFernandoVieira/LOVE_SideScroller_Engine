@@ -13,6 +13,7 @@ local OPTIONS_STRINGS = {
 
 --- Initializes the options state.
 function optionsState:init()
+  currentGameState = "optionsState"
   selection = 1
 end
 

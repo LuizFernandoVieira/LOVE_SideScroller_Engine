@@ -5,7 +5,7 @@ default_config = {
 }
 
 android_config = {
-	scale = 4,
+	scale = 10,
   fullscreen = 1,
   vsync = true,
 }

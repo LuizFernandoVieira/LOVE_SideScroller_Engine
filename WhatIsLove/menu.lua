@@ -10,7 +10,8 @@ local MENU_STRINGS = {
 
 --- Initializes the menu state.
 function menuState:init()
-  love.graphics.setBackgroundColor(237,237,171)
+  currentGameState = "menuState"
+  love.graphics.setBackgroundColor(255, 255, 255)
   selection = 1
 
   if love.system.getOS() == "Android" then

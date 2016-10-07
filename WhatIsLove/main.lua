@@ -10,6 +10,9 @@ gameState      = {}
 secondLevel    = {}
 thirdLevel     = {}
 
+-- Current Game State
+currentGameState = "splashState"
+
 -- Controls
 joystick = {}
 
@@ -61,7 +64,7 @@ function love.load(arg)
   loadResources()
   setMode()
   Gamestate.registerEvents()
-  Gamestate.switch(gameState)
+  Gamestate.switch(splashState)
 end
 
 --- Check if debug has been passed as a command line parameter
@@ -85,22 +88,34 @@ end
 -- @param pressure
 function love.touchpressed(id, x, y, dx, dy, pressure)
   if love.system.getOS() == "Android" then
-    -- clicou esquerda
-    if x > 100 and x < 220
-    and y > 840 and y < 940 then
-      player:setMovingLeft(true)
+
+    if currentGameState == "gameState" then
+      -- clicou esquerda
+      if x > 100 and x < 220
+      and y > 840 and y < 940 then
+        player:setMovingLeft(true)
+      end
+      -- clicou direita
+      if x > 590 and x < 710
+      and y > 830 and y < 950 then
+        player:setMovingRight(true)
+      end
+
+      -- clicou para atirar
+      if x > love.graphics.getWidth()/2
+      and x < love.graphics.getWidth()/4 * 3 then
+        player:shot()
+      end
+      -- clicou para pular
+      if x > love.graphics.getWidth()/2
+      + love.graphics.getWidth()/4 then
+        player:jump()
+      end
+
+    elseif currentGameState == "menuState" then
+      Gamestate.switch(gameState)
     end
 
-    -- clicou direita
-    if x > 590 and x < 710
-    and y > 830 and y < 950 then
-      player:setMovingRight(true)
-    end
-
-    -- clicou para pular
-    if x > love.graphics.getWidth()/2 then
-      player:jump()
-    end
   end
 end
 
@@ -124,9 +139,15 @@ end
 -- if running on mobile devices
 function love.draw()
   if love.system.getOS() == "Android" then
-    love.graphics.circle("fill", 410, 635, 100, 100)
-    love.graphics.circle("fill", 410, 1150, 100, 100)
-    love.graphics.circle("fill", 160, 890, 100, 100)
-    love.graphics.circle("fill", 650, 890, 100, 100)
+    if currentGameState == "menuState" then
+      love.graphics.setColor(0, 0, 0, 50)
+    end
+
+    if currentGameState ~= "splashState" then
+      love.graphics.circle("fill", 410, 635, 100, 100)
+      love.graphics.circle("fill", 410, 1150, 100, 100)
+      love.graphics.circle("fill", 160, 890, 100, 100)
+      love.graphics.circle("fill", 650, 890, 100, 100)
+    end
   end
 end

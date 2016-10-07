@@ -16,6 +16,8 @@ sound = love.audio.newSource("audio/teste.mp3")
 --- Initializes objects that belong to the first level.
 -- Called once on game state change.
 function gameState:init()
+  currentGameState = "gameState"
+
   player = Player:_init(132, 116)
   camera = Camera(player.box.x, player.box.y)
 

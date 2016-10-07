@@ -10,7 +10,7 @@ setmetatable(Bullet, {
   end,
 })
 
-local BULLET_IMAGE = "img/tiro.png"
+local BULLET_IMAGE = "img/Tiro.png"
 
 --- Initializes a bullet.
 -- @param x Position in the x axis that this object will be placed

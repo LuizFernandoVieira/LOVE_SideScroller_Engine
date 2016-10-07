@@ -107,6 +107,8 @@ function camera:attach(configScale, x,y,w,h, noclip)
 	w,h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
   configScale = configScale or 1
 
+  -- y = y + love.graphics.getHeight()/4
+
 	self._sx,self._sy,self._sw,self._sh = love.graphics.getScissor()
 	if not noclip then
 		love.graphics.setScissor(x,y,w,h)

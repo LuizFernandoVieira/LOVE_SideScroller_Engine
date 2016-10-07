@@ -46,41 +46,42 @@ end
 -- @param vel
 -- @return correctPosition
 function handleCollision(x, y, vel, dt)
+  return vel
+  --[[
   for _,t in ipairs(tiles) do
 
     local nextBox = {}
     nextBox = Rect(player.box.x + player.velocity, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
 
+    print("-----")
+    print("CHECK")
+    print("x " .. nextBox.x)
+    print("y " .. nextBox.y)
+    print("w " .. nextBox.w)
+    print("h " .. nextBox.h)
+    print("x " .. t.box.x)
+    print("y " .. t.box.y)
+    print("w " .. t.box.w)
+    print("h " .. t.box.h)
+
     if isColliding(nextBox, t.box) then
       print("IA COLIDIR")
       for vx=0, vel, 0.1 do
-        local auxX = x + vel;
-        if isColliding(
-          Rect:_init(auxX,player.box.y,player.sprite:getWidth(), player.sprite:getHeight()),
-          t.box) then
+        print("vx " .. vx)
+        local auxX = x + vx;
+        print("ENTROU")
+        local imaginaryRect = Rect(auxX, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+        if isColliding(imaginaryRect, t.box) then
+          print("FIM")
           return math.max(vx-0.1,0)
         end
       end
-      return 0
     end
-    return vel
   end
+
+  return vel
+  ]]
 end
---
--- function checkCOllision(x,y,vel,dt)
--- 	for _,t in pairs(tile) do
--- 		if inScreen() then
--- 			if iamcolliding(t,x,y) do
--- 				for (vx = 0,vel,0.1) do
--- 					local auxX = x+vx*dt;
--- 					if iamNotcolliding() then
--- 						return math.max(vel-0.1,0)
--- 					end
--- 				end
--- 			end
--- 		end
--- 	end
--- end
 
 --- Checks collision for all objects in the game.
 -- Notify those objects that collided.

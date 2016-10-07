@@ -159,6 +159,7 @@ end
 function gameState:draw()
   camera:attach(config.scale)
 
+  love.graphics.setBackgroundColor(255, 255, 255)
   love.graphics.draw(tilesetBatch)
 
   drawGameObjects(enemies)

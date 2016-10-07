@@ -10,7 +10,7 @@ local MENU_STRINGS = {
 
 --- Initializes the menu state.
 function menuState:init()
-  love.graphics.setBackgroundColor(184,199,145)
+  love.graphics.setBackgroundColor(237,237,171)
   selection = 1
 
   if love.system.getOS() == "Android" then
@@ -32,6 +32,7 @@ function menuState:draw()
   setZoom()
   love.graphics.scale(config.scale)
 
+  love.graphics.setColor(0, 0, 0)
   love.graphics.setFont(font.bold)
 	for i=1,NUMBER_OF_OPTIONS do
 		if i == selection then

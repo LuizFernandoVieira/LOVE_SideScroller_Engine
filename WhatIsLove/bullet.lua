@@ -66,7 +66,6 @@ function Bullet:isDead()
   if self.distanceLeft > 0 then
     return false
   else
-    print("mata")
     return true
   end
 end
@@ -76,7 +75,9 @@ end
 -- to the collision system (observer).
 -- @param other
 function Bullet:notifyCollision(other)
-  if other.type == "Enemy" then
+  if other.type == "Enemy"
+  or other.type == "ChaseEnemy"
+  or other.type == "RightLeftEnemy" then
     for k,v in ipairs(bullets) do
       if v.id == other.id then
         bullets[k] = nil

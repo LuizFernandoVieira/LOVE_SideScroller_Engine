@@ -162,10 +162,39 @@ function checkCollision()
     end
   end
 
+  for i,v in ipairs(chaseEnemies) do
+    if isColliding(player.box, v.box, player.rotation, v.rotation) then
+      player:notifyCollision(chaseEnemies[i])
+      chaseEnemies[i]:notifyCollision(player)
+    end
+
+    for j,u in ipairs(bullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(bullets[j])
+        u:notifyCollision(chaseEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(missleBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(missleBullets[j])
+        u:notifyCollision(chaseEnemies[i])
+      end
+    end
+  end
+
   for i,v in ipairs(enemies) do
     for j,u in ipairs(bite) do
       if isColliding(v.box, u.box, v.rotation, u.rotation) then
         enemies[i]:notifyCollision(bite[j])
+      end
+    end
+  end
+
+  for i,v in ipairs(chaseEnemies) do
+    for j,u in ipairs(bite) do
+      if isColliding(v.box, u.box, v.rotation, u.rotation) then
+        chaseEnemies[i]:notifyCollision(bite[j])
       end
     end
   end

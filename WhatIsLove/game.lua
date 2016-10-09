@@ -1,13 +1,17 @@
-player    = {}
-tiles     = {}
-map       = {}
-enemies   = {}
-items     = {}
-particles = {}
-bullets   = {}
-bite      = {}
-ladders   = {}
-weapons   = {}
+player        = {}
+tiles         = {}
+map           = {}
+enemies       = {}
+items         = {}
+particles     = {}
+bullets       = {}
+missleBullets = {}
+bite          = {}
+ladders       = {}
+weapons       = {}
+
+chaseEnemies     = {}
+rightLeftEnemies = {}
 
 psystem = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
@@ -34,6 +38,8 @@ function loadEnemies()
   table.insert(enemies, Enemy(70, 0))
   table.insert(enemies, Enemy(150, 0))
   table.insert(enemies, Enemy(200, 0))
+  table.insert(chaseEnemies, ChaseEnemy(250, 0))
+  table.insert(rightLeftEnemies, RightLeftEnemy(300, 0))
 end
 
 --- Initializes items.
@@ -44,7 +50,7 @@ function loadItems()
   table.insert(ladders, Ladder(230, 100))
   table.insert(weapons, Gun(50, 100))
   table.insert(weapons, Shotgun(100, 100))
-  table.insert(weapons, Lasergun(150, 100))
+  table.insert(weapons, Misslegun(150, 100))
 end
 
 -- Initializes background objects.
@@ -80,8 +86,11 @@ function gameState:update(dt)
   -- psystem:update(dt)
 
   updateGameObjects(dt, enemies)
+  updateGameObjects(dt, chaseEnemies)
+  updateGameObjects(dt, rightLeftEnemies)
   updateGameObjects(dt, items)
   updateGameObjects(dt, bullets)
+  updateGameObjects(dt, missleBullets)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
   updateGameObjects(dt, bite)
@@ -102,8 +111,10 @@ end
 --- Deletes entities marked as dead.
 function deleteDeadEntities()
   deleteDead(enemies)
+  deleteDead(chaseEnemies)
+  deleteDead(chaseEnemies)
   deleteDead(items)
-  deleteDead(bite)
+  -- deleteDead(bite)
   deleteDead(weapons)
 end
 
@@ -165,9 +176,12 @@ function gameState:draw()
   love.graphics.draw(tilesetBatch)
 
   drawGameObjects(enemies)
+  drawGameObjects(chaseEnemies)
+  drawGameObjects(rightLeftEnemies)
   drawGameObjects(items)
   drawGameObjects(ladders)
   drawGameObjects(bullets)
+  drawGameObjects(missleBullets)
   drawGameObjects(bite)
   drawGameObjects(weapons)
 
@@ -221,10 +235,19 @@ function drawDebug()
     for i,v in ipairs(enemies) do
       v:drawDebug()
     end
+    for i,v in ipairs(chaseEnemies) do
+      v:drawDebug()
+    end
+    for i,v in ipairs(rightLeftEnemies) do
+      v:drawDebug()
+    end
     for i,v in ipairs(items) do
       v:drawDebug()
     end
     for i,v in ipairs(bullets) do
+      v:drawDebug()
+    end
+    for i,v in ipairs(missleBullets) do
       v:drawDebug()
     end
     for i,v in ipairs(bite) do

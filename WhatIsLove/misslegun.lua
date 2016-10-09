@@ -1,7 +1,7 @@
-Lasergun         = {}
-Lasergun.__index = Lasergun
+Misslegun         = {}
+Misslegun.__index = Misslegun
 
-setmetatable(Lasergun, {
+setmetatable(Misslegun, {
   __index = Weapon,
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
@@ -10,16 +10,16 @@ setmetatable(Lasergun, {
   end,
 })
 
-local LASERGUN_IMAGE = "img/misc/spr_smoke_4.png"
+local MISSLEGUN_IMAGE = "img/misc/spr_smoke_4.png"
 
 --- Initializes laser gun.
 -- @param x Position in the x axis that this object will be placed
 -- @param y Position in the y axis that this object will be placed
-function Lasergun:_init(x, y)
+function Misslegun:_init(x, y)
   Weapon:_init(x, y)
 
-  self.type      = "Lasergun"
-  self.sprite    = Sprite:_init(LASERGUN_IMAGE, 1, 1)
+  self.type      = "Misslegun"
+  self.sprite    = Sprite:_init(MISSLEGUN_IMAGE, 1, 1)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false
 end
@@ -27,19 +27,19 @@ end
 --- Updates the laser gun object.
 -- Called once once each love.update.
 -- @param dt Time passed since last update
-function Lasergun:update(dt)
+function Misslegun:update(dt)
   self.sprite:update(dt)
 end
 
 --- Draws the laser gun object.
 -- Called once once each love.draw.
-function Lasergun:draw()
+function Misslegun:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
 --- Draws the laser gun outline and collision area.
 -- Called once once each love.draw if debug parameter passed.
-function Lasergun:drawDebug()
+function Misslegun:drawDebug()
   local lg = love.graphics
   local x  = self.box.x
   local y  = self.box.y
@@ -55,7 +55,7 @@ end
 --- Checks if laser gun has been collected.
 -- Once the laser gun has been collected it shoud be destroyed.
 -- @return boolean
-function Lasergun:isDead()
+function Misslegun:isDead()
   if self.collected then
     return true
   end
@@ -66,7 +66,7 @@ end
 -- The lase gun (subject) had previously subscribed
 -- to the collision system (observer).
 -- @param other
-function Lasergun:notifyCollision(other)
+function Misslegun:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
   end
@@ -75,6 +75,6 @@ end
 --- Specifies the type of that object.
 -- @param type
 -- @return boolean
-function Lasergun:is(type)
+function Misslegun:is(type)
   return type == self.type
 end

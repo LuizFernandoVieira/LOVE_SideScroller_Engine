@@ -43,12 +43,17 @@ end
 -- Called once once each love.update.
 -- @param dt Time passed since last update
 function Enemy:update(dt)
+  self.sprite:update(dt)
+
   self.lastY = self.box.y
 
   self.yspeed = self.yspeed + ENEMY_GRAVITY * dt
   self.box.y = self.box.y + self.yspeed * dt
 
-  self.sprite:update(dt)
+  self.box.x = self.box.x + self.xspeed * dt
+
+  self.box.x = math.floor(self.box.x)
+  self.box.y = math.floor(self.box.y)
 end
 
 --- Draws the enemy object.

@@ -48,13 +48,13 @@ end
 -- Called once once each love.draw if debug parameter passed.
 function Bullet:drawDebug()
   local lg = love.graphics
-  local x  = self.box.x
+  local x  = self.box.x + self.sprite:getWidth()/2
   local y  = self.box.y
   local w  = self.box.w
   local h  = self.box.h
-  lg.setColor(255, 255, 0, 50)
+  lg.setColor(0, 200, 255, 50)
   lg.rectangle("fill", x, y, w, h)
-  lg.setColor(255, 255, 0)
+  lg.setColor(0, 200, 255)
   lg.rectangle("line", x, y, w, h)
   lg.setColor(255, 255, 255)
 end

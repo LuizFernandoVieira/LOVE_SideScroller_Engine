@@ -30,14 +30,12 @@ end
 -- Called once once each love.update.
 -- @param dt Time passed since last update
 function Bite:update(dt)
-  print("bbbbbb")
   self.sprite:update(dt)
 end
 
 --- Draws the antidote object.
 -- Called once once each love.draw.
 function Bite:draw()
-  print("aeaseaeaea")
   self.sprite:draw(self.box.x, self.box.y)
 end
 

@@ -13,10 +13,11 @@ setmetatable(Player, {
 local PLAYER_TYPE           = "Player"
 
 local PLAYER_ANIM_IDLE        = "img/PlayerNormal_Idle.png"
-local PLAYER_ANIM_INF_IDLE    = "img/Player_RaivosoV2.png"
+local PLAYER_ANIM_INF_IDLE    = "img/PlayerAngry_Idle.png"
 local PLAYER_ANIM_WALKING     = "img/PlayerNormal_Walking.png"
 local PLAYER_ANIM_INF_WALKING = "img/PlayerAngry_Walking.png"
 local PLAYER_ANIM_JUMPING     = "img/PlayerNormal_Jupming.png"
+local PLAYER_ANIM_INF_JUMPING = "img/PlayerAngry_Jumping.png"
 
 local PLAYER_VELOCITY       = 1
 local PLAYER_ITEMS          = 1
@@ -28,9 +29,9 @@ local PLAYERSTATE_CLIMBING  = 3
 local PLAYERSTATE_DEAD      = 4
 local PLAYERSTATE_JUMPING   = 5
 
-local PLAYERWEAPON_GUN      = 0
-local PLAYERWEAPON_SHOTGUN  = 1
-local PLAYERWEAPON_LASERGUN = 2
+local PLAYERWEAPON_GUN       = 0
+local PLAYERWEAPON_SHOTGUN   = 1
+local PLAYERWEAPON_MISSLEGUN = 2
 
 local GRAVITY               = 800
 local PLAYER_FACINGRIGHT    = true
@@ -70,7 +71,7 @@ function Player:_init(x, y)
   self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING, 4, 0.1)
   self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_WALKING, 3, 0.15)
   self.animJumping         = Sprite:_init(PLAYER_ANIM_JUMPING, 1, 1)
-  self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_JUMPING, 1, 1)
   self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animFallingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
   self.sprite              = self.animIdle
@@ -267,6 +268,7 @@ function Player:jump()
     self.state = PLAYERSTATE_JUMPING
     self.grounded = false
     if self.infected then
+      self.sprite = self.animJumpingInfected
       self.yspeed = -JUMP_POWER * INFECTED_BONUS_JUMP_POWER
     else
       self.sprite = self.animJumping
@@ -298,7 +300,12 @@ function Player:shot()
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
       end
-    elseif self.weapon == PLAYERWEAPON_LASERGUN then
+    elseif self.weapon == PLAYERWEAPON_MISSLEGUN then
+      if self.facingRight then
+        table.insert(missleBullets, MissleBullet(self.box.x, self.box.y+7, 250, 40))
+      else
+        table.insert(missleBullets, MissleBullet(self.box.x-5, self.box.y+7, -250, 40))
+      end
     end
   end
 end
@@ -404,8 +411,8 @@ function Player:notifyCollision(other)
     self.weapon = PLAYERWEAPON_GUN
   elseif other.type == "Shotgun" then
     self.weapon = PLAYERWEAPON_SHOTGUN
-  elseif other.type == "Lasergun" then
-    self.weapon = PLAYERWEAPON_LASERGUN
+  elseif other.type == "Misslegun" then
+    self.weapon = PLAYERWEAPON_MISSLEGUN
   end
 end
 

@@ -35,15 +35,18 @@ require("game_object")
 require("game_actor")
 require("player")
 require("enemy")
+require("chase_enemy")
+require("rightleft_enemy")
 require("item")
 require("ladder")
 require("antidote")
 require("bullet")
+require("missle_bullet")
 require("bite")
 require("weapon")
 require("gun")
 require("shotgun")
-require("lasergun")
+require("misslegun")
 require("map")
 require("tile")
 require("vector")
@@ -114,6 +117,8 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
 
     elseif currentGameState == "menuState" then
       Gamestate.switch(gameState)
+    elseif currentGameState == "splashState" then
+      Gamestate.switch(menuState)
     end
 
   end
@@ -146,10 +151,11 @@ function love.draw()
     end
 
     if currentGameState ~= "splashState" then
-      love.graphics.circle("fill", 410, 635, 100, 100)
-      love.graphics.circle("fill", 410, 1150, 100, 100)
-      love.graphics.circle("fill", 160, 890, 100, 100)
-      love.graphics.circle("fill", 650, 890, 100, 100)
+      local lg = love.graphics
+      lg.circle("fill", 410, 635, 100, 100)
+      lg.circle("fill", 410, 1150, 100, 100)
+      lg.circle("fill", 160, 890, 100, 100)
+      lg.circle("fill", 650, 890, 100, 100)
     end
   end
 end

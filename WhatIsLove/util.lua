@@ -109,6 +109,24 @@ function checkCollision()
     end
   end
 
+  for i,v in ipairs(tiles) do
+    for j,u in ipairs(chaseEnemies) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(chaseEnemies[j])
+        u:notifyCollision(tiles[i])
+      end
+    end
+  end
+
+  for i,v in ipairs(tiles) do
+    for j,u in ipairs(rightLeftEnemies) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(rightLeftEnemies[j])
+        u:notifyCollision(tiles[i])
+      end
+    end
+  end
+
   for i,v in ipairs(items) do
     if isColliding(v.box, player.box, v.rotation, player.rotation) then
       items[i]:notifyCollision(player)
@@ -135,6 +153,13 @@ function checkCollision()
         u:notifyCollision(enemies[i])
       end
     end
+
+    for j,u in ipairs(missleBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(missleBullets[j])
+        u:notifyCollision(enemies[i])
+      end
+    end
   end
 
   for i,v in ipairs(enemies) do
@@ -146,6 +171,9 @@ function checkCollision()
   end
 end
 
+function isCollidingPointCircle(a, b, r)
+  return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) < r * r
+end
 
 --- Checks if two objects are colliding.
 -- @param a

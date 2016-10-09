@@ -238,36 +238,22 @@ end
 function drawDebug()
   if debug then
     player:drawDebug()
-    for i,v in ipairs(tiles) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(enemies) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(chaseEnemies) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(rightLeftEnemies) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(flybombEnemies) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(items) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(bullets) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(missleBullets) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(bombs) do
-      v:drawDebug()
-    end
-    for i,v in ipairs(bite) do
-      v:drawDebug()
-    end
+    drawDebugGameObjects(tiles)
+    drawDebugGameObjects(enemies)
+    drawDebugGameObjects(chaseEnemies)
+    drawDebugGameObjects(rightLeftEnemies)
+    drawDebugGameObjects(flybombEnemies)
+    drawDebugGameObjects(items)
+    drawDebugGameObjects(bullets)
+    drawDebugGameObjects(missleBullets)
+    drawDebugGameObjects(bombs)
+    drawDebugGameObjects(bite)
+  end
+end
+
+function drawDebugGameObjects(gameObjects)
+  for _,v in ipairs(gameObjects) do
+    v:drawDebug()
   end
 end
 
@@ -301,17 +287,9 @@ end
 --- Checks for key press events.
 -- @param key Keyboard key that has been pressed
 function gameState:keypressed(key)
-  if key == "w" then
-    player:jump()
-  end
-
-  if key == "space" then
-    player:shot()
-  end
-
-  if key == "x" then
-    player:dash()
-  end
+  if key == "w"     then player:jump() end
+  if key == "space" then player:shot() end
+  if key == "x"     then player:dash() end
 
   if key == "left" or key == "right" then
     if key == "left" then
@@ -324,19 +302,17 @@ function gameState:keypressed(key)
     setMode()
   end
 
-  if key == "escape" then
-    Gamestate.switch(menuState)
-  end
+  if key == "escape" then Gamestate.switch(menuState) end
 end
 
 --- Checks for gamepad release events.
 -- @param joystick
 -- @param button
 function gameState:gamepadreleased(joystick, button)
-  if button == 'dpup' then player:setMovingUp(false)       end
+  if button == 'dpup'    then player:setMovingUp(false)    end
   if button == 'dpright' then player:setMovingRight(false) end
-  if button == 'dpdown' then player:setMovingDown(false)   end
-  if button == 'dpleft' then player:setMovingLeft(false)   end
+  if button == 'dpdown'  then player:setMovingDown(false)  end
+  if button == 'dpleft'  then player:setMovingLeft(false)  end
 
   if button == 'leftx' then
     player:setMovingRight(false)

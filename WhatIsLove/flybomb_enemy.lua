@@ -33,7 +33,7 @@ function FlybombEnemy:_init(x, y)
   self.initialPosition  = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.range            = 80
   self.standingTime     = 0
-  self.flyingTime      = 0
+  self.flyingTime       = 0
   self.xspeed           = - 0.5
   self.dropBombCooldown = 5
   self.dropTiming       = 5

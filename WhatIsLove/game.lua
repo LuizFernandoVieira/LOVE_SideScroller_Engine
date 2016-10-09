@@ -18,7 +18,10 @@ bombs = {}
 
 psystem = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
+
 sound = love.audio.newSource("audio/teste.mp3")
+jumpSound = love.audio.newSource("audio/jump.wav")
+shotSound = love.audio.newSource("audio/shot.wav")
 
 --- Initializes objects that belong to the first level.
 -- Called once on game state change.
@@ -38,12 +41,12 @@ end
 
 --- Initializes enemies.
 function loadEnemies()
-  -- table.insert(enemies, Enemy(70, 0))
-  -- table.insert(enemies, Enemy(150, 0))
-  -- table.insert(enemies, Enemy(200, 0))
-  -- table.insert(chaseEnemies, ChaseEnemy(250, 0))
-  -- table.insert(rightLeftEnemies, RightLeftEnemy(300, 0))
-  table.insert(flybombEnemies, FlybombEnemy(150, 50))
+  table.insert(enemies, Enemy(70, 0))
+  table.insert(enemies, Enemy(150, 0))
+  table.insert(enemies, Enemy(200, 0))
+  table.insert(chaseEnemies, ChaseEnemy(250, 0))
+  table.insert(rightLeftEnemies, RightLeftEnemy(350, 0))
+  table.insert(flybombEnemies, FlybombEnemy(450, 50))
 end
 
 --- Initializes items.
@@ -63,7 +66,7 @@ end
 
 --- Initializes audio.
 function loadAudio()
-  -- sound:play()
+  sound:play()
 end
 
 --- Initializes particles.

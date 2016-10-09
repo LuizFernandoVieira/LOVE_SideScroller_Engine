@@ -262,6 +262,8 @@ end
 --- Apply impulse in the y axis.
 -- Player can't jump on air.
 function Player:jump()
+  jumpSound:play()
+
   if self.state == PLAYERSTATE_CLIMBING then
     self:leaveLadder()
   elseif self.grounded == true then
@@ -283,6 +285,7 @@ function Player:shot()
   if self.infected then
     table.insert(bite, Bite(self.box.x-8, self.box.y-8, 32, 32))
   else
+    shotSound:play()
     if self.weapon == PLAYERWEAPON_GUN then
       if self.facingRight then
         table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 40))

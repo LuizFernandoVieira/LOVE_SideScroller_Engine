@@ -169,6 +169,14 @@ function checkCollision()
       end
     end
   end
+
+  for i,v in ipairs(tiles) do
+    for j,u in ipairs(bombs) do
+      if isColliding(v.box, u.box, v.rotation, u.rotation) then
+        bombs[j]:notifyCollision(tiles[i])
+      end
+    end
+  end
 end
 
 function isCollidingPointCircle(a, b, r)

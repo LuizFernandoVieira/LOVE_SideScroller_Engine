@@ -1,7 +1,7 @@
-ChaseEnemy         = {}
-ChaseEnemy.__index = ChaseEnemy
+FlybombEnemy         = {}
+FlybombEnemy.__index = FlybombEnemy
 
-setmetatable(ChaseEnemy, {
+setmetatable(FlybombEnemy, {
   __index = Enemy,
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
@@ -10,8 +10,8 @@ setmetatable(ChaseEnemy, {
   end,
 })
 
-local CHASE_ENEMY_TYPE         = "ChaseEnemy"
-local CHASE_ENEMY_IMAGE        = "img/Player_Raiva.png"
+local FLYBOMB_ENEMY_TYPE  = "FlybombEnemy"
+local FLYBOMB_ENEMY_IMAGE = "img/Player_Raiva.png"
 
 local ENEMY_VELOCITY     = 0
 local ENEMY_HEALTH       = 1
@@ -19,109 +19,117 @@ local ENEMY_GRAVITY      = 800
 local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
 local ENEMYSTATE_WALKING = 1
+local ENEMYSTATE_FLYING  = 2
 
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed
 -- @param y Position in the y axis that this object will be placed
-function ChaseEnemy:_init(x, y)
+function FlybombEnemy:_init(x, y)
   Enemy:_init(x, y)
 
-  self.type   = CHASE_ENEMY_TYPE
-  self.sprite = Sprite:_init(CHASE_ENEMY_IMAGE, 1, 1)
-  self.box    = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
-  self.range  = 80
+  self.type             = FLYBOMB_ENEMY_TYPE
+  self.sprite           = Sprite:_init(FLYBOMB_ENEMY_IMAGE, 1, 1)
+  self.box              = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
+  self.initialPosition  = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
+  self.range            = 80
+  self.standingTime     = 0
+  self.flyingTime      = 0
+  self.xspeed           = - 0.5
+  self.dropBombCooldown = 5
+  self.dropTiming       = 5
 end
 
 --- Updates the enemy object.
 -- Called once once each love.update.
 -- @param dt Time passed since last update
-function ChaseEnemy:update(dt)
+function FlybombEnemy:update(dt)
   self.lastY = self.box.y
-
-  self.yspeed = self.yspeed + ENEMY_GRAVITY * dt
-  self.box.y = self.box.y + self.yspeed * dt
 
   self.box.x = self.box.x + self.xspeed
 
   -- IDLE STATE
   if self.state == ENEMYSTATE_IDLE then
-    if isPlayerInRange(self) then
-      self.state = ENEMYSTATE_WALKING
+    self.standingTime = self.standingTime + dt
+    if isToLongStanding(self) then
+      print("To long standing")
+      self.state = ENEMYSTATE_FLYING
+      self.standingTime = 0
+      self:dropBomb()
+      if self.facingRight then
+        self.xspeed = 0.5
+      else
+        self.xspeed = -0.5
+      end
     end
-  -- WALKING STATE
-  elseif self.state == ENEMYSTATE_WALKING then
-    if isPlayerInRange(self) and not isPlayerToClose(self) then
-      chasePlayer(self)
-    elseif isPlayerInRange(self) and isPlayerToClose(self) then
-    else
+  -- FLYING STATE
+  elseif self.state == ENEMYSTATE_FLYING then
+    self.flyingTime = self.flyingTime + dt
+    if isToLongFlying(self) then
+      print("To long flying")
       self.state = ENEMYSTATE_IDLE
+      self.xspeed = 0
+      self.flyingTime = 0
+    else
+      flyRightLeft(self)
     end
   end
 
   self.sprite:update(dt)
 end
 
-function isPlayerInRange(enemy)
-  local cx = enemy.box.x
-  local cy = enemy.box.y + enemy.sprite:getHeight()/2
-  local point = Vector(player.box.x, player.box.y)
-  local circleCenter = Vector(cx, cy)
-  if isCollidingPointCircle(point, circleCenter, enemy.range) then
-    return true
-  else
-    if enemy.state == ENEMYSTATE_WALKING then
-      enemy.xspeed = 0
-    end
-    return false
-  end
-end
-
-function isPlayerToClose(enemy)
-  local eb     = enemy.box
-  local newBox = Rect(eb.x+eb.w/4, eb.y+eb.w/4, eb.w/2, eb.h/2)
-  if isColliding(player.box, newBox) then
+function isToLongStanding(enemy)
+  if enemy.standingTime > 0.4 then
     return true
   else
     return false
   end
 end
 
-function chasePlayer(enemy)
-  -- anda esquerda
-  if player.box.x < enemy.box.x then
-    enemy.xspeed = - 0.7
-    enemy.facingRight = false
-  -- anda direita
+function isToLongFlying(enemy)
+  if enemy.flyingTime > 2 then
+    return true
   else
-    enemy.xspeed = 0.7
+    return false
+  end
+end
+
+function flyRightLeft(enemy)
+  if enemy.box.x < enemy.initialPosition.x - enemy.range then
+    enemy.xspeed = 0.5
     enemy.facingRight = true
+  elseif enemy.box.x > enemy.initialPosition.x + enemy.range then
+    enemy.xspeed = - 0.5
+    enemy.facingRight = false
   end
+end
+
+function FlybombEnemy:dropBomb()
+  table.insert(bombs, Bomb(self.box.x, self.box.y))
 end
 
 --- Draws the enemy object.
 -- Called once once each love.draw.
-function ChaseEnemy:draw()
+function FlybombEnemy:draw()
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
 --- Draws the enemy outline and collision area.
 -- Called once once each love.draw if debug parameter passed.
-function ChaseEnemy:drawDebug()
+function FlybombEnemy:drawDebug()
   local lg = love.graphics
   local x  = self.box.x
   local y  = self.box.y
   local w  = self.box.w
   local h  = self.box.h
-  local cx = self.box.x + self.sprite:getWidth()/2
-  local cy = self.box.y + self.sprite:getHeight()/2
+  local ix = self.initialPosition.x
   lg.setColor(255, 0, 0, 50)
   lg.rectangle("fill", x, y, w, h)
   lg.setColor(255, 0, 0)
   lg.rectangle("line", x, y, w, h)
   lg.setColor(255, 255, 0, 50)
-  lg.circle("fill", cx, cy, self.range, 100)
+  lg.rectangle("fill", ix - self.range, y, self.range * 2, h)
   lg.setColor(255, 255, 0)
-  lg.circle("line", cx, cy, self.range, 100)
+  lg.rectangle("line", ix - self.range, y, self.range * 2, h)
   lg.setColor(255, 255, 255)
 end
 
@@ -129,7 +137,7 @@ end
 -- The enemy (subject) had previously subscribed
 -- to the collision system (observer).
 -- @param other
-function ChaseEnemy:notifyCollision(other)
+function FlybombEnemy:notifyCollision(other)
   if other.type == "Tile" then
     self.grounded = true
     self.yspeed = 0
@@ -144,6 +152,6 @@ end
 --- Specifies the type of that object.
 -- @param type
 -- @return boolean
-function ChaseEnemy:is(type)
+function FlybombEnemy:is(type)
   return type == self.type
 end

@@ -12,6 +12,9 @@ weapons       = {}
 
 chaseEnemies     = {}
 rightLeftEnemies = {}
+flybombEnemies   = {}
+
+bombs = {}
 
 psystem = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
@@ -35,11 +38,12 @@ end
 
 --- Initializes enemies.
 function loadEnemies()
-  table.insert(enemies, Enemy(70, 0))
-  table.insert(enemies, Enemy(150, 0))
-  table.insert(enemies, Enemy(200, 0))
-  table.insert(chaseEnemies, ChaseEnemy(250, 0))
-  table.insert(rightLeftEnemies, RightLeftEnemy(300, 0))
+  -- table.insert(enemies, Enemy(70, 0))
+  -- table.insert(enemies, Enemy(150, 0))
+  -- table.insert(enemies, Enemy(200, 0))
+  -- table.insert(chaseEnemies, ChaseEnemy(250, 0))
+  -- table.insert(rightLeftEnemies, RightLeftEnemy(300, 0))
+  table.insert(flybombEnemies, FlybombEnemy(150, 50))
 end
 
 --- Initializes items.
@@ -88,12 +92,15 @@ function gameState:update(dt)
   updateGameObjects(dt, enemies)
   updateGameObjects(dt, chaseEnemies)
   updateGameObjects(dt, rightLeftEnemies)
+  updateGameObjects(dt, flybombEnemies)
   updateGameObjects(dt, items)
   updateGameObjects(dt, bullets)
   updateGameObjects(dt, missleBullets)
+  updateGameObjects(dt, bombs)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
   updateGameObjects(dt, bite)
+
   checkCollision()
   deleteDeadEntities()
 end
@@ -112,7 +119,7 @@ end
 function deleteDeadEntities()
   deleteDead(enemies)
   deleteDead(chaseEnemies)
-  deleteDead(chaseEnemies)
+  -- deleteDead(chaseEnemies)
   deleteDead(items)
   -- deleteDead(bite)
   deleteDead(weapons)
@@ -178,10 +185,12 @@ function gameState:draw()
   drawGameObjects(enemies)
   drawGameObjects(chaseEnemies)
   drawGameObjects(rightLeftEnemies)
+  drawGameObjects(flybombEnemies)
   drawGameObjects(items)
   drawGameObjects(ladders)
   drawGameObjects(bullets)
   drawGameObjects(missleBullets)
+  drawGameObjects(bombs)
   drawGameObjects(bite)
   drawGameObjects(weapons)
 
@@ -241,6 +250,9 @@ function drawDebug()
     for i,v in ipairs(rightLeftEnemies) do
       v:drawDebug()
     end
+    for i,v in ipairs(flybombEnemies) do
+      v:drawDebug()
+    end
     for i,v in ipairs(items) do
       v:drawDebug()
     end
@@ -248,6 +260,9 @@ function drawDebug()
       v:drawDebug()
     end
     for i,v in ipairs(missleBullets) do
+      v:drawDebug()
+    end
+    for i,v in ipairs(bombs) do
       v:drawDebug()
     end
     for i,v in ipairs(bite) do

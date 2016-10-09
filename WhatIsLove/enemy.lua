@@ -18,6 +18,7 @@ local ENEMY_GRAVITY      = 800
 local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
 local ENEMYSTATE_WALKING = 1
+local ENEMYSTATE_FLYING  = 2
 
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed

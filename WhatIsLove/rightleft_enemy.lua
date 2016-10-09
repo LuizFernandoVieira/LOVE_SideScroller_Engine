@@ -33,6 +33,7 @@ function RightLeftEnemy:_init(x, y)
   self.range           = 80
   self.standingTime    = 0
   self.walkingTime     = 0
+  self.xspeed          = - 0.5
 end
 
 --- Updates the enemy object.
@@ -50,15 +51,22 @@ function RightLeftEnemy:update(dt)
   if self.state == ENEMYSTATE_IDLE then
     self.standingTime = self.standingTime + dt
     if isToLongStanding(self) then
+      print("To long standing")
       self.state = ENEMYSTATE_WALKING
       self.standingTime = 0
-      self.xspeed = - 0.5
+      if self.facingRight then
+        self.xspeed = 0.5
+      else
+        self.xspeed = -0.5
+      end
     end
   -- WALKING STATE
   elseif self.state == ENEMYSTATE_WALKING then
     self.walkingTime = self.walkingTime + dt
     if isToLongWalking(self) then
+      print("To long walking")
       self.state = ENEMYSTATE_IDLE
+      self.xspeed = 0
       self.walkingTime = 0
     else
       walkRightLeft(self)
@@ -77,7 +85,7 @@ function isToLongStanding(enemy)
 end
 
 function isToLongWalking(enemy)
-  if enemy.walkingTime > 3 then
+  if enemy.walkingTime > 9 then
     return true
   else
     return false
@@ -87,8 +95,10 @@ end
 function walkRightLeft(enemy)
   if enemy.box.x < enemy.initialPosition.x - enemy.range then
     enemy.xspeed = 0.5
+    enemy.facingRight = true
   elseif enemy.box.x > enemy.initialPosition.x + enemy.range then
     enemy.xspeed = - 0.5
+    enemy.facingRight = false
   end
 end
 
@@ -102,14 +112,19 @@ end
 -- Called once once each love.draw if debug parameter passed.
 function RightLeftEnemy:drawDebug()
   local lg = love.graphics
-  local x  = self.initialPosition.x
+  local x  = self.box.x
   local y  = self.box.y
   local w  = self.box.w
   local h  = self.box.h
+  local ix = self.initialPosition.x
   lg.setColor(255, 0, 0, 50)
-  lg.rectangle("fill", x - self.range, y, self.range * 2, h)
+  lg.rectangle("fill", x, y, w, h)
   lg.setColor(255, 0, 0)
-  lg.rectangle("line", x - self.range, y, self.range * 2, h)
+  lg.rectangle("line", x, y, w, h)
+  lg.setColor(255, 255, 0, 50)
+  lg.rectangle("fill", ix - self.range, y, self.range * 2, h)
+  lg.setColor(255, 255, 0)
+  lg.rectangle("line", ix - self.range, y, self.range * 2, h)
   lg.setColor(255, 255, 255)
 end
 

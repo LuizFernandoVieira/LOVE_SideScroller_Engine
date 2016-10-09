@@ -11,6 +11,8 @@ local OPTIONS_STRINGS = {
   "BACK"
 }
 
+local selectSound = love.audio.newSource("audio/select.wav")
+
 --- Initializes the options state.
 function optionsState:init()
   currentGameState = "optionsState"
@@ -59,6 +61,8 @@ end
 --- Checks for keyboard presses.
 -- @param key
 function optionsState:keypressed(key)
+  selectSound:play()
+
   if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
   elseif key == "up" or key == "w" then
@@ -66,6 +70,7 @@ function optionsState:keypressed(key)
   end
 
   if key == "left" or key == "right"  or key == "a" or key == "d" then
+    -- SCALE
     if selection == 1 then
       if key == "left" or key == "a" then
         local min = math.min(config.scale - 1, NUMBER_OF_OPTIONS)
@@ -75,6 +80,7 @@ function optionsState:keypressed(key)
         config.scale = math.max(min, 1)
       end
       setMode()
+    -- FULLSCREEN
     elseif selection == 2 then
       if key == "left" or key == "a" then
         if config.fullscreen > 0 then
@@ -87,9 +93,15 @@ function optionsState:keypressed(key)
           setMode()
         end
       end
+    -- VSYNC
     elseif selection == 3 then
       config.vsync = not config.vsync
       setMode()
+    -- SOUND
+    elseif selection == 4 then
+
+    -- MUSIC
+    elseif selection == 5 then
     end
   end
 

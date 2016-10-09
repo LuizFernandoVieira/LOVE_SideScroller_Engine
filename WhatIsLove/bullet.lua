@@ -63,9 +63,10 @@ end
 -- If so it should be destroyed.
 -- @return boolean
 function Bullet:isDead()
-  if distanceLeft > 0 then
+  if self.distanceLeft > 0 then
     return false
   else
+    print("mata")
     return true
   end
 end

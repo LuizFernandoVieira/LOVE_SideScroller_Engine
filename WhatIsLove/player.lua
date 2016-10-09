@@ -288,26 +288,26 @@ function Player:shot()
     shotSound:play()
     if self.weapon == PLAYERWEAPON_GUN then
       if self.facingRight then
-        table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 40))
+        table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 10000))
       else
-        table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 40))
+        table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 10000))
       end
     elseif self.weapon == PLAYERWEAPON_SHOTGUN then
       if self.shotgunCooldown <= 0 then
         self.shotgunCooldown = 0.3
         if self.facingRight then
-          table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 40))
+          table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 10000))
         else
-          table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 40))
+          table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 10000))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
       end
     elseif self.weapon == PLAYERWEAPON_MISSLEGUN then
       if self.facingRight then
-        table.insert(missleBullets, MissleBullet(self.box.x, self.box.y+7, 250, 40))
+        table.insert(missleBullets, MissleBullet(self.box.x, self.box.y+7, 250, 10000))
       else
-        table.insert(missleBullets, MissleBullet(self.box.x-5, self.box.y+7, -250, 40))
+        table.insert(missleBullets, MissleBullet(self.box.x-5, self.box.y+7, -250, 10000))
       end
     end
   end

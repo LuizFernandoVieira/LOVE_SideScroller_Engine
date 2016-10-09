@@ -68,7 +68,7 @@ end
 -- If so it should be destroyed.
 -- @return boolean
 function Bomb:isDead()
-  if timeToExplode <= 0 then
+  if self.timeToExplode <= 0 then
     return true
   else
     return false

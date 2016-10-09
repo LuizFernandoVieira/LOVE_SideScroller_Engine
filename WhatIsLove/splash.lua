@@ -1,9 +1,12 @@
 local transitionTime
 
+splashSound = love.audio.newSource("audio/teste.mp3")
+
 ---
 --
 function splashState:init()
   transitionTime = 0
+  -- splashSound:play()
 end
 
 ---

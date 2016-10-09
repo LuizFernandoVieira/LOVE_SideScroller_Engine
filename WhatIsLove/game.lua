@@ -1,25 +1,23 @@
-player        = {}
-tiles         = {}
-map           = {}
-enemies       = {}
-items         = {}
-particles     = {}
-bullets       = {}
-missleBullets = {}
-bite          = {}
-ladders       = {}
-weapons       = {}
-
+player           = {}
+tiles            = {}
+map              = {}
+enemies          = {}
 chaseEnemies     = {}
 rightLeftEnemies = {}
 flybombEnemies   = {}
+items            = {}
+particles        = {}
+bullets          = {}
+bombs            = {}
+missleBullets    = {}
+bite             = {}
+ladders          = {}
+weapons          = {}
 
-bombs = {}
-
-psystem = {}
+psystem     = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 
-sound = love.audio.newSource("audio/teste.mp3")
+sound     = love.audio.newSource("audio/teste.mp3")
 jumpSound = love.audio.newSource("audio/jump.wav")
 shotSound = love.audio.newSource("audio/shot.wav")
 
@@ -66,7 +64,8 @@ end
 
 --- Initializes audio.
 function loadAudio()
-  sound:play()
+  -- splashSound:stop()
+  -- sound:play()
 end
 
 --- Initializes particles.
@@ -122,9 +121,13 @@ end
 function deleteDeadEntities()
   deleteDead(enemies)
   deleteDead(chaseEnemies)
-  -- deleteDead(chaseEnemies)
+  deleteDead(rightLeftEnemies)
+  deleteDead(flybombEnemies)
   deleteDead(items)
   -- deleteDead(bite)
+  deleteDead(bullets)
+  deleteDead(missleBullets)
+  deleteDead(bombs)
   deleteDead(weapons)
 end
 
@@ -205,6 +208,19 @@ function gameState:draw()
 
   -- love.graphics.draw(psystem, love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5)
 
+  drawMobileTouches()
+
+  love.graphics.push()
+  setZoom()
+  love.graphics.scale(config.scale)
+
+  drawHUD()
+
+  love.graphics.pop()
+  love.graphics.setScissor()
+end
+
+function drawMobileTouches()
   if love.system.getOS() == "Android" then
     local touches = love.touch.getTouches()
     for i, id in ipairs(touches) do
@@ -216,15 +232,6 @@ function gameState:draw()
     end
       drawMobileControler()
   end
-
-  love.graphics.push()
-  setZoom()
-  love.graphics.scale(config.scale)
-
-  drawHUD()
-
-  love.graphics.pop()
-  love.graphics.setScissor()
 end
 
 --- Draws game objects received as parameter.

@@ -8,6 +8,8 @@ local MENU_STRINGS = {
   "EXIT"
 }
 
+local selectSound = love.audio.newSource("audio/select.wav")
+
 --- Initializes the menu state.
 function menuState:init()
   currentGameState = "menuState"
@@ -49,6 +51,8 @@ end
 --- Checks for keyboard presses.
 -- @param key
 function menuState:keypressed(key)
+  selectSound:play()
+
   if key == "down" or key == "s" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
   elseif key == "up" or key == "w" then
@@ -70,6 +74,8 @@ end
 -- @param joystick
 -- @param button
 function menuState:gamepadpressed(joystick, button)
+  selectSound:play()
+
   if button == "dpdown" then
     selection = wrap(selection + 1, 1, NUMBER_OF_OPTIONS)
   elseif button == "dpup" then

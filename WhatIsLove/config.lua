@@ -52,17 +52,20 @@ function setMode()
   local lw = love.window
 
 	if  os == "Android" then
-    lw.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {fullscreen=true, vsync=config.vsync})
+    local conf = {fullscreen=true, vsync=config.vsync}
+    lw.setMode(lg.getWidth(), lg.getHeight(), conf)
   else
 		if config.fullscreen == 0 then
-			lw.setMode(WIDTH*config.scale, HEIGHT*config.scale, {fullscreen=false, vsync=config.vsync})
+      local conf = {fullscreen=false, vsync=config.vsync}
+			lw.setMode(WIDTH*config.scale, HEIGHT*config.scale, conf)
 			lg.setScissor()
 		elseif config.fullscreen > 0 and config.fullscreen <= 3 then
+      local conf = {fullscreen=true, vsync=config.vsync}
 			lw.setMode(0,0, {fullscreen=true, vsync=config.vsync})
-			lw.setMode(love.graphics.getWidth(), love.graphics.getHeight(), {fullscreen=true, vsync=config.vsync})
+			lw.setMode(lg.getWidth(), lg.getHeight(), conf)
 		end
-		fs_translatex = (love.graphics.getWidth()-WIDTH*config.scale)/2
-		fs_translatey = (love.graphics.getHeight()-HEIGHT*config.scale)/2
+		fs_translatex = (lg.getWidth()-WIDTH*config.scale)/2
+		fs_translatey = (lg.getHeight()-HEIGHT*config.scale)/2
   end
 end
 

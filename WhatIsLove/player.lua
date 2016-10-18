@@ -1,4 +1,4 @@
- Player         = {}
+Player         = {}
 Player.__index = Player
 
 setmetatable(Player, {
@@ -18,6 +18,8 @@ local PLAYER_ANIM_WALKING     = "img/PlayerNormal_Walking.png"
 local PLAYER_ANIM_INF_WALKING = "img/PlayerAngry_Walking.png"
 local PLAYER_ANIM_JUMPING     = "img/PlayerNormal_Jupming.png"
 local PLAYER_ANIM_INF_JUMPING = "img/PlayerAngry_Jumping.png"
+local PLAYER_ANIM_DYING       = "img/PlayerNormal_Idle.png"
+local PLAYER_ANIM_INF_DYING   = "img/PlayerAngry_Idle.png"
 
 local PLAYER_VELOCITY       = 1
 local PLAYER_ITEMS          = 1
@@ -65,6 +67,8 @@ function Player:_init(x, y)
   self.infected        = false
   self.weapon          = PLAYERWEAPON_GUN
   self.shotgunCooldown = 0
+  self.dmgCooldown     = 0
+  self.respawnTime     = 3
 
   self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
@@ -74,6 +78,8 @@ function Player:_init(x, y)
   self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_JUMPING, 1, 1)
   self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animFallingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
+  self.animDying           = Sprite:_init(PLAYER_ANIM_DYING, 1, 1)
+  self.animDyingInfected   = Sprite:_init(PLAYER_ANIM_INF_DYING, 1, 1)
   self.sprite              = self.animIdle
 
   self.boxIdle            = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
@@ -84,6 +90,8 @@ function Player:_init(x, y)
   self.boxJumpingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
   self.boxFalling         = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
   self.boxFallingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
+  self.boxDying           = Rect(x, y, self.animDying:getWidth(), self.animDying:getHeight())
+  self.boxDyingInfected   = Rect(x, y, self.animDyingInfected:getWidth(), self.animDyingInfected:getHeight())
   self.box                = self.boxIdle
 
   return self
@@ -97,6 +105,12 @@ function Player:update(dt)
 
   lastX = self.box.x
   lastY = self.box.y
+
+  print("dcd: " .. self.dmgCooldown)
+
+  if self.state ~= PLAYERSTATE_DEAD then
+    self.dmgCooldown = self.dmgCooldown - dt
+  end
 
   -- IDLE STATE
   if self.state == PLAYERSTATE_IDLE then
@@ -116,6 +130,7 @@ function Player:update(dt)
     self:updateClimbing(dt)
   -- DEAD STATE
   elseif self.state == PLAYERSTATE_DEAD then
+    self:updateDead(dt)
   elseif self.state == PLAYERSTATE_JUMPING then
     self:updateWalking(dt)
     self:updateGravity(dt)
@@ -248,6 +263,8 @@ function Player:updateClimbing(dt)
     self.box.y = self.box.y + 2
   end
 
+  -- logica de sair da escada
+
   -- if not joystick then return
   if love.keyboard.isDown('space') then
     self:jump()
@@ -257,11 +274,31 @@ end
 --- Updates the player when his state is dead.
 -- @param dt Time passed since last update
 function Player:updateDead(dt)
+  self.respawnTime = self.respawnTime - 0.02
+  self:updateGravity(dt)
+
+  print("rt: " .. self.respawnTime)
+  print("update dead")
+
+  if self.respawnTime <= 0 then
+    print("PRONTO para respawn")
+    self.infected = false
+    self.sprite = self.animIdle
+    self.boxIdle.x = self.box.x
+    self.boxIdle.y = self.box.y
+    self.box = self.boxIdle
+    self.respawnTime = 3
+    self.state = PLAYERSTATE_IDLE
+  end
 end
 
 --- Apply impulse in the y axis.
 -- Player can't jump on air.
 function Player:jump()
+  if player.state == PLAYERSTATE_DEAD then
+    return
+  end
+
   jumpSound:play()
 
   if self.state == PLAYERSTATE_CLIMBING then
@@ -283,7 +320,11 @@ end
 -- current weapon that the player is using.
 function Player:shot()
   if self.infected then
-    table.insert(bite, Bite(self.box.x-8, self.box.y-8, 32, 32))
+    if self.facingRight then
+      table.insert(bite, Bite(self.box.x+16, self.box.y+5, 32, 32, self.facingRight))
+    else
+      table.insert(bite, Bite(self.box.x-16, self.box.y+5, 32, 32, self.facingRight))
+    end
   else
     shotSound:play()
     if self.weapon == PLAYERWEAPON_GUN then
@@ -381,25 +422,32 @@ end
 -- @param other
 function Player:notifyCollision(other)
   if other.type == "Tile" then
-
     -- se colidiu verticalmente
     self.grounded = true
     self.yspeed = 0
     self.box.y = lastY
-
     self.state = PLAYERSTATE_IDLE
-
     -- se colidiu horizontalmente
     -- if  then
     --   self.box.x = lastX
     -- end
-
   elseif other.type == "Enemy" then
-    self.infected = true
-    self.sprite = self.animIdleInfected
-    self.boxIdleInfected.x = self.box.x
-    self.boxIdleInfected.y = self.box.y
-    self.box = self.boxIdleInfected
+    if self.dmgCooldown <= 0 then
+      if not self.infected then
+        self.dmgCooldown = 3
+        self.infected = true
+        self.sprite = self.animIdleInfected
+        self.boxIdleInfected.x = self.box.x
+        self.boxIdleInfected.y = self.box.y
+        self.box = self.boxIdleInfected
+      elseif self.infected then
+        self.sprite = self.animDyingInfected
+        self.boxDyingInfected.x = self.box.x
+        self.boxDyingInfected.y = self.box.y
+        self.box = self.boxDyingInfected
+        self.state = PLAYERSTATE_DEAD
+      end
+    end
   elseif other.type == "Antidote" then
     self.infected = false
     self.sprite = self.animIdle

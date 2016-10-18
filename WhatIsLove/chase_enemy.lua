@@ -45,14 +45,14 @@ function ChaseEnemy:update(dt)
 
   -- IDLE STATE
   if self.state == ENEMYSTATE_IDLE then
-    if isPlayerInRange(self) then
+    if self:isPlayerInRange() then
       self.state = ENEMYSTATE_WALKING
     end
   -- WALKING STATE
   elseif self.state == ENEMYSTATE_WALKING then
-    if isPlayerInRange(self) and not isPlayerToClose(self) then
+    if self:isPlayerInRange() and not isPlayerToClose(self) then
       chasePlayer(self)
-    elseif isPlayerInRange(self) and isPlayerToClose(self) then
+    elseif self:isPlayerInRange() and isPlayerToClose(self) then
     else
       self.state = ENEMYSTATE_IDLE
     end
@@ -61,16 +61,16 @@ function ChaseEnemy:update(dt)
   self.sprite:update(dt)
 end
 
-function isPlayerInRange(enemy)
-  local cx = enemy.box.x
-  local cy = enemy.box.y + enemy.sprite:getHeight()/2
+function ChaseEnemy:isPlayerInRange()
+  local cx = self.box.x
+  local cy = self.box.y + self.sprite:getHeight()/2
   local point = Vector(player.box.x, player.box.y)
   local circleCenter = Vector(cx, cy)
-  if isCollidingPointCircle(point, circleCenter, enemy.range) then
+  if isCollidingPointCircle(point, circleCenter, self.range) then
     return true
   else
-    if enemy.state == ENEMYSTATE_WALKING then
-      enemy.xspeed = 0
+    if self.state == ENEMYSTATE_WALKING then
+      self.xspeed = 0
     end
     return false
   end

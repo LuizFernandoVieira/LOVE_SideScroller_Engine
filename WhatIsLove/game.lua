@@ -52,7 +52,7 @@ function loadItems()
   table.insert(items, Item(20, 150))
   table.insert(items, Item(0, 150))
   table.insert(items, Antidote(110, 150))
-  table.insert(ladders, Ladder(230, 100))
+  table.insert(ladders, Ladder(230, 120))
   table.insert(weapons, Gun(50, 100))
   table.insert(weapons, Shotgun(100, 100))
   table.insert(weapons, Misslegun(150, 100))
@@ -124,7 +124,7 @@ function deleteDeadEntities()
   deleteDead(rightLeftEnemies)
   deleteDead(flybombEnemies)
   deleteDead(items)
-  -- deleteDead(bite)
+  deleteDead(bite)
   deleteDead(bullets)
   deleteDead(missleBullets)
   deleteDead(bombs)
@@ -148,6 +148,10 @@ end
 -- Called once once each love.update.
 function handleInputs()
   local lk = love.keyboard
+
+  if player.state == PLAYERSTATE_DEAD then
+    return
+  end
 
   if lk.isDown('w') then player:setMovingUp(true)    end
   if lk.isDown('d') then player:setMovingRight(true) end
@@ -206,7 +210,9 @@ function gameState:draw()
 
   camera:detach()
 
-  -- love.graphics.draw(psystem, love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5)
+  -- love.graphics.draw(
+  -- psystem, love.graphics.getWidth() *
+  -- 0.5, love.graphics.getHeight() * 0.5)
 
   drawMobileTouches()
 
@@ -218,20 +224,6 @@ function gameState:draw()
 
   love.graphics.pop()
   love.graphics.setScissor()
-end
-
-function drawMobileTouches()
-  if love.system.getOS() == "Android" then
-    local touches = love.touch.getTouches()
-    for i, id in ipairs(touches) do
-        local x, y = love.touch.getPosition(id)
-        local lg = love.graphics
-        lg.setColor(0, 255, 0)
-        lg.circle("fill", x, y, 20)
-        lg.setColor(255, 255, 255)
-    end
-      drawMobileControler()
-  end
 end
 
 --- Draws game objects received as parameter.
@@ -267,15 +259,6 @@ function drawDebugGameObjects(gameObjects)
   end
 end
 
---- Draws a controler on mobile devices
--- so the player can see where he should
--- click to activate ingame player actions.
-function drawMobileControler()
-  love.graphics.setColor( 255, 255, 255, 50 )
-  love.graphics.draw(mobileCntrl, 25, 500, 0, 1, 1)
-  love.graphics.setColor( 255, 255, 255, 255 )
-end
-
 --- Draws all graphics that act as a head-up display.
 function drawHUD()
   love.graphics.setFont(font.bold)
@@ -285,18 +268,13 @@ function drawHUD()
   love.graphics.setColor(255,255,255)
 end
 
---- Checks for key release events.
--- @param key Keyboard key that has been released
-function gameState:keyreleased(key)
-  if key == 'w' then player:setMovingUp(false)    end
-  if key == 'd' then player:setMovingRight(false) end
-  if key == 's' then player:setMovingDown(false)  end
-  if key == 'a' then player:setMovingLeft(false)  end
-end
-
 --- Checks for key press events.
 -- @param key Keyboard key that has been pressed
 function gameState:keypressed(key)
+  if player.state == PLAYERSTATE_DEAD then
+    return
+  end
+
   if key == "w"     then player:jump() end
   if key == "space" then player:shot() end
   if key == "x"     then player:dash() end
@@ -315,6 +293,34 @@ function gameState:keypressed(key)
   if key == "escape" then Gamestate.switch(menuState) end
 end
 
+--- Checks for key release events.
+-- @param key Keyboard key that has been released
+function gameState:keyreleased(key)
+  if key == 'w' then player:setMovingUp(false)    end
+  if key == 'd' then player:setMovingRight(false) end
+  if key == 's' then player:setMovingDown(false)  end
+  if key == 'a' then player:setMovingLeft(false)  end
+end
+
+--- Checks for gamepad press events.
+-- @param joystick
+-- @param button
+function gameState:gamepadpressed(joystick, button)
+  if player.state == PLAYERSTATE_DEAD then
+    return
+  end
+
+  if button == "a" then
+    if player.state == PLAYERSTATE_CLIMBING then
+      player.state = PLAYERSTATE_WALKING
+    end
+    player:jump()
+  end
+
+  if button == "x" then player:shot() end
+  if button == "b" then player:dash() end
+end
+
 --- Checks for gamepad release events.
 -- @param joystick
 -- @param button
@@ -328,19 +334,4 @@ function gameState:gamepadreleased(joystick, button)
     player:setMovingRight(false)
     player:setMovingLeft(false)
   end
-end
-
---- Checks for gamepad press events.
--- @param joystick
--- @param button
-function gameState:gamepadpressed(joystick, button)
-  if button == "a" then
-    if player.state == PLAYERSTATE_CLIMBING then
-      player.state = PLAYERSTATE_WALKING
-    end
-    player:jump()
-  end
-
-  if button == "x" then player:shot() end
-  if button == "b" then player:dash() end
 end

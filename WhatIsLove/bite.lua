@@ -18,12 +18,14 @@ local BITE_IMAGE = "img/Bite.png"
 -- @param y Position in the y axis that this object will be placed
 -- @param w Width of the collision area of that bite
 -- @param h Height of the collision area of that bite
-function Bite:_init(x, y, w, h)
+function Bite:_init(x, y, w, h, facingRight)
   GameObject:_init(x, y)
 
   self.type         = "Bite"
-  self.sprite       = Sprite:_init(BITE_IMAGE, 3, 0)
+  self.sprite       = Sprite:_init(BITE_IMAGE, 3, 0.15)
   self.box          = Rect(x, y, w, h)
+  self.facingRight  = facingRight
+  self.lifeTime     = 0.45
 end
 
 --- Updates the bite object.
@@ -31,12 +33,13 @@ end
 -- @param dt Time passed since last update
 function Bite:update(dt)
   self.sprite:update(dt)
+  self.lifeTime = self.lifeTime - dt
 end
 
 --- Draws the antidote object.
 -- Called once once each love.draw.
 function Bite:draw()
-  self.sprite:draw(self.box.x, self.box.y)
+  self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
 --- Draws the bite outline and collision area.
@@ -57,7 +60,11 @@ end
 --- Bite is killed after instantiate.
 -- @return boolean
 function Bite:isDead()
-  return true
+  if self.lifeTime <= 0 then
+    return true
+  else
+    return false
+  end
 end
 
 --- Notifies the bite that a collision involving himself had ocurred.

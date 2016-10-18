@@ -37,6 +37,7 @@ function menuState:draw()
 
   love.graphics.setColor(0, 0, 0)
   love.graphics.setFont(font.bold)
+  
 	for i=1,NUMBER_OF_OPTIONS do
 		if i == selection then
 			love.graphics.print(">", ARROW_X, 86+i*13)

@@ -113,8 +113,20 @@ end
 -- @param gameObjects List of game objects
 function updateGameObjects(dt, gameObjects)
   for _,v in ipairs(gameObjects) do
-    v:update(dt)
+    if isInsideCamera(v) then
+      v:update(dt)
+    end
   end
+end
+
+function isInsideCamera(gameObject)
+  local lgw = love.graphics.getWidth()
+  local cx, cy = camera:position()
+  if gameObject.box.x > cx - lgw/2
+  and gameObject.box.x < cx + lgw/2 then
+    return true
+  end
+  return false
 end
 
 --- Deletes entities marked as dead.

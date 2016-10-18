@@ -106,7 +106,7 @@ function Player:update(dt)
   lastX = self.box.x
   lastY = self.box.y
 
-  print("dcd: " .. self.dmgCooldown)
+  -- print("dcd: " .. self.dmgCooldown)
 
   if self.state ~= PLAYERSTATE_DEAD then
     self.dmgCooldown = self.dmgCooldown - dt

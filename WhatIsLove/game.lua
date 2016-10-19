@@ -22,6 +22,8 @@ sound     = love.audio.newSource("audio/teste.mp3")
 jumpSound = love.audio.newSource("audio/jump.wav")
 shotSound = love.audio.newSource("audio/shot.wav")
 
+overlayImg = love.graphics.newImage("img/Overlay.png")
+
 --- Initializes objects that belong to the first level.
 -- Called once on game state change.
 function gameState:init()
@@ -58,6 +60,7 @@ function loadItems()
   table.insert(weapons, Gun(50, 100))
   table.insert(weapons, Shotgun(100, 100))
   table.insert(weapons, Misslegun(150, 100))
+  table.insert(weapons, Machinegun(0, 150))
 end
 
 -- Initializes background objects.
@@ -89,7 +92,7 @@ function gameState:update(dt)
 
   local dx = player.box.x - camera.x
   local dy = player.box.y - camera.y
-  camera:move(dx/2, dy/2)
+  camera:move(dx/2, 0)
 
   -- psystem:update(dt)
 
@@ -205,7 +208,7 @@ end
 function gameState:draw()
   camera:attach(config.scale)
 
-  love.graphics.setBackgroundColor(255, 255, 255)
+  love.graphics.setBackgroundColor(230, 214, 156)
   love.graphics.draw(tilesetBatch)
 
   drawGameObjects(enemies)

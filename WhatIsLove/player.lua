@@ -31,9 +31,10 @@ local PLAYERSTATE_CLIMBING  = 3
 local PLAYERSTATE_DEAD      = 4
 local PLAYERSTATE_JUMPING   = 5
 
-local PLAYERWEAPON_GUN       = 0
-local PLAYERWEAPON_SHOTGUN   = 1
-local PLAYERWEAPON_MISSLEGUN = 2
+local PLAYERWEAPON_GUN        = 0
+local PLAYERWEAPON_SHOTGUN    = 1
+local PLAYERWEAPON_MISSLEGUN  = 2
+local PLAYERWEAPON_MACHINEGUN = 3
 
 local GRAVITY               = 800
 local PLAYER_FACINGRIGHT    = true
@@ -72,7 +73,7 @@ function Player:_init(x, y)
 
   self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
   self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
-  self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING, 4, 0.1)
+  self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING, 8, 0.1)
   self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_WALKING, 3, 0.15)
   self.animJumping         = Sprite:_init(PLAYER_ANIM_JUMPING, 1, 1)
   self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_JUMPING, 1, 1)
@@ -277,11 +278,7 @@ function Player:updateDead(dt)
   self.respawnTime = self.respawnTime - 0.02
   self:updateGravity(dt)
 
-  print("rt: " .. self.respawnTime)
-  print("update dead")
-
   if self.respawnTime <= 0 then
-    print("PRONTO para respawn")
     self.infected = false
     self.sprite = self.animIdle
     self.boxIdle.x = self.box.x
@@ -319,36 +316,53 @@ end
 --- Fires a projectile depending on the
 -- current weapon that the player is using.
 function Player:shot()
+  local x = self.box.x
+  local y = self.box.y
+
   if self.infected then
     if self.facingRight then
-      table.insert(bite, Bite(self.box.x+16, self.box.y+5, 32, 32, self.facingRight))
+      table.insert(bite, Bite(x+16, y+5, 32, 32, self.facingRight))
     else
-      table.insert(bite, Bite(self.box.x-16, self.box.y+5, 32, 32, self.facingRight))
+      table.insert(bite, Bite(x-16, y+5, 32, 32, self.facingRight))
     end
   else
     shotSound:play()
+    -- Gun
     if self.weapon == PLAYERWEAPON_GUN then
       if self.facingRight then
-        table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 10000))
+        table.insert(bullets, Bullet(x, y+7, 250, 10000))
       else
-        table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 10000))
+        table.insert(bullets, Bullet(x-5, y+7, -250, 10000))
       end
+    -- Shotgun
     elseif self.weapon == PLAYERWEAPON_SHOTGUN then
       if self.shotgunCooldown <= 0 then
         self.shotgunCooldown = 0.3
         if self.facingRight then
-          table.insert(bullets, Bullet(self.box.x, self.box.y+7, 250, 10000))
+          table.insert(bullets, Bullet(x, y+7, 250, 10000))
         else
-          table.insert(bullets, Bullet(self.box.x-5, self.box.y+7, -250, 10000))
+          table.insert(bullets, Bullet(x-5, y+7, -250, 10000))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
       end
+    -- Misslegun
     elseif self.weapon == PLAYERWEAPON_MISSLEGUN then
       if self.facingRight then
-        table.insert(missleBullets, MissleBullet(self.box.x, self.box.y+7, 250, 10000))
+        table.insert(missleBullets, MissleBullet(x, y+7, 250, 100))
       else
-        table.insert(missleBullets, MissleBullet(self.box.x-5, self.box.y+7, -250, 10000))
+        table.insert(missleBullets, MissleBullet(x-5, y+7, -250, 100))
+      end
+    -- Machinegun
+    elseif self.weapon ==  PLAYERWEAPON_MACHINEGUN then
+      if self.facingRight then
+        table.insert(bullets, Bullet(x, y, 150, 50, -40))
+        table.insert(bullets, Bullet(x, y, 150, 50, 0))
+        table.insert(bullets, Bullet(x, y, 150, 50, 40))
+      else
+        table.insert(bullets, Bullet(x, y, -150, 50, -40))
+        table.insert(bullets, Bullet(x, y, -150, 50, 0))
+        table.insert(bullets, Bullet(x, y, -150, 50, 40))
       end
     end
   end
@@ -464,6 +478,8 @@ function Player:notifyCollision(other)
     self.weapon = PLAYERWEAPON_SHOTGUN
   elseif other.type == "Misslegun" then
     self.weapon = PLAYERWEAPON_MISSLEGUN
+  elseif other.type == "Machinegun" then
+    self.weapon = PLAYERWEAPON_MACHINEGUN
   end
 end
 

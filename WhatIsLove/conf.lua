@@ -1,7 +1,7 @@
 function love.conf(t)
   t.window.title          = "Bunny"             -- The window title (string)
-  t.window.width          = 256 * 3             -- The window width (number) 16
-  t.window.height         = 200 * 3             -- The window height (number) 12.5
+  t.window.width          = 160 * 3             -- The window width (number) 16
+  t.window.height         = 144 * 3             -- The window height (number) 12.5
   t.console               = false               -- Attach a console (boolean, Windows only)
   t.window.resizable      = false               -- Let the window be user-resizable (boolean)
   t.window.fullscreen     = false               -- Enable fullscreen (boolean)

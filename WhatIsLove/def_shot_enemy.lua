@@ -104,7 +104,6 @@ function DefShotEnemy:drawDebug()
   local y  = self.box.y
   local w  = self.box.w
   local h  = self.box.h
-  local ix = self.initialPosition.x
   lg.setColor(255, 0, 0, 50)
   lg.rectangle("fill", x, y, w, h)
   lg.setColor(255, 0, 0)

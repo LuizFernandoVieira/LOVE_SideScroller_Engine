@@ -1,5 +1,5 @@
-local ARROW_X           = 100
-local MENU_STRING_X     = 108
+local ARROW_X           = 60
+local MENU_STRING_X     = 68
 local NUMBER_OF_OPTIONS = 6
 
 local OPTIONS_STRINGS = {
@@ -36,23 +36,23 @@ function optionsState:draw()
 
   lg.setFont(font.bold)
 
-  lg.print("SCALE:", 65, 63)
-  lg.print(config.scale, 167, 63)
+  lg.print("SCALE:", 25, 33)
+  lg.print(config.scale, 120, 33)
 
-	lg.print("FULLSCREEN:", 65, 76)
-	if     config.fullscreen == 0 then lg.print("OFF", 167, 76)
-	elseif config.fullscreen == 1 then lg.print("FILL", 167, 76)
-	elseif config.fullscreen == 2 then lg.print("ZOOM", 167, 76)
-	else								               lg.print("SCALE", 167, 76) end
+	lg.print("FULLSCREEN:", 25, 46)
+	if     config.fullscreen == 0 then lg.print("OFF", 120, 46)
+	elseif config.fullscreen == 1 then lg.print("FILL", 120, 46)
+	elseif config.fullscreen == 2 then lg.print("ZOOM", 120, 46)
+	else								               lg.print("SCALE", 120, 46) end
 
-	lg.print("VSYNC:", 65, 89)
-  lg.print(config.vsync and "ON" or "OFF", 167, 89)
+	lg.print("VSYNC:", 25, 59)
+  lg.print(config.vsync and "ON" or "OFF", 120, 59)
 
-	lg.print("SOUND VOL:", 65, 102)
-	lg.print("MUSIC VOL:", 65, 115)
-	lg.print("BACK", 65, 128)
+	lg.print("SOUND VOL:", 25, 72)
+	lg.print("MUSIC VOL:", 25, 85)
+	lg.print("BACK", 25, 98)
 
-	lg.print(">", 52, 49+selection*13)
+	lg.print(">", 17, 20+selection*13)
 
   lg.pop()
   lg.setScissor()

@@ -22,8 +22,8 @@ Camera    = require "hump.camera"
 suit      = require "suit"
 
 -- Window Info
-WIDTH = 256
-HEIGHT = 200
+WIDTH  = 160
+HEIGHT = 144
 
 -- Debug Mode
 debug = false
@@ -58,6 +58,7 @@ require("weapon")
 require("gun")
 require("shotgun")
 require("misslegun")
+require("machinegun")
 require("map")
 require("tile")
 require("vector")

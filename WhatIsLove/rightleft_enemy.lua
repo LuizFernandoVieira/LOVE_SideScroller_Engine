@@ -11,7 +11,7 @@ setmetatable(RightLeftEnemy, {
 })
 
 local RIGHTLEFT_ENEMY_TYPE  = "RightLeftEnemy"
-local RIGHTLEFT_ENEMY_IMAGE = "img/Player_Raiva.png"
+local RIGHTLEFT_ENEMY_IMAGE = "img/EnemyFox.png"
 
 local ENEMY_VELOCITY     = 0
 local ENEMY_HEALTH       = 1

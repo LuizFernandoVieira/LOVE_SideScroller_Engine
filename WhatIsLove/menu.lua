@@ -1,5 +1,5 @@
-local ARROW_X           = 100
-local MENU_STRING_X     = 108
+local ARROW_X           = 60
+local MENU_STRING_X     = 68
 local NUMBER_OF_OPTIONS = 3
 
 local MENU_STRINGS = {
@@ -13,7 +13,7 @@ local selectSound = love.audio.newSource("audio/select.wav")
 --- Initializes the menu state.
 function menuState:init()
   currentGameState = "menuState"
-  love.graphics.setBackgroundColor(255, 255, 255)
+  love.graphics.setBackgroundColor(230, 214, 156)
   selection = 1
 
   if love.system.getOS() == "Android" then
@@ -35,14 +35,14 @@ function menuState:draw()
   setZoom()
   love.graphics.scale(config.scale)
 
-  love.graphics.setColor(0, 0, 0)
+  love.graphics.setColor(123, 114, 99)
   love.graphics.setFont(font.bold)
-  
+
 	for i=1,NUMBER_OF_OPTIONS do
 		if i == selection then
-			love.graphics.print(">", ARROW_X, 86+i*13)
+			love.graphics.print(">", ARROW_X, 50+i*13)
 		end
-		love.graphics.print(MENU_STRINGS[i], MENU_STRING_X, 86+i*13)
+		love.graphics.print(MENU_STRINGS[i], MENU_STRING_X, 50+i*13)
 	end
 
   love.graphics.pop()

@@ -127,6 +127,15 @@ function checkCollision()
     end
   end
 
+  for i,v in ipairs(tiles) do
+    for j,u in ipairs(defShotEnemies) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(defShotEnemies[j])
+        u:notifyCollision(tiles[i])
+      end
+    end
+  end
+
   for i,v in ipairs(items) do
     if isColliding(v.box, player.box, v.rotation, player.rotation) then
       items[i]:notifyCollision(player)

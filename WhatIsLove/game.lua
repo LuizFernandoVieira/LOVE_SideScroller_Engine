@@ -5,6 +5,7 @@ enemies          = {}
 chaseEnemies     = {}
 rightLeftEnemies = {}
 flybombEnemies   = {}
+defShotEnemies   = {}
 items            = {}
 particles        = {}
 bullets          = {}
@@ -41,10 +42,11 @@ end
 function loadEnemies()
   table.insert(enemies, Enemy(70, 0))
   table.insert(enemies, Enemy(150, 0))
-  table.insert(enemies, Enemy(200, 0))
+  -- table.insert(enemies, Enemy(200, 0))
   table.insert(chaseEnemies, ChaseEnemy(250, 0))
   table.insert(rightLeftEnemies, RightLeftEnemy(350, 0))
   table.insert(flybombEnemies, FlybombEnemy(450, 50))
+  table.insert(defShotEnemies, DefShotEnemy(200, 0))
 end
 
 --- Initializes items.
@@ -95,6 +97,7 @@ function gameState:update(dt)
   updateGameObjects(dt, chaseEnemies)
   updateGameObjects(dt, rightLeftEnemies)
   updateGameObjects(dt, flybombEnemies)
+  updateGameObjects(dt, defShotEnemies)
   updateGameObjects(dt, items)
   updateGameObjects(dt, bullets)
   updateGameObjects(dt, missleBullets)
@@ -135,6 +138,7 @@ function deleteDeadEntities()
   deleteDead(chaseEnemies)
   deleteDead(rightLeftEnemies)
   deleteDead(flybombEnemies)
+  deleteDead(defShotEnemies)
   deleteDead(items)
   deleteDead(bite)
   deleteDead(bullets)
@@ -208,6 +212,7 @@ function gameState:draw()
   drawGameObjects(chaseEnemies)
   drawGameObjects(rightLeftEnemies)
   drawGameObjects(flybombEnemies)
+  drawGameObjects(defShotEnemies)
   drawGameObjects(items)
   drawGameObjects(ladders)
   drawGameObjects(bullets)
@@ -257,6 +262,7 @@ function drawDebug()
     drawDebugGameObjects(chaseEnemies)
     drawDebugGameObjects(rightLeftEnemies)
     drawDebugGameObjects(flybombEnemies)
+    drawDebugGameObjects(defShotEnemies)
     drawDebugGameObjects(items)
     drawDebugGameObjects(bullets)
     drawDebugGameObjects(missleBullets)

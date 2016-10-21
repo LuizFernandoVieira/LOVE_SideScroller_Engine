@@ -10,7 +10,7 @@ setmetatable(Misslegun, {
   end,
 })
 
-local MISSLEGUN_IMAGE = "img/misc/spr_smoke_4.png"
+local MISSLEGUN_IMAGE = "img/missil.png"
 
 --- Initializes laser gun.
 -- @param x Position in the x axis that this object will be placed

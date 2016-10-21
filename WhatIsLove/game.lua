@@ -15,6 +15,10 @@ bite             = {}
 ladders          = {}
 weapons          = {}
 
+bgObjects        = {}
+
+defShotEnemiesBullets = {}
+
 psystem     = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 
@@ -47,15 +51,19 @@ function loadEnemies()
   -- table.insert(enemies, Enemy(200, 0))
   table.insert(chaseEnemies, ChaseEnemy(250, 0))
   table.insert(rightLeftEnemies, RightLeftEnemy(350, 0))
-  table.insert(flybombEnemies, FlybombEnemy(450, 50))
+  table.insert(flybombEnemies, FlybombEnemy(450, 70))
   table.insert(defShotEnemies, DefShotEnemy(200, 0))
 end
 
 --- Initializes items.
 function loadItems()
+  table.insert(items, Item(30, 150))
+  table.insert(items, Item(35, 160))
   table.insert(items, Item(20, 150))
-  table.insert(items, Item(0, 150))
-  table.insert(items, Antidote(110, 150))
+  table.insert(items, Item(25, 160))
+  table.insert(items, Item(10, 150))
+  table.insert(items, Item(15, 160))
+  table.insert(items, Antidote(100, 160))
   table.insert(ladders, Ladder(230, 120))
   table.insert(weapons, Gun(50, 100))
   table.insert(weapons, Shotgun(100, 100))
@@ -65,6 +73,11 @@ end
 
 -- Initializes background objects.
 function loadBackgroundObjects()
+  table.insert(bgObjects, BgObject(200, 60, "img/BackgroundTree.png"))
+  table.insert(bgObjects, BgObject(300, 60, "img/BackgroundTree.png"))
+  table.insert(bgObjects, BgObject(400, 60, "img/BackgroundTree.png"))
+  table.insert(bgObjects, BgObject(500, 60, "img/BackgroundTree.png"))
+  table.insert(bgObjects, BgObject(600, 60, "img/BackgroundTree.png"))
 end
 
 --- Initializes audio.
@@ -104,10 +117,12 @@ function gameState:update(dt)
   updateGameObjects(dt, items)
   updateGameObjects(dt, bullets)
   updateGameObjects(dt, missleBullets)
+  updateGameObjects(dt, defShotEnemiesBullets)
   updateGameObjects(dt, bombs)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
   updateGameObjects(dt, bite)
+  updateGameObjects(dt, bgObjects)
 
   checkCollision()
   deleteDeadEntities()
@@ -145,6 +160,7 @@ function deleteDeadEntities()
   deleteDead(items)
   deleteDead(bite)
   deleteDead(bullets)
+  deleteDead(defShotEnemiesBullets)
   deleteDead(missleBullets)
   deleteDead(bombs)
   deleteDead(weapons)
@@ -211,14 +227,16 @@ function gameState:draw()
   love.graphics.setBackgroundColor(230, 214, 156)
   love.graphics.draw(tilesetBatch)
 
+  drawGameObjects(bgObjects)
   drawGameObjects(enemies)
   drawGameObjects(chaseEnemies)
   drawGameObjects(rightLeftEnemies)
   drawGameObjects(flybombEnemies)
   drawGameObjects(defShotEnemies)
   drawGameObjects(items)
-  drawGameObjects(ladders)
+  -- drawGameObjects(ladders)
   drawGameObjects(bullets)
+  drawGameObjects(defShotEnemiesBullets)
   drawGameObjects(missleBullets)
   drawGameObjects(bombs)
   drawGameObjects(bite)
@@ -268,6 +286,7 @@ function drawDebug()
     drawDebugGameObjects(defShotEnemies)
     drawDebugGameObjects(items)
     drawDebugGameObjects(bullets)
+    drawDebugGameObjects(defShotEnemiesBullets)
     drawDebugGameObjects(missleBullets)
     drawDebugGameObjects(bombs)
     drawDebugGameObjects(bite)
@@ -282,8 +301,9 @@ end
 
 --- Draws all graphics that act as a head-up display.
 function drawHUD()
+  love.graphics.draw(love.graphics.newImage("img/Overlay.png"), 0, 0)
   love.graphics.setFont(font.bold)
-  love.graphics.setColor(16,12,9)
+  love.graphics.setColor(179, 164, 106)
   love.graphics.print("ITEMS: " .. player.items, 170, 8)
   love.graphics.print("WEAPON: " .. "1", 170, 20)
   love.graphics.setColor(255,255,255)

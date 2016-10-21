@@ -11,7 +11,7 @@ setmetatable(RightLeftEnemy, {
 })
 
 local RIGHTLEFT_ENEMY_TYPE  = "RightLeftEnemy"
-local RIGHTLEFT_ENEMY_IMAGE = "img/EnemyFox.png"
+local RIGHTLEFT_ENEMY_IMAGE = "img/EnemyBearcat.png"
 
 local ENEMY_VELOCITY     = 0
 local ENEMY_HEALTH       = 1
@@ -27,7 +27,7 @@ function RightLeftEnemy:_init(x, y)
   Enemy:_init(x, y)
 
   self.type            = RIGHTLEFT_ENEMY_TYPE
-  self.sprite          = Sprite:_init(RIGHTLEFT_ENEMY_IMAGE, 1, 1)
+  self.sprite          = Sprite:_init(RIGHTLEFT_ENEMY_IMAGE, 4, 0.2)
   self.box             = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.initialPosition = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.range           = 80
@@ -70,14 +70,13 @@ function RightLeftEnemy:update(dt)
       self.walkingTime = 0
     else
       walkRightLeft(self)
+      self.sprite:update(dt)
     end
   end
-
-  self.sprite:update(dt)
 end
 
 function isToLongStanding(enemy)
-  if enemy.standingTime > 3 then
+  if enemy.standingTime > 9 then
     return true
   else
     return false

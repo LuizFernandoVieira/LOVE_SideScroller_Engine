@@ -10,7 +10,7 @@ setmetatable(Machinegun, {
   end,
 })
 
-local MACHINEGUN_IMAGE = "img/Tiro.png"
+local MACHINEGUN_IMAGE = "img/shotgun.png"
 
 --- Initializes shotgun.
 -- @param x Position in the x axis that this object will be placed

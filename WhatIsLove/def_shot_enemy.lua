@@ -10,12 +10,13 @@ setmetatable(DefShotEnemy, {
   end,
 })
 
-local DEFSHOT_ENEMY_TYPE   = "DefShotEnemy"
-local DEFSHOT_ENEMY_IMAGE  = "img/Player_Raiva.png"
-local ENEMY_HEALTH         = 1
-local ENEMY_GRAVITY        = 800
-local ENEMYSTATE_HIDING    = 0
-local ENEMYSTATE_ATTACKING = 1
+local DEFSHOT_ENEMY_TYPE            = "DefShotEnemy"
+local DEFSHOT_ENEMY_HIDING_IMAGE    = "img/EnemyShellIdle.png"
+local DEFSHOT_ENEMY_ATTACKING_IMAGE = "img/EnemyShellAttacking.png"
+local ENEMY_HEALTH                  = 1
+local ENEMY_GRAVITY                 = 800
+local ENEMYSTATE_HIDING             = 0
+local ENEMYSTATE_ATTACKING          = 1
 
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed
@@ -24,12 +25,15 @@ function DefShotEnemy:_init(x, y)
   Enemy:_init(x, y)
 
   self.type          = DEFSHOT_ENEMY_TYPE
-  self.sprite        = Sprite:_init(DEFSHOT_ENEMY_IMAGE, 1, 1)
-  self.box           = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.state         = ENEMYSTATE_HIDING
   self.hidingTime    = 0
   self.attackingTime = 0
   self.shotTime      = 0
+
+  self.animHiding    = Sprite:_init(DEFSHOT_ENEMY_HIDING_IMAGE, 1, 1)
+  self.animAttacking = Sprite:_init(DEFSHOT_ENEMY_ATTACKING_IMAGE, 12, 0.1)
+  self.sprite        = self.animHiding
+  self.box           = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
 --- Updates the enemy object.
@@ -47,6 +51,7 @@ function DefShotEnemy:update(dt)
     if self:isToLongHiding() then
       print("To long hiding")
       self.state = ENEMYSTATE_ATTACKING
+      self.sprite = self.animAttacking
       self.hidingTime = 0
     end
   -- ATTACKING STATE
@@ -61,6 +66,7 @@ function DefShotEnemy:update(dt)
     if self:isToLongAttacking() then
       print("To long attacking")
       self.state = ENEMYSTATE_HIDING
+      self.sprite = self.animHiding
       self.attackingTime = 0
       self.shotTime = 0
     end
@@ -80,14 +86,14 @@ function DefShotEnemy:isToLongAttacking()
 end
 
 function DefShotEnemy:shot()
-  local x = self.box.x
-  local y = self.box.y
+  local x = self.box.x - 6
+  local y = self.box.y + 6
   local distLeft = 10000
-  table.insert(bullets, Bullet(x, y,  50, distLeft, -50))
-  table.insert(bullets, Bullet(x, y, -50, distLeft, -50))
-  table.insert(bullets, Bullet(x, y,  00, distLeft, -50))
-  table.insert(bullets, Bullet(x, y, -50, distLeft,  00))
-  table.insert(bullets, Bullet(x, y,  50, distLeft,  00))
+  table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y,  50, distLeft, -50))
+  table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y, -50, distLeft, -50))
+  table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y,  00, distLeft, -50))
+  table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y, -50, distLeft,  00))
+  table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y,  50, distLeft,  00))
 end
 
 --- Draws the enemy object.

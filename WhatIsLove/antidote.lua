@@ -10,7 +10,7 @@ setmetatable(Antidote, {
   end,
 })
 
-local ANTIDOTE_IMAGE = "img/misc/spr_cannondown_0.png"
+local ANTIDOTE_IMAGE = "img/Antidote.png"
 
 --- Initializes antidote.
 -- @param x Position in the x axis that this object will be placed

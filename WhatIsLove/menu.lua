@@ -1,5 +1,5 @@
-local ARROW_X           = 60
-local MENU_STRING_X     = 68
+local ARROW_X           = 50
+local MENU_STRING_X     = 58
 local NUMBER_OF_OPTIONS = 3
 
 local MENU_STRINGS = {
@@ -40,9 +40,9 @@ function menuState:draw()
 
 	for i=1,NUMBER_OF_OPTIONS do
 		if i == selection then
-			love.graphics.print(">", ARROW_X, 50+i*13)
+			love.graphics.print(">", ARROW_X, 60+i*13)
 		end
-		love.graphics.print(MENU_STRINGS[i], MENU_STRING_X, 50+i*13)
+		love.graphics.print(MENU_STRINGS[i], MENU_STRING_X, 60+i*13)
 	end
 
   love.graphics.pop()

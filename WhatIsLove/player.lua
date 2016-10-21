@@ -10,35 +10,40 @@ setmetatable(Player, {
   end,
 })
 
-local PLAYER_TYPE           = "Player"
+local PLAYER_TYPE               = "Player"
 
-local PLAYER_ANIM_IDLE        = "img/PlayerNormal_Idle.png"
-local PLAYER_ANIM_INF_IDLE    = "img/PlayerAngry_Idle.png"
-local PLAYER_ANIM_WALKING     = "img/PlayerNormal_Walking.png"
-local PLAYER_ANIM_INF_WALKING = "img/PlayerAngry_Walking.png"
-local PLAYER_ANIM_JUMPING     = "img/PlayerNormal_Jupming.png"
-local PLAYER_ANIM_INF_JUMPING = "img/PlayerAngry_Jumping.png"
-local PLAYER_ANIM_DYING       = "img/PlayerNormal_Idle.png"
-local PLAYER_ANIM_INF_DYING   = "img/PlayerAngry_Idle.png"
+local PLAYER_ANIM_IDLE          = "img/PlayerNormal_Idle.png"
+local PLAYER_ANIM_INF_IDLE      = "img/PlayerAngry_Idle.png"
+local PLAYER_ANIM_WALKING       = "img/PlayerNormal_Walking.png"
+local PLAYER_ANIM_INF_WALKING   = "img/PlayerAngry_Walking.png"
+local PLAYER_ANIM_JUMPING       = "img/PlayerNormal_Jupming.png"
+local PLAYER_ANIM_INF_JUMPING   = "img/PlayerAngry_Jumping.png"
+local PLAYER_ANIM_DYING         = "img/PlayerNormal_Idle.png"
+local PLAYER_ANIM_INF_DYING     = "img/PlayerAngry_Idle.png"
 
-local PLAYER_VELOCITY       = 1
-local PLAYER_ITEMS          = 1
+local PLAYER_GUN_ANIM           = "img/GunPistol.png"
+local PLAYER_MACHINEGUN_ANIM    = "img/GunMachinegun.png"
+local PLAYER_SHOTGUN_ANIM       = "img/GunShotgun.png"
+local PLAYER_MISSLEGUN_ANIM     = "img/GunMisselLaucher.png"
 
-local PLAYERSTATE_IDLE      = 0
-local PLAYERSTATE_WALKING   = 1
-local PLAYERSTATE_DASHING   = 2
-local PLAYERSTATE_CLIMBING  = 3
-local PLAYERSTATE_DEAD      = 4
-local PLAYERSTATE_JUMPING   = 5
+local PLAYER_VELOCITY           = 1
+local PLAYER_ITEMS              = 1
 
-local PLAYERWEAPON_GUN        = 0
-local PLAYERWEAPON_SHOTGUN    = 1
-local PLAYERWEAPON_MISSLEGUN  = 2
-local PLAYERWEAPON_MACHINEGUN = 3
+local PLAYERSTATE_IDLE          = 0
+local PLAYERSTATE_WALKING       = 1
+local PLAYERSTATE_DASHING       = 2
+local PLAYERSTATE_CLIMBING      = 3
+local PLAYERSTATE_DEAD          = 4
+local PLAYERSTATE_JUMPING       = 5
 
-local GRAVITY               = 800
-local PLAYER_FACINGRIGHT    = true
-local JUMP_POWER            = 255
+local PLAYERWEAPON_GUN          = 0
+local PLAYERWEAPON_SHOTGUN      = 1
+local PLAYERWEAPON_MISSLEGUN    = 2
+local PLAYERWEAPON_MACHINEGUN   = 3
+
+local GRAVITY                   = 800
+local PLAYER_FACINGRIGHT        = true
+local JUMP_POWER                = 255
 
 local INFECTED_BONUS_VELOCITY   = 2.5
 local INFECTED_BONUS_GRAVITY    = 3
@@ -71,17 +76,23 @@ function Player:_init(x, y)
   self.dmgCooldown     = 0
   self.respawnTime     = 3
 
-  self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
-  self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
-  self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING, 8, 0.1)
+  self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE       , 1, 1   )
+  self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE   , 1, 1   )
+  self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING    , 8, 0.1)
   self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_WALKING, 3, 0.15)
-  self.animJumping         = Sprite:_init(PLAYER_ANIM_JUMPING, 1, 1)
-  self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_JUMPING, 1, 1)
-  self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE, 1, 1)
-  self.animFallingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE, 1, 1)
-  self.animDying           = Sprite:_init(PLAYER_ANIM_DYING, 1, 1)
-  self.animDyingInfected   = Sprite:_init(PLAYER_ANIM_INF_DYING, 1, 1)
+  self.animJumping         = Sprite:_init(PLAYER_ANIM_JUMPING    , 1, 1   )
+  self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_JUMPING, 1, 1   )
+  self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE       , 1, 1   )
+  self.animFallingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE   , 1, 1   )
+  self.animDying           = Sprite:_init(PLAYER_ANIM_DYING      , 1, 1   )
+  self.animDyingInfected   = Sprite:_init(PLAYER_ANIM_INF_DYING  , 1, 1   )
   self.sprite              = self.animIdle
+
+  self.animGun        = Sprite:_init(PLAYER_GUN_ANIM       , 1, 1)
+  self.animMachinegun = Sprite:_init(PLAYER_MACHINEGUN_ANIM, 1, 1)
+  self.animShotgun    = Sprite:_init(PLAYER_SHOTGUN_ANIM   , 1, 1)
+  self.animMisslegun  = Sprite:_init(PLAYER_MISSLEGUN_ANIM , 1, 1)
+  self.gunSprite      = self.animGun
 
   self.boxIdle            = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
   self.boxIdleInfected    = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
@@ -390,6 +401,7 @@ end
 --- Draws the player object.
 -- Called once once each love.draw.
 function Player:draw()
+  self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
   self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
@@ -474,12 +486,16 @@ function Player:notifyCollision(other)
     self.canClimb = true
   elseif other.type == "Gun" then
     self.weapon = PLAYERWEAPON_GUN
+    self.gunSprite = self.animGun
   elseif other.type == "Shotgun" then
     self.weapon = PLAYERWEAPON_SHOTGUN
+    self.gunSprite = self.animShotgun
   elseif other.type == "Misslegun" then
     self.weapon = PLAYERWEAPON_MISSLEGUN
+    self.gunSprite = self.animMisslegun
   elseif other.type == "Machinegun" then
     self.weapon = PLAYERWEAPON_MACHINEGUN
+    self.gunSprite = self.animMachinegun
   end
 end
 

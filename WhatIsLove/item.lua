@@ -10,7 +10,9 @@ setmetatable(Item, {
   end,
 })
 
-local ITEM_IMAGE = "img/misc/spr_star_0.png"
+local ITEM_IMAGE = "img/COIN.png"
+
+local coindSound = love.audio.newSource("audio/coin.wav")
 
 --- Initializes item.
 -- @param x Position in the x axis that this object will be placed
@@ -19,7 +21,7 @@ function Item:_init(x, y)
   GameObject:_init(x, y)
 
   self.type      = "Item"
-  self.sprite    = Sprite:_init(ITEM_IMAGE, 1, 1)
+  self.sprite    = Sprite:_init(ITEM_IMAGE, 2, 0.5)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false
 end
@@ -69,6 +71,7 @@ end
 function Item:notifyCollision(other)
   if other.type == "Player" then
     self.collected = true
+    coindSound:play()
   end
 end
 

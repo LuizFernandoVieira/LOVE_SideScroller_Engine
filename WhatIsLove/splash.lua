@@ -24,7 +24,7 @@ function splashState:draw()
   local width = lg.getWidth()
   local height = lg.getHeight()
   quad.screen = lg.newQuad(0, 0, width, height, width, height)
-  local splashImage1 = lg.newImage("img/splash.jpg")
+  local splashImage1 = lg.newImage("img/splash.png")
   local splashImage2 = lg.newImage("img/lovesplashpixel.png")
 
   if transitionTime < 4 then

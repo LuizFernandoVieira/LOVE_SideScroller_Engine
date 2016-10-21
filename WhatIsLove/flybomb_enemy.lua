@@ -11,7 +11,7 @@ setmetatable(FlybombEnemy, {
 })
 
 local FLYBOMB_ENEMY_TYPE  = "FlybombEnemy"
-local FLYBOMB_ENEMY_IMAGE = "img/Player_Raiva.png"
+local FLYBOMB_ENEMY_IMAGE = "img/EnemyFox-o-copter.png"
 
 local ENEMY_VELOCITY     = 0
 local ENEMY_HEALTH       = 1
@@ -28,7 +28,7 @@ function FlybombEnemy:_init(x, y)
   Enemy:_init(x, y)
 
   self.type             = FLYBOMB_ENEMY_TYPE
-  self.sprite           = Sprite:_init(FLYBOMB_ENEMY_IMAGE, 1, 1)
+  self.sprite           = Sprite:_init(FLYBOMB_ENEMY_IMAGE, 2, 0.1)
   self.box              = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.initialPosition  = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.range            = 80

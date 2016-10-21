@@ -11,7 +11,7 @@ setmetatable(Enemy, {
 })
 
 local ENEMY_TYPE         = "Enemy"
-local ENEMY_IMAGE        = "img/Player_Raiva.png"
+local ENEMY_IMAGE        = "img/EnemyFox.png"
 local ENEMY_VELOCITY     = 1
 local ENEMY_HEALTH       = 1
 local ENEMY_GRAVITY      = 800

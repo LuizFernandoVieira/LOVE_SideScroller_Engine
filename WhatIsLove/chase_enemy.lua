@@ -11,7 +11,7 @@ setmetatable(ChaseEnemy, {
 })
 
 local CHASE_ENEMY_TYPE         = "ChaseEnemy"
-local CHASE_ENEMY_IMAGE        = "img/Player_Raiva.png"
+local CHASE_ENEMY_IMAGE        = "img/EnemyFox.png"
 
 local ENEMY_VELOCITY     = 0
 local ENEMY_HEALTH       = 1

@@ -94,15 +94,15 @@ function Player:_init(x, y)
   self.animMisslegun  = Sprite:_init(PLAYER_MISSLEGUN_ANIM , 1, 1)
   self.gunSprite      = self.animGun
 
-  self.boxIdle            = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
-  self.boxIdleInfected    = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
-  self.boxWalking         = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
-  self.boxWalkingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
-  self.boxJumping         = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
-  self.boxJumpingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
-  self.boxFalling         = Rect(x, y, self.animIdle:getWidth(), self.animIdle:getHeight())
-  self.boxFallingInfected = Rect(x, y, self.animIdleInfected:getWidth(), self.animIdleInfected:getHeight())
-  self.boxDying           = Rect(x, y, self.animDying:getWidth(), self.animDying:getHeight())
+  self.boxIdle            = Rect(x, y, self.animIdle:getWidth()         , self.animIdle:getHeight()         )
+  self.boxIdleInfected    = Rect(x, y, self.animIdleInfected:getWidth() , self.animIdleInfected:getHeight() )
+  self.boxWalking         = Rect(x, y, self.animIdle:getWidth()         , self.animIdle:getHeight()         )
+  self.boxWalkingInfected = Rect(x, y, self.animIdleInfected:getWidth() , self.animIdleInfected:getHeight() )
+  self.boxJumping         = Rect(x, y, self.animIdle:getWidth()         , self.animIdle:getHeight()         )
+  self.boxJumpingInfected = Rect(x, y, self.animIdleInfected:getWidth() , self.animIdleInfected:getHeight() )
+  self.boxFalling         = Rect(x, y, self.animIdle:getWidth()         , self.animIdle:getHeight()         )
+  self.boxFallingInfected = Rect(x, y, self.animIdleInfected:getWidth() , self.animIdleInfected:getHeight() )
+  self.boxDying           = Rect(x, y, self.animDying:getWidth()        , self.animDying:getHeight()        )
   self.boxDyingInfected   = Rect(x, y, self.animDyingInfected:getWidth(), self.animDyingInfected:getHeight())
   self.box                = self.boxIdle
 
@@ -117,8 +117,6 @@ function Player:update(dt)
 
   lastX = self.box.x
   lastY = self.box.y
-
-  -- print("dcd: " .. self.dmgCooldown)
 
   if self.state ~= PLAYERSTATE_DEAD then
     self.dmgCooldown = self.dmgCooldown - dt

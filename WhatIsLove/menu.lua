@@ -47,6 +47,7 @@ function menuState:draw()
 
   love.graphics.pop()
   love.graphics.setScissor()
+  drawMobileTouches()
 end
 
 --- Checks for keyboard presses.

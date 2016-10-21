@@ -96,7 +96,7 @@ function checkCollision()
   for i,v in ipairs(defShotEnemiesBullets) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
       player:notifyCollision(defShotEnemiesBullets[i])
-      tiles[i]:notifyCollision(player)
+      defShotEnemiesBullets[i]:notifyCollision(player)
     end
   end
 

@@ -33,7 +33,45 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
       end
 
     elseif currentGameState == "menuState" then
-      Gamestate.switch(gameState)
+
+      -- clicou para movimentar para baixo
+      if x > 400 and x < 520
+      and y > 1140 and y < 1260 then
+        selection = wrap(selection + 1, 1, 3)
+      end
+      -- clicou para movimentar para cima
+      if x > 400 and x < 520
+      and y > 624 and y < 745 then
+        selection = wrap(selection - 1, 1, 3)
+      end
+
+      -- clicou para selecionar no play
+      if x > love.graphics.getWidth()/2
+      + love.graphics.getWidth()/4
+      and selection == 1 then
+        Gamestate.switch(gameState)
+      end
+
+      -- clicou para selecionar no options
+      if x > love.graphics.getWidth()/2
+      + love.graphics.getWidth()/4
+      and selection == 2 then
+        Gamestate.switch(optionsState)
+      end
+
+    elseif currentGameState == "optionsState" then
+
+      -- clicou esquerda
+      if x > 100 and x < 220
+      and y > 840 and y < 940 then
+
+      end
+      -- clicou direita
+      if x > 590 and x < 710
+      and y > 830 and y < 950 then
+
+      end
+
     elseif currentGameState == "splashState" then
       Gamestate.switch(menuState)
     end
@@ -50,7 +88,8 @@ end
 -- @param dy
 -- @param pressure
 function love.touchreleased(id, x, y, dx, dy, pressure)
-  if love.system.getOS() == "Android" then
+  if love.system.getOS() == "Android"
+  and currentGameState == "gameState" then
     if x < love.graphics:getWidth()/2 then
       player:setMovingLeft(false)
       player:setMovingRight(false)
@@ -69,10 +108,10 @@ function love.draw()
 
     if currentGameState ~= "splashState" then
       local lg = love.graphics
-      lg.circle("fill", 410, 635, 100, 100)
-      lg.circle("fill", 410, 1150, 100, 100)
-      lg.circle("fill", 160, 890, 100, 100)
-      lg.circle("fill", 650, 890, 100, 100)
+      -- lg.circle("fill", 410, 635, 100, 100)
+      -- lg.circle("fill", 410, 1150, 100, 100)
+      -- lg.circle("fill", 160, 890, 100, 100)
+      -- lg.circle("fill", 650, 890, 100, 100)
     end
   end
 end

@@ -56,6 +56,7 @@ function optionsState:draw()
 
   lg.pop()
   lg.setScissor()
+  drawMobileTouches()
 end
 
 --- Checks for keyboard presses.

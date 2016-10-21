@@ -256,8 +256,8 @@ function gameState:draw()
 
   love.graphics.push()
   setZoom()
-  love.graphics.scale(config.scale)
 
+  love.graphics.scale(config.scale)
   drawHUD()
 
   love.graphics.pop()
@@ -304,8 +304,8 @@ function drawHUD()
   love.graphics.draw(love.graphics.newImage("img/Overlay.png"), 0, 0)
   love.graphics.setFont(font.bold)
   love.graphics.setColor(179, 164, 106)
-  love.graphics.print("ITEMS: " .. player.items, 170, 8)
-  love.graphics.print("WEAPON: " .. "1", 170, 20)
+  love.graphics.print("ITEMS: " .. player.items, 90, 2)
+  love.graphics.print("WEAPON: " .. player.weapon, 90, 9)
   love.graphics.setColor(255,255,255)
 end
 

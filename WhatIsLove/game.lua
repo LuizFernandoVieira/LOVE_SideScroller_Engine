@@ -18,7 +18,8 @@ weapons          = {}
 bgObjects        = {}
 
 defShotEnemiesBullets = {}
-machinegunBullets = {}
+machinegunBullets     = {}
+shotgunBullets        = {}
 
 psystem     = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
@@ -121,6 +122,7 @@ function gameState:update(dt)
   updateGameObjects(dt, missleBullets)
   updateGameObjects(dt, defShotEnemiesBullets)
   updateGameObjects(dt, machinegunBullets)
+  updateGameObjects(dt, shotgunBullets)
   updateGameObjects(dt, bombs)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
@@ -166,6 +168,7 @@ function deleteDeadEntities()
   deleteDead(defShotEnemiesBullets)
   deleteDead(machinegunBullets)
   deleteDead(missleBullets)
+  deleteDead(shotgunBullets)
   deleteDead(bombs)
   deleteDead(weapons)
 end
@@ -243,6 +246,7 @@ function gameState:draw()
   drawGameObjects(defShotEnemiesBullets)
   drawGameObjects(machinegunBullets)
   drawGameObjects(missleBullets)
+  drawGameObjects(shotgunBullets)
   drawGameObjects(bombs)
   drawGameObjects(bite)
   drawGameObjects(weapons)
@@ -294,6 +298,7 @@ function drawDebug()
     drawDebugGameObjects(defShotEnemiesBullets)
     drawDebugGameObjects(machinegunBullets)
     drawDebugGameObjects(missleBullets)
+    drawDebugGameObjects(shotgunBullets)
     drawDebugGameObjects(bombs)
     drawDebugGameObjects(bite)
   end

@@ -130,10 +130,10 @@ function optionsState:gamepadpressed(joystick, button)
   if button == "dpleft" or button == "dpright" then
     if selection == 1 then
       if button == "dpleft" then
-        local min = math.min(config.scale - 1, 4)
+        local min = math.min(config.scale - 1, NUMBER_OF_OPTIONS)
         config.scale = math.max(min, 1)
       elseif button == "dpright" then
-        local min = math.min(config.scale + 1, 4)
+        local min = math.min(config.scale + 1, NUMBER_OF_OPTIONS)
         config.scale = math.max(min, 1)
       end
       setMode()

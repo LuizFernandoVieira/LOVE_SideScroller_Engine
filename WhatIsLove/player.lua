@@ -348,9 +348,9 @@ function Player:shot()
       if self.shotgunCooldown <= 0 then
         self.shotgunCooldown = 0.3
         if self.facingRight then
-          table.insert(bullets, Bullet(x, y+7, 250, 90))
+          table.insert(shotgunBullets, ShotgunBullet(x, y+12, 20, 90))
         else
-          table.insert(bullets, Bullet(x-5, y+7, -250, 90))
+          table.insert(shotgunBullets, ShotgunBullet(x-5, y+12, -20, 90))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
@@ -358,20 +358,20 @@ function Player:shot()
     -- Misslegun
     elseif self.weapon == PLAYERWEAPON_MISSLEGUN then
       if self.facingRight then
-        table.insert(missleBullets, MissleBullet(x, y+7, 250, 90))
+        table.insert(missleBullets, MissleBullet(x, y+14, 20, 90))
       else
-        table.insert(missleBullets, MissleBullet(x-5, y+7, -250, 90))
+        table.insert(missleBullets, MissleBullet(x-5, y+14, -20, 90))
       end
     -- Machinegun
     elseif self.weapon ==  PLAYERWEAPON_MACHINEGUN then
       if self.facingRight then
-        table.insert(machinegunBullets, MachinegunBullet(x, y, 150, 50, -40))
-        table.insert(machinegunBullets, MachinegunBullet(x, y, 150, 50, 0))
-        table.insert(machinegunBullets, MachinegunBullet(x, y, 150, 50, 40))
+        table.insert(machinegunBullets, MachinegunBullet(x+4, y+12, 150, 50, -40))
+        table.insert(machinegunBullets, MachinegunBullet(x+4, y+12, 150, 50, 0))
+        table.insert(machinegunBullets, MachinegunBullet(x+4, y+12, 150, 50, 40))
       else
-        table.insert(machinegunBullets, MachinegunBullet(x, y, -150, 50, -40))
-        table.insert(machinegunBullets, MachinegunBullet(x, y, -150, 50, 0))
-        table.insert(machinegunBullets, MachinegunBullet(x, y, -150, 50, 40))
+        table.insert(machinegunBullets, MachinegunBullet(x-16, y+12, -150, 50, -40))
+        table.insert(machinegunBullets, MachinegunBullet(x-16, y+12, -150, 50, 0))
+        table.insert(machinegunBullets, MachinegunBullet(x-16, y+12, -150, 50, 40))
       end
     end
   end

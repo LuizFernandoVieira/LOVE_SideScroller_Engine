@@ -12,7 +12,9 @@ setmetatable(MissleBullet, {
 
 function MissleBullet:_init(x, y, speed, distanceLeft)
   Bullet:_init(x, y, speed, distanceLeft)
-  self.type = "MissleBullet"
+  self.type   = "MissleBullet"
+  self.sprite = Sprite:_init("img/GunMisselLaucher_bullet.png", 1, 1)
+  self.box    = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
 function MissleBullet:notifyCollision(other)

@@ -74,3 +74,12 @@ function splashState:keypressed(key)
     Gamestate.switch(menuState)
   end
 end
+
+--
+-- @param joystick
+-- @param button
+function splashState:gamepadpressed(joystick, button)
+  if button == "a" then
+    Gamestate.switch(menuState)
+  end
+end

@@ -339,18 +339,18 @@ function Player:shot()
     -- Gun
     if self.weapon == PLAYERWEAPON_GUN then
       if self.facingRight then
-        table.insert(bullets, Bullet(x, y+7, 250, 10000))
+        table.insert(bullets, Bullet(x, y+7, 250, 90))
       else
-        table.insert(bullets, Bullet(x-5, y+7, -250, 10000))
+        table.insert(bullets, Bullet(x-5, y+7, -250, 90))
       end
     -- Shotgun
     elseif self.weapon == PLAYERWEAPON_SHOTGUN then
       if self.shotgunCooldown <= 0 then
         self.shotgunCooldown = 0.3
         if self.facingRight then
-          table.insert(bullets, Bullet(x, y+7, 250, 10000))
+          table.insert(bullets, Bullet(x, y+7, 250, 90))
         else
-          table.insert(bullets, Bullet(x-5, y+7, -250, 10000))
+          table.insert(bullets, Bullet(x-5, y+7, -250, 90))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
@@ -358,20 +358,20 @@ function Player:shot()
     -- Misslegun
     elseif self.weapon == PLAYERWEAPON_MISSLEGUN then
       if self.facingRight then
-        table.insert(missleBullets, MissleBullet(x, y+7, 250, 100))
+        table.insert(missleBullets, MissleBullet(x, y+7, 250, 90))
       else
-        table.insert(missleBullets, MissleBullet(x-5, y+7, -250, 100))
+        table.insert(missleBullets, MissleBullet(x-5, y+7, -250, 90))
       end
     -- Machinegun
     elseif self.weapon ==  PLAYERWEAPON_MACHINEGUN then
       if self.facingRight then
-        table.insert(bullets, Bullet(x, y, 150, 50, -40))
-        table.insert(bullets, Bullet(x, y, 150, 50, 0))
-        table.insert(bullets, Bullet(x, y, 150, 50, 40))
+        table.insert(machinegunBullets, MachinegunBullet(x, y, 150, 50, -40))
+        table.insert(machinegunBullets, MachinegunBullet(x, y, 150, 50, 0))
+        table.insert(machinegunBullets, MachinegunBullet(x, y, 150, 50, 40))
       else
-        table.insert(bullets, Bullet(x, y, -150, 50, -40))
-        table.insert(bullets, Bullet(x, y, -150, 50, 0))
-        table.insert(bullets, Bullet(x, y, -150, 50, 40))
+        table.insert(machinegunBullets, MachinegunBullet(x, y, -150, 50, -40))
+        table.insert(machinegunBullets, MachinegunBullet(x, y, -150, 50, 0))
+        table.insert(machinegunBullets, MachinegunBullet(x, y, -150, 50, 40))
       end
     end
   end

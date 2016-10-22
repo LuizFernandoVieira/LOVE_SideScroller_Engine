@@ -1,7 +1,7 @@
-DefShotEnemiesBullets         = {}
-DefShotEnemiesBullets.__index = DefShotEnemiesBullets
+MachinegunBullet         = {}
+MachinegunBullet.__index = MachinegunBullet
 
-setmetatable(DefShotEnemiesBullets, {
+setmetatable(MachinegunBullet, {
   __index = GameObject,
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
@@ -17,10 +17,10 @@ local BULLET_IMAGE = "img/GunShotgun_Bullet.png"
 -- @param y Position in the y axis that this object will be placed
 -- @param speed Quantity that represents how fast this bullet moves
 -- @param distanceLeft Amount of space left before the bullet is destroyed
-function DefShotEnemiesBullets:_init(x, y, speed, distanceLeft, speedY)
+function MachinegunBullet:_init(x, y, speed, distanceLeft, speedY)
   GameObject:_init(x, y)
 
-  self.type         = "DefShotEnemiesBullet"
+  self.type         = "Bullet"
   self.sprite       = Sprite:_init(BULLET_IMAGE, 1, 1)
   self.speedX       = speed
   self.speedY       = speedY or 0
@@ -31,7 +31,7 @@ end
 --- Updates the bullet object.
 -- Called once once each love.update.
 -- @param dt Time passed since last update
-function DefShotEnemiesBullets:update(dt)
+function MachinegunBullet:update(dt)
   self.sprite:update(dt)
 
   local previousX   = self.box.x
@@ -44,13 +44,13 @@ end
 
 --- Draws the bullet object.
 -- Called once once each love.draw.
-function DefShotEnemiesBullets:draw()
+function MachinegunBullet:draw()
   self.sprite:draw(self.box.x, self.box.y, 0)
 end
 
 --- Draws the bite outline and collision area.
 -- Called once once each love.draw if debug parameter passed.
-function DefShotEnemiesBullets:drawDebug()
+function MachinegunBullet:drawDebug()
   local lg = love.graphics
   local x  = self.box.x + self.sprite:getWidth()/2
   local y  = self.box.y
@@ -66,7 +66,7 @@ end
 --- Checks if the bullet have traveled its full distance.
 -- If so it should be destroyed.
 -- @return boolean
-function DefShotEnemiesBullets:isDead()
+function MachinegunBullet:isDead()
   if self.distanceLeft > 0 then
     return false
   else
@@ -78,12 +78,21 @@ end
 -- The bullet (subject) had previously subscribed
 -- to the collision system (observer).
 -- @param other
-function DefShotEnemiesBullets:notifyCollision(other)
+function MachinegunBullet:notifyCollision(other)
+  if other.type == "Enemy"
+  or other.type == "ChaseEnemy"
+  or other.type == "RightLeftEnemy" then
+    for k,v in ipairs(bullets) do
+      if v.id == other.id then
+        bullets[k] = nil
+      end
+    end
+  end
 end
 
 --- Specifies the type of that object.
 -- @param type
 -- @return boolean
-function DefShotEnemiesBullets:is(type)
+function MachinegunBullet:is(type)
   return type == self.type
 end

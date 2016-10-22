@@ -92,10 +92,10 @@ function isToLongWalking(enemy)
 end
 
 function walkRightLeft(enemy)
-  if enemy.box.x < enemy.initialPosition.x - enemy.range then
+  if enemy.box:center().x < enemy.initialPosition.x - enemy.range then
     enemy.xspeed = 0.5
     enemy.facingRight = true
-  elseif enemy.box.x > enemy.initialPosition.x + enemy.range then
+  elseif enemy.box:center().x > enemy.initialPosition.x + enemy.range then
     enemy.xspeed = - 0.5
     enemy.facingRight = false
   end

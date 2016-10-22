@@ -61,6 +61,17 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
 
     elseif currentGameState == "optionsState" then
 
+      -- clicou para movimentar para baixo
+      if x > 400 and x < 520
+      and y > 1140 and y < 1260 then
+        selection = wrap(selection + 1, 1, 6)
+      end
+      -- clicou para movimentar para cima
+      if x > 400 and x < 520
+      and y > 624 and y < 745 then
+        selection = wrap(selection - 1, 1, 6)
+      end
+
       -- clicou esquerda
       if x > 100 and x < 220
       and y > 840 and y < 940 then
@@ -70,6 +81,13 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
       if x > 590 and x < 710
       and y > 830 and y < 950 then
 
+      end
+
+      -- clicou para selecionar no back
+      if x > love.graphics.getWidth()/2
+      + love.graphics.getWidth()/4
+      and selection == 6 then
+        Gamestate.switch(menuState)
       end
 
     elseif currentGameState == "splashState" then
@@ -136,5 +154,6 @@ end
 function drawMobileControler()
   love.graphics.setColor( 255, 255, 255, 50 )
   love.graphics.draw(mobileCntrl, 25, 500, 0, 1, 1)
+  love.graphics.draw(mobileCntrl, 1775, 500, 0, 1, 1)
   love.graphics.setColor( 255, 255, 255, 255 )
 end

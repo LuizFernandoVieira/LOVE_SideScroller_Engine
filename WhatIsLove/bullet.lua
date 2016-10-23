@@ -22,7 +22,7 @@ function Bullet:_init(x, y, speed, distanceLeft, speedY)
 
   self.type         = "Bullet"
   self.sprite       = Sprite:_init(BULLET_IMAGE, 1, 1)
-  self.speedX       = speed
+  self.speedX       = speed or 0
   self.speedY       = speedY or 0
   self.distanceLeft = distanceLeft
   self.box          = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
@@ -81,7 +81,9 @@ end
 function Bullet:notifyCollision(other)
   if other.type == "Enemy"
   or other.type == "ChaseEnemy"
-  or other.type == "RightLeftEnemy" then
+  or other.type == "RightLeftEnemy"
+  or other.type == "DefShotEnemy"
+  or other.type == "FlybombEnemy" then
     for k,v in ipairs(bullets) do
       if v.id == other.id then
         bullets[k] = nil

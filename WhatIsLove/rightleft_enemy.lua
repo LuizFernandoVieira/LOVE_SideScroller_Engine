@@ -20,6 +20,8 @@ local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
 local ENEMYSTATE_WALKING = 1
 
+local hurtSound = love.audio.newSource("audio/hurt.wav")
+
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed
 -- @param y Position in the y axis that this object will be placed
@@ -34,6 +36,8 @@ function RightLeftEnemy:_init(x, y)
   self.standingTime    = 0
   self.walkingTime     = 0
   self.xspeed          = - 0.5
+  self.health          = 3
+  self.dmgCooldown     = 3
 end
 
 --- Updates the enemy object.
@@ -46,6 +50,8 @@ function RightLeftEnemy:update(dt)
   self.box.y = self.box.y + self.yspeed * dt
 
   self.box.x = self.box.x + self.xspeed
+
+  self.dmgCooldown = self.dmgCooldown - 0.1
 
   -- IDLE STATE
   if self.state == ENEMYSTATE_IDLE then
@@ -136,10 +142,16 @@ function RightLeftEnemy:notifyCollision(other)
     self.grounded = true
     self.yspeed = 0
     self.box.y = self.lastY
-  elseif other.type == "Bullet" then
-    self.health = 0
-  elseif other.type == "Bite" then
-    self.health = 0
+  elseif other.type == "Bullet"
+  or     other.type == "Bite"
+  or     other.type == "MissleBullet"
+  or     other.type == "ShotgunBullet"
+  or     other.type == "MachinegunBullet" then
+    if self.dmgCooldown <= 0 then
+      hurtSound:play()
+      self.health = self.health - 1
+      self.dmgCooldown = 3
+    end
   end
 end
 

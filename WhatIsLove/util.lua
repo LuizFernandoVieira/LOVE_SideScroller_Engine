@@ -157,6 +157,7 @@ function checkCollision()
     end
   end
 
+  -- enemies
   for i,v in ipairs(enemies) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
       player:notifyCollision(enemies[i])
@@ -176,8 +177,23 @@ function checkCollision()
         u:notifyCollision(enemies[i])
       end
     end
+
+    for j,u in ipairs(shotgunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(shotgunBullets[j])
+        u:notifyCollision(enemies[i])
+      end
+    end
+
+    for j,u in ipairs(machinegunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(machinegunBullets[j])
+        u:notifyCollision(enemies[i])
+      end
+    end
   end
 
+  -- chaseEnemies
   for i,v in ipairs(chaseEnemies) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
       player:notifyCollision(chaseEnemies[i])
@@ -195,6 +211,92 @@ function checkCollision()
       if isColliding(u.box, v.box, u.rotation, v.rotation) then
         v:notifyCollision(missleBullets[j])
         u:notifyCollision(chaseEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(shotgunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(shotgunBullets[j])
+        u:notifyCollision(chaseEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(machinegunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(machinegunBullets[j])
+        u:notifyCollision(chaseEnemies[i])
+      end
+    end
+  end
+
+  -- defShotEnemies
+  for i,v in ipairs(defShotEnemies) do
+    if isColliding(player.box, v.box, player.rotation, v.rotation) then
+      player:notifyCollision(defShotEnemies[i])
+      defShotEnemies[i]:notifyCollision(player)
+    end
+
+    for j,u in ipairs(bullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(bullets[j])
+        u:notifyCollision(defShotEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(missleBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(missleBullets[j])
+        u:notifyCollision(defShotEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(shotgunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(shotgunBullets[j])
+        u:notifyCollision(defShotEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(machinegunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(machinegunBullets[j])
+        u:notifyCollision(defShotEnemies[i])
+      end
+    end
+  end
+
+  -- Right Left Enemy
+  for i,v in ipairs(rightLeftEnemies) do
+    if isColliding(player.box, v.box, player.rotation, v.rotation) then
+      player:notifyCollision(rightLeftEnemies[i])
+      rightLeftEnemies[i]:notifyCollision(player)
+    end
+
+    for j,u in ipairs(bullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(bullets[j])
+        u:notifyCollision(rightLeftEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(missleBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(missleBullets[j])
+        u:notifyCollision(rightLeftEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(shotgunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(shotgunBullets[j])
+        u:notifyCollision(rightLeftEnemies[i])
+      end
+    end
+
+    for j,u in ipairs(machinegunBullets) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(machinegunBullets[j])
+        u:notifyCollision(rightLeftEnemies[i])
       end
     end
   end

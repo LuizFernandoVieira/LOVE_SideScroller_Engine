@@ -75,6 +75,7 @@ function Player:_init(x, y)
   self.shotgunCooldown = 0
   self.dmgCooldown     = 0
   self.respawnTime     = 3
+  self.blinkAfterHit   = false
 
   self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE       , 1, 1   )
   self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE   , 1, 1   )
@@ -329,6 +330,7 @@ function Player:shot()
   local y = self.box.y
 
   if self.infected then
+    biteSound:play()
     if self.facingRight then
       table.insert(bite, Bite(x+16, y+5, 32, 32, self.facingRight))
     else
@@ -348,9 +350,9 @@ function Player:shot()
       if self.shotgunCooldown <= 0 then
         self.shotgunCooldown = 0.3
         if self.facingRight then
-          table.insert(shotgunBullets, ShotgunBullet(x, y+12, 20, 90))
+          table.insert(shotgunBullets, ShotgunBullet(x+16, y+16, 250, 90, true))
         else
-          table.insert(shotgunBullets, ShotgunBullet(x-5, y+12, -20, 90))
+          table.insert(shotgunBullets, ShotgunBullet(x-16, y+16, -250, 90, false))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
@@ -358,9 +360,9 @@ function Player:shot()
     -- Misslegun
     elseif self.weapon == PLAYERWEAPON_MISSLEGUN then
       if self.facingRight then
-        table.insert(missleBullets, MissleBullet(x, y+14, 20, 90))
+        table.insert(missleBullets, MissleBullet(x, y+14, 200, 90, true))
       else
-        table.insert(missleBullets, MissleBullet(x-5, y+14, -20, 90))
+        table.insert(missleBullets, MissleBullet(x-5, y+14, -200, 90, false))
       end
     -- Machinegun
     elseif self.weapon ==  PLAYERWEAPON_MACHINEGUN then
@@ -399,8 +401,18 @@ end
 --- Draws the player object.
 -- Called once once each love.draw.
 function Player:draw()
-  self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
-  self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+  if self.dmgCooldown <= 0 then
+    self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+    self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+  else
+    if self.blinkAfterHit == false then
+      self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+      self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+      self.blinkAfterHit = true
+    else
+      self.blinkAfterHit = false
+    end
+  end
 end
 
 --- Draws the player outline and collision area.
@@ -478,6 +490,7 @@ function Player:notifyCollision(other)
     self.boxIdle.x = self.box.x
     self.boxIdle.y = self.box.y
     self.box = self.boxIdle
+    antidoteSound:play()
   elseif other.type == "Item" then
     self.items = self.items + 1
   elseif other.type == "Ladder" then
@@ -485,15 +498,19 @@ function Player:notifyCollision(other)
   elseif other.type == "Gun" then
     self.weapon = PLAYERWEAPON_GUN
     self.gunSprite = self.animGun
+    pickupSound:play()
   elseif other.type == "Shotgun" then
     self.weapon = PLAYERWEAPON_SHOTGUN
     self.gunSprite = self.animShotgun
+    pickupSound:play()
   elseif other.type == "Misslegun" then
     self.weapon = PLAYERWEAPON_MISSLEGUN
     self.gunSprite = self.animMisslegun
+    pickupSound:play()
   elseif other.type == "Machinegun" then
     self.weapon = PLAYERWEAPON_MACHINEGUN
     self.gunSprite = self.animMachinegun
+    pickupSound:play()
   end
 end
 

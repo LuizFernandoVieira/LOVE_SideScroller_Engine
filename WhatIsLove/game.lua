@@ -21,12 +21,17 @@ defShotEnemiesBullets = {}
 machinegunBullets     = {}
 shotgunBullets        = {}
 
+missleExplosions  = {}
+
 psystem     = {}
 mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
 
 sound     = love.audio.newSource("audio/teste.mp3")
 jumpSound = love.audio.newSource("audio/jump.wav")
 shotSound = love.audio.newSource("audio/shot.wav")
+biteSound = love.audio.newSource("audio/bite.wav")
+pickupSound = love.audio.newSource("audio/pickup2.wav")
+antidoteSound = love.audio.newSource("audio/antidote.wav")
 
 overlayImg = love.graphics.newImage("img/Overlay.png")
 
@@ -50,7 +55,7 @@ end
 function loadEnemies()
   table.insert(enemies, Enemy(70, 0))
   table.insert(enemies, Enemy(150, 0))
-  -- table.insert(enemies, Enemy(200, 0))
+  table.insert(enemies, Enemy(200, 0))
   table.insert(chaseEnemies, ChaseEnemy(250, 0))
   table.insert(rightLeftEnemies, RightLeftEnemy(350, 0))
   table.insert(flybombEnemies, FlybombEnemy(450, 70))
@@ -68,9 +73,9 @@ function loadItems()
   table.insert(items, Item(15, 160))
   table.insert(items, Antidote(100, 150))
   table.insert(ladders, Ladder(230, 120))
-  table.insert(weapons, Gun(100, 100))
-  table.insert(weapons, Shotgun(100, 100))
-  table.insert(weapons, Misslegun(150, 100))
+  -- table.insert(weapons, Gun(100, 100))
+  table.insert(weapons, Shotgun(100, 120))
+  table.insert(weapons, Misslegun(150, 120))
   table.insert(weapons, Machinegun(0, 150))
 end
 
@@ -127,6 +132,7 @@ function gameState:update(dt)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
   updateGameObjects(dt, bite)
+  updateGameObjects(dt, missleExplosions)
   updateGameObjects(dt, bgObjects)
 
   checkCollision()
@@ -170,6 +176,7 @@ function deleteDeadEntities()
   deleteDead(missleBullets)
   deleteDead(shotgunBullets)
   deleteDead(bombs)
+  deleteDead(missleExplosions)
   deleteDead(weapons)
 end
 
@@ -249,6 +256,7 @@ function gameState:draw()
   drawGameObjects(shotgunBullets)
   drawGameObjects(bombs)
   drawGameObjects(bite)
+  drawGameObjects(missleExplosions)
   drawGameObjects(weapons)
 
   player:draw()
@@ -300,6 +308,7 @@ function drawDebug()
     drawDebugGameObjects(missleBullets)
     drawDebugGameObjects(shotgunBullets)
     drawDebugGameObjects(bombs)
+    drawDebugGameObjects(missleExplosions)
     drawDebugGameObjects(bite)
   end
 end

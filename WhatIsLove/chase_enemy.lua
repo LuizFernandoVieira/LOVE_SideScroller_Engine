@@ -20,6 +20,8 @@ local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
 local ENEMYSTATE_WALKING = 1
 
+local hurtSound = love.audio.newSource("audio/hurt.wav")
+
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed
 -- @param y Position in the y axis that this object will be placed
@@ -134,9 +136,12 @@ function ChaseEnemy:notifyCollision(other)
     self.grounded = true
     self.yspeed = 0
     self.box.y = self.lastY
-  elseif other.type == "Bullet" then
-    self.health = 0
-  elseif other.type == "Bite" then
+  elseif other.type == "Bullet"
+  or     other.type == "Bite"
+  or     other.type == "MissleBullet"
+  or     other.type == "ShotgunBullet"
+  or     other.type == "MachinegunBullet" then
+    hurtSound:play()
     self.health = 0
   end
 end

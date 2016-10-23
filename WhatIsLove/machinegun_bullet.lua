@@ -2,7 +2,7 @@ MachinegunBullet         = {}
 MachinegunBullet.__index = MachinegunBullet
 
 setmetatable(MachinegunBullet, {
-  __index = GameObject,
+  __index = Bullet,
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
     self:_init(...)
@@ -18,9 +18,9 @@ local BULLET_IMAGE = "img/GunShotgun_Bullet.png"
 -- @param speed Quantity that represents how fast this bullet moves
 -- @param distanceLeft Amount of space left before the bullet is destroyed
 function MachinegunBullet:_init(x, y, speed, distanceLeft, speedY)
-  GameObject:_init(x, y)
+  Bullet:_init(x, y)
 
-  self.type         = "Bullet"
+  self.type         = "MachinegunBullet"
   self.sprite       = Sprite:_init(BULLET_IMAGE, 1, 1)
   self.speedX       = speed
   self.speedY       = speedY or 0
@@ -81,7 +81,9 @@ end
 function MachinegunBullet:notifyCollision(other)
   if other.type == "Enemy"
   or other.type == "ChaseEnemy"
-  or other.type == "RightLeftEnemy" then
+  or other.type == "RightLeftEnemy"
+  or other.type == "DefShotEnemy"
+  or other.type == "FlybombEnemy" then
     for k,v in ipairs(bullets) do
       if v.id == other.id then
         bullets[k] = nil

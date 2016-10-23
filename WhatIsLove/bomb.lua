@@ -69,6 +69,7 @@ end
 -- @return boolean
 function Bomb:isDead()
   if self.timeToExplode <= 0 then
+    table.insert(missleBullets, MissleExplosion(self.box.x, self.box.y))
     return true
   else
     return false

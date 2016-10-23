@@ -17,6 +17,8 @@ local ENEMY_HEALTH                  = 1
 local ENEMY_GRAVITY                 = 800
 local ENEMYSTATE_HIDING             = 0
 local ENEMYSTATE_ATTACKING          = 1
+local hurtSound = love.audio.newSource("audio/hurt.wav")
+local defSound  = love.audio.newSource("audio/def.wav")
 
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed
@@ -126,9 +128,15 @@ function DefShotEnemy:notifyCollision(other)
     self.grounded = true
     self.yspeed = 0
     self.box.y = self.lastY
-  elseif other.type == "Bullet" then
+  elseif other.type == "Bullet"
+  or     other.type == "MissleBullet"
+  or     other.type == "ShotgunBullet"
+  or     other.type == "MachinegunBullet" then
     if self.state == ENEMYSTATE_ATTACKING then
+      hurtSound:play()
       self.health = 0
+    else
+      defSound:play()
     end
   elseif other.type == "Bite" then
     if self.state == ENEMYSTATE_ATTACKING then

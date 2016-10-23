@@ -402,11 +402,15 @@ end
 -- Called once once each love.draw.
 function Player:draw()
   if self.dmgCooldown <= 0 then
-    self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+    if not self.infected then
+      self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+    end
     self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
   else
     if self.blinkAfterHit == false then
-      self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+      if not self.infected then
+        self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+      end
       self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
       self.blinkAfterHit = true
     else

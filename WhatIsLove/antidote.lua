@@ -10,7 +10,8 @@ setmetatable(Antidote, {
   end,
 })
 
-local ANTIDOTE_IMAGE = "img/Antidote.png"
+local ANTIDOTE_TYPE  = "Antidote"
+local ANTIDOTE_IMAGE = "img/antidote.png"
 
 --- Initializes antidote.
 -- @param x Position in the x axis that this object will be placed
@@ -18,7 +19,7 @@ local ANTIDOTE_IMAGE = "img/Antidote.png"
 function Antidote:_init(x, y)
   Item:_init(x, y)
 
-  self.type      = "Antidote"
+  self.type      = ANTIDOTE_TYPE
   self.sprite    = Sprite:_init(ANTIDOTE_IMAGE, 1, 1)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false

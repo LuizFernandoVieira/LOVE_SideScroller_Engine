@@ -10,7 +10,8 @@ setmetatable(Bite, {
   end,
 })
 
-local BITE_IMAGE = "img/Bite.png"
+local BITE_TYPE  = "Bite"
+local BITE_IMAGE = "img/bite.png"
 
 --- Initializes a bite.
 -- Bite's are created every time a infected player tries to attack.
@@ -21,7 +22,7 @@ local BITE_IMAGE = "img/Bite.png"
 function Bite:_init(x, y, w, h, facingRight)
   GameObject:_init(x, y)
 
-  self.type         = "Bite"
+  self.type         = BITE_TYPE
   self.sprite       = Sprite:_init(BITE_IMAGE, 3, 0.15)
   self.box          = Rect(x, y, w, h)
   self.facingRight  = facingRight

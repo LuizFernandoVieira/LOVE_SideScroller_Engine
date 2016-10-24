@@ -10,7 +10,7 @@ setmetatable(Bullet, {
   end,
 })
 
-local BULLET_IMAGE = "img/Tiro.png"
+local BULLET_IMAGE = "img/bullet.png"
 
 --- Initializes a bullet.
 -- @param x Position in the x axis that this object will be placed
@@ -83,7 +83,8 @@ function Bullet:notifyCollision(other)
   or other.type == "ChaseEnemy"
   or other.type == "RightLeftEnemy"
   or other.type == "DefShotEnemy"
-  or other.type == "FlybombEnemy" then
+  or other.type == "FlybombEnemy"
+  or other.type == "ShootEnemy" then
     for k,v in ipairs(bullets) do
       if v.id == other.id then
         bullets[k] = nil

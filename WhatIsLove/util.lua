@@ -46,41 +46,51 @@ end
 -- @param vel
 -- @return correctPosition
 function handleCollision(x, y, vel, dt)
-  return vel
-  --[[
   for _,t in ipairs(tiles) do
 
-    local nextBox = {}
-    nextBox = Rect(player.box.x + player.velocity, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+    local velocity
+    if player.facingRight then
+      velocity = vel
+    else
+      velocity = -vel
+    end
 
-    print("-----")
-    print("CHECK")
-    print("x " .. nextBox.x)
-    print("y " .. nextBox.y)
-    print("w " .. nextBox.w)
-    print("h " .. nextBox.h)
-    print("x " .. t.box.x)
-    print("y " .. t.box.y)
-    print("w " .. t.box.w)
-    print("h " .. t.box.h)
+    local nextBox = {}
+
+    local interval
+    if velocity < 0 then
+      interval = - 0.01
+    else
+      interval = 0.01
+    end
+
+    print("vel: " .. vel)
+    print("velocity: " .. velocity)
+    print("i: " .. interval)
+
+    if velocity < 0 then
+      nextBox = Rect(player.box.x - player.velocity * dt, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+    else
+      nextBox = Rect(player.box.x + player.velocity * dt, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+    end
 
     if isColliding(nextBox, t.box) then
-      print("IA COLIDIR")
-      for vx=0, vel, 0.1 do
-        print("vx " .. vx)
-        local auxX = x + vx;
-        print("ENTROU")
+      for vx=0, velocity, interval do
+
+        local auxX
+
+        if vx > 0 then auxX = player.box.x + vx * dt
+        else auxX = player.box.x - 0.1 - vx * dt end
+
         local imaginaryRect = Rect(auxX, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
         if isColliding(imaginaryRect, t.box) then
-          print("FIM")
-          return math.max(vx-0.1,0)
+          return vx
         end
       end
     end
   end
 
   return vel
-  ]]
 end
 
 --- Checks collision for all objects in the game.
@@ -313,7 +323,7 @@ function checkCollision()
   -- ShootEnemies
   for i,v in ipairs(shootEnemies) do
     if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(rightLeftEnemies[i])
+      player:notifyCollision(shootEnemies[i])
       shootEnemies[i]:notifyCollision(player)
     end
 

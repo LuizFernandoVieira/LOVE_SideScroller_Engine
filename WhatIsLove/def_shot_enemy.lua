@@ -51,7 +51,6 @@ function DefShotEnemy:update(dt)
   if self.state == ENEMYSTATE_HIDING then
     self.hidingTime = self.hidingTime + dt
     if self:isToLongHiding() then
-      print("To long hiding")
       self.state = ENEMYSTATE_ATTACKING
       self.sprite = self.animAttacking
       self.hidingTime = 0

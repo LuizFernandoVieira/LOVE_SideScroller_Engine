@@ -10,7 +10,8 @@ setmetatable(Bomb, {
   end,
 })
 
-local BOMB_IMAGE   = "img/EnemyFox-o-copter_bullet.png"
+local BOMB_TYPE    = "Bomb"
+local BOMB_IMAGE   = "img/bomb.png"
 local BOMB_GRAVITY = 800
 
 --- Initializes a bullet.
@@ -21,7 +22,7 @@ local BOMB_GRAVITY = 800
 function Bomb:_init(x, y, speed, distanceLeft)
   GameObject:_init(x, y)
 
-  self.type          = "Bomb"
+  self.type          = BOMB_TYPE
   self.sprite        = Sprite:_init(BOMB_IMAGE, 2, 0.5)
   self.box           = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.grounded      = false

@@ -79,6 +79,14 @@ end
 -- to the collision system (observer).
 -- @param other
 function DefShotEnemiesBullets:notifyCollision(other)
+  if other.type == "Player" then
+    print("Col com player")
+    for k,v in ipairs(defShotEnemiesBullets) do
+      if v.id == self.id then
+        defShotEnemiesBullets[k] = nil
+      end
+    end
+  end
 end
 
 --- Specifies the type of that object.

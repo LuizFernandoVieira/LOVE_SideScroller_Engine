@@ -57,7 +57,6 @@ function RightLeftEnemy:update(dt)
   if self.state == ENEMYSTATE_IDLE then
     self.standingTime = self.standingTime + dt
     if isToLongStanding(self) then
-      print("To long standing")
       self.state = ENEMYSTATE_WALKING
       self.standingTime = 0
       if self.facingRight then

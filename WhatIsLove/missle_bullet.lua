@@ -72,7 +72,8 @@ function MissleBullet:notifyCollision(other)
   or other.type == "ChaseEnemy"
   or other.type == "FlybombEnemy"
   or other.type == "RightLeftEnemy"
-  or other.type == "DefShotEnemy" then
+  or other.type == "DefShotEnemy"
+  or other.type == "ShootEnemy" then
     for k,v in ipairs(missleBullets) do
       if v.id == other.id then
         missleBullets[k] = nil

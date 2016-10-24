@@ -130,8 +130,8 @@ function Player:update(dt)
     self:checkIfStartedClimbing(dt)
   -- WALKING STATE
   elseif self.state == PLAYERSTATE_WALKING then
-    self:updateGravity(dt)
     self:updateWalking(dt)
+    self:updateGravity(dt)
     self:checkIfStartedClimbing(dt)
   -- DASHING STATE
   elseif self.state == PLAYERSTATE_DASHING then
@@ -462,15 +462,10 @@ end
 -- @param other
 function Player:notifyCollision(other)
   if other.type == "Tile" then
-    -- se colidiu verticalmente
     self.grounded = true
     self.yspeed = 0
     self.box.y = lastY
     self.state = PLAYERSTATE_IDLE
-    -- se colidiu horizontalmente
-    -- if  then
-    --   self.box.x = lastX
-    -- end
   elseif other.type == "Enemy" then
     if self.dmgCooldown <= 0 then
       if not self.infected then

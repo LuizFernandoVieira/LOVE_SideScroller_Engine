@@ -32,21 +32,9 @@ function BgObject:draw()
   self.sprite:draw(self.box.x, self.box.y)
 end
 
---- Check if the game object is alive.
--- @return boolean
-function BgObject:isDead()
-end
-
---- Notifies the game object that a collision involving himself had ocurred.
--- The game object (subject) had previously subscribed
--- to the collision system (observer).
--- @param other
-function BgObject:notifyCollision(other)
-end
-
 --- Specifies the type of that object.
 -- @param type
 -- @return boolean
 function BgObject:is(type)
-  return type == "GameObject"
+  return type == "BgObject"
 end

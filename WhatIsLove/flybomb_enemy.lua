@@ -53,7 +53,6 @@ function FlybombEnemy:update(dt)
   if self.state == ENEMYSTATE_IDLE then
     self.standingTime = self.standingTime + dt
     if isToLongStanding(self) then
-      print("To long standing")
       self.state = ENEMYSTATE_FLYING
       self.standingTime = 0
       self:dropBomb()

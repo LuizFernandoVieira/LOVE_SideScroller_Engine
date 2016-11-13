@@ -22,8 +22,8 @@ local PLAYER_ANIM_DYING         = "img/PlayerNormal_Idle.png"
 local PLAYER_ANIM_INF_DYING     = "img/PlayerAngry_Idle.png"
 
 local PLAYER_GUN_ANIM           = "img/GunPistol.png"
-local PLAYER_MACHINEGUN_ANIM    = "img/GunMachinegun.png"
-local PLAYER_SHOTGUN_ANIM       = "img/GunShotgun.png"
+local PLAYER_MACHINEGUN_ANIM    = "img/GunShotgun.png"
+local PLAYER_SHOTGUN_ANIM       = "img/GunMachinegun.png"
 local PLAYER_MISSLEGUN_ANIM     = "img/GunMisselLaucher.png"
 
 local PLAYER_VELOCITY           = 1
@@ -70,29 +70,33 @@ function Player:_init(x, y)
   self.dashDuration    = 0
   self.dashCooldown    = 0
   self.canClimb        = false
-  self.infected        = false
   self.weapon          = PLAYERWEAPON_GUN
+  self.bulletAmount    = 50
   self.shotgunCooldown = 0
+
+  self.health          = 3
+  self.infected        = false
   self.dmgCooldown     = 0
   self.respawnTime     = 3
+  self.blinkTime       = Timer()
   self.blinkAfterHit   = false
 
-  self.animIdle            = Sprite:_init(PLAYER_ANIM_IDLE       , 1, 1   )
-  self.animIdleInfected    = Sprite:_init(PLAYER_ANIM_INF_IDLE   , 1, 1   )
-  self.animWalking         = Sprite:_init(PLAYER_ANIM_WALKING    , 8, 0.1)
-  self.animWalkingInfected = Sprite:_init(PLAYER_ANIM_INF_WALKING, 3, 0.15)
-  self.animJumping         = Sprite:_init(PLAYER_ANIM_JUMPING    , 1, 1   )
-  self.animJumpingInfected = Sprite:_init(PLAYER_ANIM_INF_JUMPING, 1, 1   )
-  self.animFalling         = Sprite:_init(PLAYER_ANIM_IDLE       , 1, 1   )
-  self.animFallingInfected = Sprite:_init(PLAYER_ANIM_INF_IDLE   , 1, 1   )
-  self.animDying           = Sprite:_init(PLAYER_ANIM_DYING      , 1, 1   )
-  self.animDyingInfected   = Sprite:_init(PLAYER_ANIM_INF_DYING  , 1, 1   )
+  self.animIdle            = Sprite(PLAYER_ANIM_IDLE       , 1, 1   )
+  self.animIdleInfected    = Sprite(PLAYER_ANIM_INF_IDLE   , 1, 1   )
+  self.animWalking         = Sprite(PLAYER_ANIM_WALKING    , 8, 0.1 )
+  self.animWalkingInfected = Sprite(PLAYER_ANIM_INF_WALKING, 3, 0.15)
+  self.animJumping         = Sprite(PLAYER_ANIM_JUMPING    , 1, 1   )
+  self.animJumpingInfected = Sprite(PLAYER_ANIM_INF_JUMPING, 1, 1   )
+  self.animFalling         = Sprite(PLAYER_ANIM_IDLE       , 1, 1   )
+  self.animFallingInfected = Sprite(PLAYER_ANIM_INF_IDLE   , 1, 1   )
+  self.animDying           = Sprite(PLAYER_ANIM_DYING      , 1, 1   )
+  self.animDyingInfected   = Sprite(PLAYER_ANIM_INF_DYING  , 1, 1   )
   self.sprite              = self.animIdle
 
-  self.animGun        = Sprite:_init(PLAYER_GUN_ANIM       , 1, 1)
-  self.animMachinegun = Sprite:_init(PLAYER_MACHINEGUN_ANIM, 1, 1)
-  self.animShotgun    = Sprite:_init(PLAYER_SHOTGUN_ANIM   , 1, 1)
-  self.animMisslegun  = Sprite:_init(PLAYER_MISSLEGUN_ANIM , 1, 1)
+  self.animGun        = Sprite(PLAYER_GUN_ANIM       , 1, 1)
+  self.animMachinegun = Sprite(PLAYER_MACHINEGUN_ANIM, 1, 1)
+  self.animShotgun    = Sprite(PLAYER_SHOTGUN_ANIM   , 1, 1)
+  self.animMisslegun  = Sprite(PLAYER_MISSLEGUN_ANIM , 1, 1)
   self.gunSprite      = self.animGun
 
   self.boxIdle            = Rect(x, y, self.animIdle:getWidth()         , self.animIdle:getHeight()         )
@@ -123,6 +127,10 @@ function Player:update(dt)
     self.dmgCooldown = self.dmgCooldown - dt
   end
 
+  if self.dmgCooldown > 0 then
+    self.blinkTime:update(dt)
+  end
+
   -- IDLE STATE
   if self.state == PLAYERSTATE_IDLE then
     self:updateWalking(dt)
@@ -146,6 +154,8 @@ function Player:update(dt)
     self:updateWalking(dt)
     self:updateGravity(dt)
   end
+
+  print(self.bulletAmount)
 
   self.box.x = math.floor(self.box.x)
   self.box.y = math.floor(self.box.y)
@@ -175,7 +185,8 @@ function Player:updateWalking(dt)
     -- jumping
     if self.state == PLAYERSTATE_JUMPING then
       if self.infected then
-        self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
+        local vel = handleCollision(self.box.x, self.box.y, self.velocity * INFECTED_BONUS_VELOCITY, dt)
+        self.box.x = self.box.x + vel
       else
         local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
         self.box.x = self.box.x + vel
@@ -184,7 +195,8 @@ function Player:updateWalking(dt)
     else
       if self.infected then
         self.sprite = self.animWalkingInfected
-        self.box.x = self.box.x + self.velocity * INFECTED_BONUS_VELOCITY
+        local vel = handleCollision(self.box.x, self.box.y, self.velocity * INFECTED_BONUS_VELOCITY, dt)
+        self.box.x = self.box.x + vel
       else
         self.sprite = self.animWalking
         local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
@@ -193,7 +205,7 @@ function Player:updateWalking(dt)
       self.state = PLAYERSTATE_WALKING
     end
   -- clica para esquerda
-  elseif self.moveLeft then
+  elseif self.moveLeft and self.box.x > 0 then
     self.facingRight = false
     -- jumping
     if self.state == PLAYERSTATE_JUMPING then
@@ -208,7 +220,8 @@ function Player:updateWalking(dt)
       if self.state ~= PLAYERSTATE_JUMPING then
         if self.infected then
           self.sprite = self.animWalkingInfected
-          self.box.x = self.box.x - self.velocity * INFECTED_BONUS_VELOCITY
+          local vel = handleCollision(self.box.x, self.box.y, self.velocity * INFECTED_BONUS_VELOCITY, dt)
+          self.box.x = self.box.x - vel
         else
           self.sprite = self.animWalking
           local vel = handleCollision(self.box.x, self.box.y, self.velocity, dt)
@@ -227,6 +240,12 @@ function Player:updateWalking(dt)
         self.sprite = self.animIdle
       end
     end
+  end
+end
+
+function Player:limitBoundry()
+  if self.box.x < 0 then
+    self.box.x = 0
   end
 end
 
@@ -287,10 +306,11 @@ end
 function Player:updateDead(dt)
   self.respawnTime = self.respawnTime - 0.02
   self:updateGravity(dt)
-
   if self.respawnTime <= 0 then
     self.infected = false
     self.sprite = self.animIdle
+    self.box.x = 0
+    self.box.y = 50
     self.boxIdle.x = self.box.x
     self.boxIdle.y = self.box.y
     self.box = self.boxIdle
@@ -337,7 +357,15 @@ function Player:shot()
       table.insert(bite, Bite(x-16, y+5, 32, 32, self.facingRight))
     end
   else
+
     shotSound:play()
+    self.bulletAmount = self.bulletAmount - 1
+    if self.bulletAmount < 0 then
+      self.weapon    = PLAYERWEAPON_GUN
+      self.bulletAmount = 50
+      self.gunSprite = self.animGun
+    end
+
     -- Gun
     if self.weapon == PLAYERWEAPON_GUN then
       if self.facingRight then
@@ -350,9 +378,9 @@ function Player:shot()
       if self.shotgunCooldown <= 0 then
         self.shotgunCooldown = 0.3
         if self.facingRight then
-          table.insert(shotgunBullets, ShotgunBullet(x+16, y+16, 250, 90, true))
+          table.insert(shotgunBullets, ShotgunBullet(x+16, y+14, 250, 90, true))
         else
-          table.insert(shotgunBullets, ShotgunBullet(x-16, y+16, -250, 90, false))
+          table.insert(shotgunBullets, ShotgunBullet(x-16, y+14, -250, 90, false))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
@@ -401,20 +429,25 @@ end
 --- Draws the player object.
 -- Called once once each love.draw.
 function Player:draw()
+  local x = self.box.x
+  local y = self.box.y
+  local fr = self.facingRight
+  local bt = self.blinkTime:get()
+
   if self.dmgCooldown <= 0 then
     if not self.infected then
-      self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+      self.gunSprite:draw(x, y, 0, fr)
     end
-    self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+    self.sprite:draw(x, y, 0, fr)
   else
-    if self.blinkAfterHit == false then
+    if bt < 0.1 then
       if not self.infected then
-        self.gunSprite:draw(self.box.x, self.box.y, 0, self.facingRight)
+        self.gunSprite:draw(x, y, 0, fr)
       end
-      self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
-      self.blinkAfterHit = true
+      self.sprite:draw(x, y, 0, fr)
+    elseif bt > 0.1 and bt < 0.2 then
     else
-      self.blinkAfterHit = false
+      self.blinkTime:restart()
     end
   end
 end
@@ -437,6 +470,7 @@ end
 --- Checks if player health is more than zero.
 -- @return boolean
 function Player:isDead()
+  return false
 end
 
 --- Checks horizontal collision
@@ -449,9 +483,6 @@ function colidiuHorizontalmente(player, other)
   if playerMaxRight > other.box.x
   and player.moveRight then
     return true
-  -- elseif player.box:center().x > other.box:center().x
-  -- and player.moveLeft then
-  --   return true
   end
   return false
 end
@@ -466,10 +497,37 @@ function Player:notifyCollision(other)
     self.yspeed = 0
     self.box.y = lastY
     self.state = PLAYERSTATE_IDLE
-  elseif other.type == "Enemy" then
+  elseif other.type == "Enemy"
+      or other.type == "ChaseEnemy"
+      or other.type == "RightLeftEnemy"
+      or other.type == "ShootEnemy"
+      or other.type == "SpikeEnemy"
+      or other.type == "DefShotEnemiesBullet" then
+      if self.dmgCooldown <= 0 then
+        if not self.infected then
+          self.dmgCooldown = 2
+          self.health = self.health - 1
+          if self.health < 1 then
+            self.sprite = self.animDying
+            self.boxDying.x = 0
+            self.boxDying.y = 50
+            self.box = self.boxDying
+            self.state = PLAYERSTATE_DEAD
+            self.health = 3
+          end
+        elseif self.infected then
+          self.sprite = self.animDyingInfected
+          self.boxDyingInfected.x = self.box.x
+          self.boxDyingInfected.y = self.box.y
+          self.box = self.boxDyingInfected
+          self.state = PLAYERSTATE_DEAD
+        end
+      end
+  elseif other.type == "BlobEnemiesBullet"
+      or other.type == "SyringeBullet" then
     if self.dmgCooldown <= 0 then
       if not self.infected then
-        self.dmgCooldown = 3
+        self.dmgCooldown = 2
         self.infected = true
         self.sprite = self.animIdleInfected
         self.boxIdleInfected.x = self.box.x
@@ -477,8 +535,8 @@ function Player:notifyCollision(other)
         self.box = self.boxIdleInfected
       elseif self.infected then
         self.sprite = self.animDyingInfected
-        self.boxDyingInfected.x = self.box.x
-        self.boxDyingInfected.y = self.box.y
+        self.boxDyingInfected.x = 0
+        self.boxDyingInfected.y = 50
         self.box = self.boxDyingInfected
         self.state = PLAYERSTATE_DEAD
       end
@@ -501,14 +559,17 @@ function Player:notifyCollision(other)
   elseif other.type == "Shotgun" then
     self.weapon = PLAYERWEAPON_SHOTGUN
     self.gunSprite = self.animShotgun
+    self.bulletAmount = 35
     pickupSound:play()
   elseif other.type == "Misslegun" then
     self.weapon = PLAYERWEAPON_MISSLEGUN
     self.gunSprite = self.animMisslegun
+    self.bulletAmount = 35
     pickupSound:play()
   elseif other.type == "Machinegun" then
     self.weapon = PLAYERWEAPON_MACHINEGUN
     self.gunSprite = self.animMachinegun
+    self.bulletAmount = 20
     pickupSound:play()
   end
 end

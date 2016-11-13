@@ -21,7 +21,7 @@ function Bullet:_init(x, y, speed, distanceLeft, speedY)
   GameObject:_init(x, y)
 
   self.type         = "Bullet"
-  self.sprite       = Sprite:_init(BULLET_IMAGE, 1, 1)
+  self.sprite       = Sprite(BULLET_IMAGE, 1, 1)
   self.speedX       = speed or 0
   self.speedY       = speedY or 0
   self.distanceLeft = distanceLeft

@@ -12,13 +12,11 @@ setmetatable(RightLeftEnemy, {
 
 local RIGHTLEFT_ENEMY_TYPE  = "RightLeftEnemy"
 local RIGHTLEFT_ENEMY_IMAGE = "img/EnemyBearcat.png"
-
-local ENEMY_VELOCITY     = 0
-local ENEMY_HEALTH       = 1
-local ENEMY_GRAVITY      = 800
-local ENEMY_FACINGRIGHT  = true
-local ENEMYSTATE_IDLE    = 0
-local ENEMYSTATE_WALKING = 1
+local ENEMY_HEALTH          = 1
+local ENEMY_GRAVITY         = 800
+local ENEMY_FACINGRIGHT     = true
+local ENEMYSTATE_IDLE       = 0
+local ENEMYSTATE_WALKING    = 1
 
 local hurtSound = love.audio.newSource("audio/hurt.wav")
 
@@ -29,7 +27,7 @@ function RightLeftEnemy:_init(x, y)
   Enemy:_init(x, y)
 
   self.type            = RIGHTLEFT_ENEMY_TYPE
-  self.sprite          = Sprite:_init(RIGHTLEFT_ENEMY_IMAGE, 4, 0.2)
+  self.sprite          = Sprite(RIGHTLEFT_ENEMY_IMAGE, 4, 0.2)
   self.box             = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.initialPosition = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.range           = 80
@@ -69,7 +67,6 @@ function RightLeftEnemy:update(dt)
   elseif self.state == ENEMYSTATE_WALKING then
     self.walkingTime = self.walkingTime + dt
     if isToLongWalking(self) then
-      print("To long walking")
       self.state = ENEMYSTATE_IDLE
       self.xspeed = 0
       self.walkingTime = 0

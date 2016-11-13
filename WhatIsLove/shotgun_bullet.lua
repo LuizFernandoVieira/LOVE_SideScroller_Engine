@@ -17,7 +17,7 @@ function ShotgunBullet:_init(x, y, speed, distanceLeft, facingRight)
   self.speedX       = speed
   self.speedY       = speedY or 0
   self.distanceLeft = distanceLeft
-  self.sprite = Sprite:_init("img/GunMachinegun_bullet.png", 1, 1)
+  self.sprite = Sprite("img/GunMachinegun_bullet.png", 1, 1)
   self.box    = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 

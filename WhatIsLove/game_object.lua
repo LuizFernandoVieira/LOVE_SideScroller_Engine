@@ -1,5 +1,6 @@
 GameObject          = {}
 GameObject.__index  = GameObject
+
 nextId              = 0
 
 setmetatable(GameObject, {

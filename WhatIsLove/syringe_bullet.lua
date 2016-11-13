@@ -12,8 +12,8 @@ setmetatable(SyringeBullet, {
 
 function SyringeBullet:_init(x, y, speed, distanceLeft, facingRight)
   Bullet:_init(x, y, speed, distanceLeft)
-  self.type   = "MissleBullet"
-  self.sprite = Sprite:_init("img/EnemyFox_Bullet.png", 1, 1)
+  self.type   = "SyringeBullet"
+  self.sprite = Sprite("img/EnemyFox_Bullet.png", 1, 1)
   self.facingRight = facingRight
   self.speedX       = speed
   self.speedY       = speedY or 0

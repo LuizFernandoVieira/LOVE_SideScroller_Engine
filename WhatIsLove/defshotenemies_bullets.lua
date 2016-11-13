@@ -21,7 +21,7 @@ function DefShotEnemiesBullets:_init(x, y, speed, distanceLeft, speedY)
   GameObject:_init(x, y)
 
   self.type         = "DefShotEnemiesBullet"
-  self.sprite       = Sprite:_init(BULLET_IMAGE, 1, 1)
+  self.sprite       = Sprite(BULLET_IMAGE, 1, 1)
   self.speedX       = speed
   self.speedY       = speedY or 0
   self.distanceLeft = distanceLeft
@@ -80,7 +80,6 @@ end
 -- @param other
 function DefShotEnemiesBullets:notifyCollision(other)
   if other.type == "Player" then
-    print("Col com player")
     for k,v in ipairs(defShotEnemiesBullets) do
       if v.id == self.id then
         defShotEnemiesBullets[k] = nil

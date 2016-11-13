@@ -23,7 +23,7 @@ function Bomb:_init(x, y, speed, distanceLeft)
   GameObject:_init(x, y)
 
   self.type          = BOMB_TYPE
-  self.sprite        = Sprite:_init(BOMB_IMAGE, 2, 0.5)
+  self.sprite        = Sprite(BOMB_IMAGE, 2, 0.5)
   self.box           = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.grounded      = false
   self.yspeed        = 0
@@ -70,7 +70,7 @@ end
 -- @return boolean
 function Bomb:isDead()
   if self.timeToExplode <= 0 then
-    table.insert(missleBullets, MissleExplosion(self.box.x, self.box.y))
+    table.insert(bombExplosions, BombExplosion(self.box.x, self.box.y))
     return true
   else
     return false

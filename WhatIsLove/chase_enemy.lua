@@ -11,9 +11,7 @@ setmetatable(ChaseEnemy, {
 })
 
 local CHASE_ENEMY_TYPE         = "ChaseEnemy"
-local CHASE_ENEMY_IMAGE        = "img/EnemyFox.png"
-
-local ENEMY_VELOCITY     = 0
+local CHASE_ENEMY_IMAGE        = "img/enemy_fox.png"
 local ENEMY_HEALTH       = 1
 local ENEMY_GRAVITY      = 800
 local ENEMY_FACINGRIGHT  = true
@@ -29,7 +27,7 @@ function ChaseEnemy:_init(x, y)
   Enemy:_init(x, y)
 
   self.type   = CHASE_ENEMY_TYPE
-  self.sprite = Sprite:_init(CHASE_ENEMY_IMAGE, 1, 1)
+  self.sprite = Sprite(CHASE_ENEMY_IMAGE, 1, 1)
   self.box    = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.range  = 80
 end
@@ -38,6 +36,8 @@ end
 -- Called once once each love.update.
 -- @param dt Time passed since last update
 function ChaseEnemy:update(dt)
+  self.sprite:update(dt)
+
   self.lastY = self.box.y
 
   self.yspeed = self.yspeed + ENEMY_GRAVITY * dt
@@ -59,8 +59,6 @@ function ChaseEnemy:update(dt)
       self.state = ENEMYSTATE_IDLE
     end
   end
-
-  self.sprite:update(dt)
 end
 
 function ChaseEnemy:isPlayerInRange()
@@ -125,25 +123,6 @@ function ChaseEnemy:drawDebug()
   lg.setColor(255, 255, 0)
   lg.circle("line", cx, cy, self.range, 100)
   lg.setColor(255, 255, 255)
-end
-
---- Notifies the enemy that a collision involving himself had ocurred.
--- The enemy (subject) had previously subscribed
--- to the collision system (observer).
--- @param other
-function ChaseEnemy:notifyCollision(other)
-  if other.type == "Tile" then
-    self.grounded = true
-    self.yspeed = 0
-    self.box.y = self.lastY
-  elseif other.type == "Bullet"
-  or     other.type == "Bite"
-  or     other.type == "MissleBullet"
-  or     other.type == "ShotgunBullet"
-  or     other.type == "MachinegunBullet" then
-    hurtSound:play()
-    self.health = 0
-  end
 end
 
 --- Specifies the type of that object.

@@ -17,7 +17,6 @@ function GameActor:_init(x, y)
   GameObject:_init(x, y)
 
   self.type = "GameActor"
-  self.box  = Rect(x, y, 0, 0)
 end
 
 --- Updates the game actor.

@@ -19,7 +19,7 @@ function Machinegun:_init(x, y)
   Weapon:_init(x, y)
 
   self.type      = "Machinegun"
-  self.sprite    = Sprite:_init(MACHINEGUN_IMAGE, 1, 1)
+  self.sprite    = Sprite(MACHINEGUN_IMAGE, 1, 1)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false
 end

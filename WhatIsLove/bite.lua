@@ -23,7 +23,7 @@ function Bite:_init(x, y, w, h, facingRight)
   GameObject:_init(x, y)
 
   self.type         = BITE_TYPE
-  self.sprite       = Sprite:_init(BITE_IMAGE, 3, 0.15)
+  self.sprite       = Sprite(BITE_IMAGE, 3, 0.15)
   self.box          = Rect(x, y, w, h)
   self.facingRight  = facingRight
   self.lifeTime     = 0.45

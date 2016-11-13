@@ -19,7 +19,7 @@ function Weapon:_init(x, y)
   Item:_init(x, y)
 
   self.type      = "Weapon"
-  self.sprite    = Sprite:_init(WEAPON_IMAGE, 1, 1)
+  self.sprite    = Sprite(WEAPON_IMAGE, 1, 1)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false
 end

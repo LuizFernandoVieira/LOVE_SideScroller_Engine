@@ -21,7 +21,7 @@ function Item:_init(x, y)
   GameObject:_init(x, y)
 
   self.type      = "Item"
-  self.sprite    = Sprite:_init(ITEM_IMAGE, 2, 0.5)
+  self.sprite    = Sprite(ITEM_IMAGE, 2, 0.5)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false
 end

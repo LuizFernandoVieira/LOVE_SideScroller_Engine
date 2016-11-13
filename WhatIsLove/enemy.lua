@@ -10,17 +10,13 @@ setmetatable(Enemy, {
   end,
 })
 
+local hurtSound          = love.audio.newSource("audio/hurt.wav")
 local ENEMY_TYPE         = "Enemy"
-local ENEMY_IMAGE        = "img/EnemyFox.png"
-local ENEMY_VELOCITY     = 1
+local ENEMY_IMAGE        = "img/enemy_fox.png"
 local ENEMY_HEALTH       = 1
 local ENEMY_GRAVITY      = 800
 local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
-local ENEMYSTATE_WALKING = 1
-local ENEMYSTATE_FLYING  = 2
-
-local hurtSound = love.audio.newSource("audio/hurt.wav")
 
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed
@@ -30,10 +26,9 @@ function Enemy:_init(x, y)
 
   self.type        = ENEMY_TYPE
   self.facingRight = true
-  self.velocity    = ENEMY_VELOCITY
   self.health      = ENEMY_HEALTH
   self.grounded    = false
-  self.sprite      = Sprite:_init(ENEMY_IMAGE, 1, 1)
+  self.sprite      = Sprite(ENEMY_IMAGE, 1, 1)
   self.box         = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.xspeed      = 0
   self.yspeed      = 0
@@ -47,12 +42,10 @@ end
 -- @param dt Time passed since last update
 function Enemy:update(dt)
   self.sprite:update(dt)
-
   self.lastY = self.box.y
 
   self.yspeed = self.yspeed + ENEMY_GRAVITY * dt
   self.box.y = self.box.y + self.yspeed * dt
-
   self.box.x = self.box.x + self.xspeed * dt
 
   self.box.x = math.floor(self.box.x)

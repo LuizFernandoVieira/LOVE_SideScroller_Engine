@@ -16,7 +16,7 @@ function StillAnimation:_init(x, y, bgImage)
   GameObject:_init(x, y)
 
   self.box    = Rect(x, y, 0, 0)
-  self.sprite = Sprite:_init(bgImage, 1, 1)
+  self.sprite = Sprite(bgImage, 1, 1)
 end
 
 --- Updates the game object

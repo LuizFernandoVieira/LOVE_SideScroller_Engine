@@ -19,7 +19,7 @@ function Ladder:_init(x, y)
   GameObject:_init(x, y)
 
   self.type      = "Ladder"
-  self.sprite    = Sprite:_init(LADDER_IMAGE, 1, 1)
+  self.sprite    = Sprite(LADDER_IMAGE, 1, 1)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 

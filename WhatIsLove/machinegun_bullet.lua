@@ -21,7 +21,7 @@ function MachinegunBullet:_init(x, y, speed, distanceLeft, speedY)
   Bullet:_init(x, y)
 
   self.type         = "MachinegunBullet"
-  self.sprite       = Sprite:_init(BULLET_IMAGE, 1, 1)
+  self.sprite       = Sprite(BULLET_IMAGE, 1, 1)
   self.speedX       = speed
   self.speedY       = speedY or 0
   self.distanceLeft = distanceLeft

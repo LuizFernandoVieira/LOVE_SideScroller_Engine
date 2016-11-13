@@ -24,3 +24,7 @@ end
 function Timer:get()
   return self.time
 end
+
+function Timer:set(time)
+  self.time = time
+end

@@ -34,7 +34,13 @@ function Map:_init()
     for j=0, height-1 do
       for i=0, width-1 do
         if data[j+y][i+x] == 01
-        or data[j+y][i+x] == 02 then
+        or data[j+y][i+x] == 03
+        or data[j+y][i+x] == 05
+        or data[j+y][i+x] == 07
+        or data[j+y][i+x] == 09
+        or data[j+y][i+x] == 10
+        or data[j+y][i+x] == 12
+        or data[j+y][i+x] == 14 then
           table.insert(tiles, Tile(i * tileSize, j * tileSize))
         end
       end

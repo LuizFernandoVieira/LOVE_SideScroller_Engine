@@ -1,43 +1,106 @@
----
---
--- @param val
--- @param min
--- @param max
--- @return number
-function wrap(val, min, max)
-	if val < min then val = max end
-	if val > max then val = min end
-	return val
+--- Checks collision for all objects in the game.
+-- Notify those objects that collided.
+function checkCollision()
+  -- Tiles
+  checkCollisionBetweenPlayerAnd(tiles)
+  checkCollisionBetweenBossAnd(tiles)
+  checkCollisionBetween(tiles, enemies)
+  checkCollisionBetween(tiles, shootEnemies)
+  checkCollisionBetween(tiles, chaseEnemies)
+  checkCollisionBetween(tiles, rightLeftEnemies)
+  checkCollisionBetween(tiles, defShotEnemies)
+  checkCollisionBetween(tiles, shieldEnemies)
+  checkCollisionBetween(tiles, bombs)
+  -- Enemies
+  checkCollisionBetweenPlayerAnd(enemies)
+  checkCollisionBetween(enemies, bite)
+  checkCollisionBetween(enemies, bullets)
+  checkCollisionBetween(enemies, missleBullets)
+  checkCollisionBetween(enemies, shotgunBullets)
+  checkCollisionBetween(enemies, machinegunBullets)
+  -- ChaseEnemies
+  checkCollisionBetweenPlayerAnd(chaseEnemies)
+  checkCollisionBetween(chaseEnemies, bite)
+  checkCollisionBetween(chaseEnemies, bullets)
+  checkCollisionBetween(chaseEnemies, missleBullets)
+  checkCollisionBetween(chaseEnemies, shotgunBullets)
+  checkCollisionBetween(chaseEnemies, machinegunBullets)
+  -- DefShotEnemies
+  checkCollisionBetweenPlayerAnd(defShotEnemies)
+  checkCollisionBetween(defShotEnemies, bullets)
+  checkCollisionBetween(defShotEnemies, missleBullets)
+  checkCollisionBetween(defShotEnemies, shotgunBullets)
+  checkCollisionBetween(defShotEnemies, machinegunBullets)
+  -- Right Left Enemy
+  checkCollisionBetweenPlayerAnd(rightLeftEnemies)
+  checkCollisionBetween(rightLeftEnemies, bullets)
+  checkCollisionBetween(rightLeftEnemies, missleBullets)
+  checkCollisionBetween(rightLeftEnemies, shotgunBullets)
+  checkCollisionBetween(rightLeftEnemies, machinegunBullets)
+  -- Shoot Enemies
+  checkCollisionBetweenPlayerAnd(shootEnemies)
+  checkCollisionBetween(shootEnemies, bullets)
+  checkCollisionBetween(shootEnemies, missleBullets)
+  checkCollisionBetween(shootEnemies, shotgunBullets)
+  checkCollisionBetween(shootEnemies, machinegunBullets)
+  -- Flybomb Enemies
+  checkCollisionBetweenPlayerAnd(flybombEnemies)
+  checkCollisionBetween(flybombEnemies, bullets)
+  checkCollisionBetween(flybombEnemies, missleBullets)
+  checkCollisionBetween(flybombEnemies, shotgunBullets)
+  checkCollisionBetween(flybombEnemies, machinegunBullets)
+  -- Shield Enemies
+  checkCollisionBetweenPlayerAnd(shieldEnemies)
+  checkCollisionBetween(shieldEnemies, bullets)
+  checkCollisionBetween(shieldEnemies, missleBullets)
+  checkCollisionBetween(shieldEnemies, shotgunBullets)
+  checkCollisionBetween(shieldEnemies, machinegunBullets)
+  -- SpikeEnemy
+  checkCollisionBetweenPlayerAnd(spikeEnemies)
+  checkCollisionBetween(spikeEnemies, bullets)
+  checkCollisionBetween(spikeEnemies, missleBullets)
+  checkCollisionBetween(spikeEnemies, shotgunBullets)
+  checkCollisionBetween(spikeEnemies, machinegunBullets)
+  -- Player
+  checkCollisionBetweenPlayerAnd(defShotEnemiesBullets)
+  checkCollisionBetweenPlayerAnd(ladders)
+  checkCollisionBetweenPlayerAnd(items)
+  checkCollisionBetweenPlayerAnd(weapons)
+  checkCollisionBetweenPlayerAnd(shotEnemyBullets)
+  checkCollisionBetweenPlayerAnd(blobEnemyBullets)
 end
 
----
---
--- @param val
--- @param min
--- @param max
--- @return number
-function cap(val, min, max)
-	return math.max(math.min(val, max), min)
+-- @param a
+function checkCollisionBetweenPlayerAnd(a)
+  for i,v in ipairs(a) do
+    if isColliding(player.box, v.box, player.rotation, v.rotation) then
+      player:notifyCollision(a[i])
+      a[i]:notifyCollision(player)
+    end
+  end
 end
 
----
---
-function setZoom()
-	if config.fullscreen == 1 then
-		local sw = love.graphics.getWidth()/WIDTH/config.scale
-		local sh = love.graphics.getHeight()/HEIGHT/config.scale
-		love.graphics.scale(sw,sh)
-	elseif config.fullscreen == 2 then
-		local sw = love.graphics.getWidth()/WIDTH/config.scale
-		local sh = love.graphics.getHeight()/HEIGHT/config.scale
-		local tx = (love.graphics.getWidth() - WIDTH*config.scale*sh)/2
-		love.graphics.translate(tx, 0)
-		love.graphics.scale(sh, sh)
-		love.graphics.setScissor(tx, 0, WIDTH*config.scale*sh, love.graphics.getHeight())
-	elseif config.fullscreen == 3 then
-		love.graphics.translate(fs_translatex,fs_translatey)
-		love.graphics.setScissor(fs_translatex, fs_translatey, WIDTH*config.scale, HEIGHT*config.scale)
-	end
+-- @param a
+function checkCollisionBetweenBossAnd(a)
+  for i,v in ipairs(a) do
+    if isColliding(boss.box, v.box, boss.rotation, v.rotation) then
+      boss:notifyCollision(a[i])
+      a[i]:notifyCollision(boss)
+    end
+  end
+end
+
+-- @param a
+-- @param b
+function checkCollisionBetween(a, b)
+  for i,v in ipairs(a) do
+    for j,u in ipairs(b) do
+      if isColliding(u.box, v.box, u.rotation, v.rotation) then
+        v:notifyCollision(b[j])
+        u:notifyCollision(a[i])
+      end
+    end
+  end
 end
 
 --- Handle collision.
@@ -64,14 +127,18 @@ function handleCollision(x, y, vel, dt)
       interval = 0.01
     end
 
-    print("vel: " .. vel)
-    print("velocity: " .. velocity)
-    print("i: " .. interval)
-
     if velocity < 0 then
-      nextBox = Rect(player.box.x - player.velocity * dt, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+      nextBox = Rect(
+        player.box.x - player.velocity * dt,
+        player.box.y,
+        player.sprite:getWidth(),
+        player.sprite:getHeight())
     else
-      nextBox = Rect(player.box.x + player.velocity * dt, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+      nextBox = Rect(
+        player.box.x + player.velocity * dt,
+        player.box.y,
+        player.sprite:getWidth(),
+        player.sprite:getHeight())
     end
 
     if isColliding(nextBox, t.box) then
@@ -82,7 +149,13 @@ function handleCollision(x, y, vel, dt)
         if vx > 0 then auxX = player.box.x + vx * dt
         else auxX = player.box.x - 0.1 - vx * dt end
 
-        local imaginaryRect = Rect(auxX, player.box.y, player.sprite:getWidth(), player.sprite:getHeight())
+        local imaginaryRect = Rect(
+          auxX,
+          player.box.y,
+          player.sprite:getWidth(),
+          player.sprite:getHeight()
+        )
+
         if isColliding(imaginaryRect, t.box) then
           return vx
         end
@@ -93,295 +166,10 @@ function handleCollision(x, y, vel, dt)
   return vel
 end
 
---- Checks collision for all objects in the game.
--- Notify those objects that collided.
-function checkCollision()
-  for i,v in ipairs(tiles) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(tiles[i])
-      tiles[i]:notifyCollision(player)
-    end
-  end
-
-  for i,v in ipairs(defShotEnemiesBullets) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(defShotEnemiesBullets[i])
-      defShotEnemiesBullets[i]:notifyCollision(player)
-    end
-  end
-
-  for i,v in ipairs(ladders) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(ladders[i])
-      ladders[i]:notifyCollision(player)
-    end
-  end
-
-  for i,v in ipairs(tiles) do
-    for j,u in ipairs(enemies) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(enemies[j])
-        u:notifyCollision(tiles[i])
-      end
-    end
-  end
-
-  for i,v in ipairs(tiles) do
-    for j,u in ipairs(shootEnemies) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(shootEnemies[j])
-        u:notifyCollision(tiles[i])
-      end
-    end
-  end
-
-  for i,v in ipairs(tiles) do
-    for j,u in ipairs(chaseEnemies) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(chaseEnemies[j])
-        u:notifyCollision(tiles[i])
-      end
-    end
-  end
-
-  for i,v in ipairs(tiles) do
-    for j,u in ipairs(rightLeftEnemies) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(rightLeftEnemies[j])
-        u:notifyCollision(tiles[i])
-      end
-    end
-  end
-
-  for i,v in ipairs(tiles) do
-    for j,u in ipairs(defShotEnemies) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(defShotEnemies[j])
-        u:notifyCollision(tiles[i])
-      end
-    end
-  end
-
-  for i,v in ipairs(items) do
-    if isColliding(v.box, player.box, v.rotation, player.rotation) then
-      items[i]:notifyCollision(player)
-      player:notifyCollision(items[i])
-    end
-  end
-
-  for i,v in ipairs(weapons) do
-    if isColliding(v.box, player.box, v.rotation, player.rotation) then
-      weapons[i]:notifyCollision(player)
-      player:notifyCollision(weapons[i])
-    end
-  end
-
-  -- enemies
-  for i,v in ipairs(enemies) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(enemies[i])
-      enemies[i]:notifyCollision(player)
-    end
-
-    for j,u in ipairs(bullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(bullets[j])
-        u:notifyCollision(enemies[i])
-      end
-    end
-
-    for j,u in ipairs(missleBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(missleBullets[j])
-        u:notifyCollision(enemies[i])
-      end
-    end
-
-    for j,u in ipairs(shotgunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(shotgunBullets[j])
-        u:notifyCollision(enemies[i])
-      end
-    end
-
-    for j,u in ipairs(machinegunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(machinegunBullets[j])
-        u:notifyCollision(enemies[i])
-      end
-    end
-  end
-
-  -- chaseEnemies
-  for i,v in ipairs(chaseEnemies) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(chaseEnemies[i])
-      chaseEnemies[i]:notifyCollision(player)
-    end
-
-    for j,u in ipairs(bullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(bullets[j])
-        u:notifyCollision(chaseEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(missleBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(missleBullets[j])
-        u:notifyCollision(chaseEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(shotgunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(shotgunBullets[j])
-        u:notifyCollision(chaseEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(machinegunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(machinegunBullets[j])
-        u:notifyCollision(chaseEnemies[i])
-      end
-    end
-  end
-
-  -- defShotEnemies
-  for i,v in ipairs(defShotEnemies) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(defShotEnemies[i])
-      defShotEnemies[i]:notifyCollision(player)
-    end
-
-    for j,u in ipairs(bullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(bullets[j])
-        u:notifyCollision(defShotEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(missleBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(missleBullets[j])
-        u:notifyCollision(defShotEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(shotgunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(shotgunBullets[j])
-        u:notifyCollision(defShotEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(machinegunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(machinegunBullets[j])
-        u:notifyCollision(defShotEnemies[i])
-      end
-    end
-  end
-
-  -- Right Left Enemy
-  for i,v in ipairs(rightLeftEnemies) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(rightLeftEnemies[i])
-      rightLeftEnemies[i]:notifyCollision(player)
-    end
-
-    for j,u in ipairs(bullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(bullets[j])
-        u:notifyCollision(rightLeftEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(missleBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(missleBullets[j])
-        u:notifyCollision(rightLeftEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(shotgunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(shotgunBullets[j])
-        u:notifyCollision(rightLeftEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(machinegunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(machinegunBullets[j])
-        u:notifyCollision(rightLeftEnemies[i])
-      end
-    end
-  end
-
-  -- ShootEnemies
-  for i,v in ipairs(shootEnemies) do
-    if isColliding(player.box, v.box, player.rotation, v.rotation) then
-      player:notifyCollision(shootEnemies[i])
-      shootEnemies[i]:notifyCollision(player)
-    end
-
-    for j,u in ipairs(bullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(bullets[j])
-        u:notifyCollision(shootEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(missleBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(missleBullets[j])
-        u:notifyCollision(shootEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(shotgunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(shotgunBullets[j])
-        u:notifyCollision(shootEnemies[i])
-      end
-    end
-
-    for j,u in ipairs(machinegunBullets) do
-      if isColliding(u.box, v.box, u.rotation, v.rotation) then
-        v:notifyCollision(machinegunBullets[j])
-        u:notifyCollision(shootEnemies[i])
-      end
-    end
-  end
-
-
-  for i,v in ipairs(enemies) do
-    for j,u in ipairs(bite) do
-      if isColliding(v.box, u.box, v.rotation, u.rotation) then
-        enemies[i]:notifyCollision(bite[j])
-      end
-    end
-  end
-
-  for i,v in ipairs(chaseEnemies) do
-    for j,u in ipairs(bite) do
-      if isColliding(v.box, u.box, v.rotation, u.rotation) then
-        chaseEnemies[i]:notifyCollision(bite[j])
-      end
-    end
-  end
-
-  for i,v in ipairs(tiles) do
-    for j,u in ipairs(bombs) do
-      if isColliding(v.box, u.box, v.rotation, u.rotation) then
-        bombs[j]:notifyCollision(tiles[i])
-      end
-    end
-  end
-end
-
+-- @param a
+-- @param b
+-- @param r
+-- @ return boolean
 function isCollidingPointCircle(a, b, r)
   return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) < r * r
 end
@@ -542,4 +330,51 @@ function rotate(vec, ang)
     vec.x * cs - vec.y * sn,
     vec.x * sn + vec.y * cs
   )
+end
+
+---
+--
+-- @param val
+-- @param min
+-- @param max
+-- @return number
+function wrap(val, min, max)
+	if val < min then val = max end
+	if val > max then val = min end
+	return val
+end
+
+---
+--
+-- @param val
+-- @param min
+-- @param max
+-- @return number
+function cap(val, min, max)
+	return math.max(math.min(val, max), min)
+end
+
+---
+--
+function setZoom()
+  local cf = config.fullscreen
+  local cs = config.scale
+  local lg = love.graphics
+  local w = WIDTH
+  local h = HEIGHT
+	if cf == 1 then
+		local sw = lg.getWidth() / w / cs
+		local sh = lg.getHeight() / h / cs
+		lg.scale(sw,sh)
+	elseif cf == 2 then
+		local sw = lg.getWidth() / w / cs
+		local sh = lg.getHeight() / h / cs
+		local tx = (lg.getWidth() - w * cs * sh) / 2
+		lg.translate(tx, 0)
+		lg.scale(sh, sh)
+		lg.setScissor(tx, 0, w*cs*sh, lg.getHeight())
+	elseif cf == 3 then
+		lg.translate(fs_translatex, fs_translatey)
+		lg.setScissor(fs_translatex, fs_translatey, w*cs, h*cs)
+	end
 end

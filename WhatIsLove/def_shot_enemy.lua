@@ -32,8 +32,8 @@ function DefShotEnemy:_init(x, y)
   self.attackingTime = 0
   self.shotTime      = 0
 
-  self.animHiding    = Sprite:_init(DEFSHOT_ENEMY_HIDING_IMAGE, 1, 1)
-  self.animAttacking = Sprite:_init(DEFSHOT_ENEMY_ATTACKING_IMAGE, 12, 0.1)
+  self.animHiding    = Sprite(DEFSHOT_ENEMY_HIDING_IMAGE, 1, 1)
+  self.animAttacking = Sprite(DEFSHOT_ENEMY_ATTACKING_IMAGE, 12, 0.1)
   self.sprite        = self.animHiding
   self.box           = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
@@ -42,6 +42,8 @@ end
 -- Called once once each love.update.
 -- @param dt Time passed since last update
 function DefShotEnemy:update(dt)
+  self.sprite:update(dt)
+  
   self.lastY = self.box.y
 
   self.yspeed = self.yspeed + ENEMY_GRAVITY * dt
@@ -60,20 +62,16 @@ function DefShotEnemy:update(dt)
     self.attackingTime = self.attackingTime + dt
     self.shotTime = self.shotTime + dt
     if self.shotTime > 0.6 then
-      print("shot")
       self:shot()
       self.shotTime = 0
     end
     if self:isToLongAttacking() then
-      print("To long attacking")
       self.state = ENEMYSTATE_HIDING
       self.sprite = self.animHiding
       self.attackingTime = 0
       self.shotTime = 0
     end
   end
-
-  self.sprite:update(dt)
 end
 
 function DefShotEnemy:isToLongHiding()

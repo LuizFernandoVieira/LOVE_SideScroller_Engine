@@ -22,7 +22,7 @@ function MissleExplosion:_init(x, y)
   GameObject:_init(x, y)
 
   self.type         = "MissleExplosion"
-  self.sprite       = Sprite:_init(EXPLOSION_IMAGE, 6, 0.15)
+  self.sprite       = Sprite(EXPLOSION_IMAGE, 6, 0.15)
   self.box          = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.lifeTime     = 0.9
 end

@@ -20,7 +20,7 @@ function Antidote:_init(x, y)
   Item:_init(x, y)
 
   self.type      = ANTIDOTE_TYPE
-  self.sprite    = Sprite:_init(ANTIDOTE_IMAGE, 1, 1)
+  self.sprite    = Sprite(ANTIDOTE_IMAGE, 1, 1)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false
 end

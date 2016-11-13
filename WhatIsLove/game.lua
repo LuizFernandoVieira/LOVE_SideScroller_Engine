@@ -1,50 +1,53 @@
-player           = {}
-tiles            = {}
-map              = {}
-enemies          = {}
-chaseEnemies     = {}
-rightLeftEnemies = {}
-flybombEnemies   = {}
-defShotEnemies   = {}
-shootEnemies     = {}
-items            = {}
-particles        = {}
-bullets          = {}
-bombs            = {}
-missleBullets    = {}
-bite             = {}
-ladders          = {}
-weapons          = {}
-
-bgObjects        = {}
-
+player                = {}
+tiles                 = {}
+map                   = {}
+enemies               = {}
+chaseEnemies          = {}
+rightLeftEnemies      = {}
+flybombEnemies        = {}
+defShotEnemies        = {}
+shootEnemies          = {}
+blobEnemies           = {}
+shieldEnemies         = {}
+spikeEnemies          = {}
+items                 = {}
+particles             = {}
+bullets               = {}
+bombs                 = {}
+missleBullets         = {}
+bite                  = {}
+ladders               = {}
+weapons               = {}
+bgObjects             = {}
 defShotEnemiesBullets = {}
 machinegunBullets     = {}
 shotgunBullets        = {}
+shotEnemyBullets      = {}
+blobEnemyBullets      = {}
+missleExplosions      = {}
+bombExplosions        = {}
+psystem               = {}
+boss                  = {}
 
-shotEnemyBullets = {}
-
-missleExplosions  = {}
-
-psystem     = {}
-mobileCntrl = love.graphics.newImage("img/mobile_cntrl.png")
-
-sound     = love.audio.newSource("audio/teste.mp3")
-jumpSound = love.audio.newSource("audio/jump.wav")
-shotSound = love.audio.newSource("audio/shot.wav")
-biteSound = love.audio.newSource("audio/bite.wav")
-pickupSound = love.audio.newSource("audio/pickup2.wav")
+mobileCntrl   = love.graphics.newImage("img/mobile_cntrl.png")
+overlayImg    = love.graphics.newImage("img/Overlay.png")
+sound         = love.audio.newSource("audio/teste.mp3")
+jumpSound     = love.audio.newSource("audio/jump.wav")
+shotSound     = love.audio.newSource("audio/shot.wav")
+biteSound     = love.audio.newSource("audio/bite.wav")
+pickupSound   = love.audio.newSource("audio/pickup2.wav")
 antidoteSound = love.audio.newSource("audio/antidote.wav")
 
-overlayImg = love.graphics.newImage("img/Overlay.png")
+bossFight     = false
 
 --- Initializes objects that belong to the first level.
 -- Called once on game state change.
 function gameState:init()
   currentGameState = "gameState"
 
-  player = Player:_init(132, 116)
+  player = Player(132, 116)
   camera = Camera(player.box.x, player.box.y)
+  boss   = Boss(800, 0)
 
   loadEnemies()
   loadItems()
@@ -57,14 +60,16 @@ end
 --- Initializes enemies.
 function loadEnemies()
   table.insert(enemies, Enemy(70, 0))
-  -- table.insert(enemies, Enemy(150, 0))
-  -- table.insert(enemies, Enemy(200, 0))
   table.insert(shootEnemies, ShootEnemy(150, 0))
   table.insert(chaseEnemies, ChaseEnemy(250, 0))
   table.insert(rightLeftEnemies, RightLeftEnemy(350, 0))
-  table.insert(flybombEnemies, FlybombEnemy(450, 70))
+  table.insert(flybombEnemies, FlybombEnemy(450, 100))
   table.insert(flybombEnemies, FlybombEnemy(550, 70))
   table.insert(defShotEnemies, DefShotEnemy(200, 0))
+  table.insert(blobEnemies, BlobEnemy(620, 70, "down"))
+  table.insert(blobEnemies, BlobEnemy(660, 170, "up"))
+  table.insert(shieldEnemies, ShieldEnemy(40, 0))
+  table.insert(spikeEnemies, SpikeEnemy(50, 120))
 end
 
 --- Initializes items.
@@ -75,9 +80,8 @@ function loadItems()
   table.insert(items, Item(25, 160))
   table.insert(items, Item(10, 150))
   table.insert(items, Item(15, 160))
-  table.insert(items, Antidote(100, 150))
+  table.insert(items, Antidote(50, 150))
   table.insert(ladders, Ladder(230, 120))
-  -- table.insert(weapons, Gun(100, 100))
   table.insert(weapons, Shotgun(100, 120))
   table.insert(weapons, Misslegun(150, 120))
   table.insert(weapons, Machinegun(0, 150))
@@ -114,12 +118,13 @@ end
 function gameState:update(dt)
   handleInputs()
   player:update(dt)
+  boss:update(dt)
 
   local dx = player.box.x - camera.x
   local dy = player.box.y - camera.y
   camera:move(dx/2, 0)
-
-  -- psystem:update(dt)
+  limitBoundries()
+  updateBossFight()
 
   updateGameObjects(dt, enemies)
   updateGameObjects(dt, chaseEnemies)
@@ -127,6 +132,9 @@ function gameState:update(dt)
   updateGameObjects(dt, flybombEnemies)
   updateGameObjects(dt, defShotEnemies)
   updateGameObjects(dt, shootEnemies)
+  updateGameObjects(dt, blobEnemies)
+  updateGameObjects(dt, shieldEnemies)
+  updateGameObjects(dt, spikeEnemies)
   updateGameObjects(dt, items)
   updateGameObjects(dt, bullets)
   updateGameObjects(dt, missleBullets)
@@ -134,11 +142,13 @@ function gameState:update(dt)
   updateGameObjects(dt, machinegunBullets)
   updateGameObjects(dt, shotgunBullets)
   updateGameObjects(dt, shotEnemyBullets)
+  updateGameObjects(dt, blobEnemyBullets)
   updateGameObjects(dt, bombs)
   updateGameObjects(dt, ladders)
   updateGameObjects(dt, weapons)
   updateGameObjects(dt, bite)
   updateGameObjects(dt, missleExplosions)
+  updateGameObjects(dt, bombExplosions)
   updateGameObjects(dt, bgObjects)
 
   checkCollision()
@@ -167,6 +177,24 @@ function isInsideCamera(gameObject)
   return false
 end
 
+function limitBoundries()
+  if not bossFight then
+    if camera.x < 80 then
+      camera:lockX(80)
+    elseif camera.x > 800 then
+      camera:lockX(800)
+      bossFight = true
+    end
+  end
+end
+
+function updateBossFight()
+  if bossFight then
+    camera:lockX(800)
+    print("boss fight")
+  end
+end
+
 --- Deletes entities marked as dead.
 function deleteDeadEntities()
   deleteDead(enemies)
@@ -175,6 +203,9 @@ function deleteDeadEntities()
   deleteDead(flybombEnemies)
   deleteDead(defShotEnemies)
   deleteDead(shootEnemies)
+  deleteDead(blobEnemies)
+  deleteDead(shieldEnemies)
+  deleteDead(spikeEnemies)
   deleteDead(items)
   deleteDead(bite)
   deleteDead(bullets)
@@ -183,8 +214,10 @@ function deleteDeadEntities()
   deleteDead(missleBullets)
   deleteDead(shotgunBullets)
   deleteDead(shotEnemyBullets)
+  deleteDead(blobEnemyBullets)
   deleteDead(bombs)
   deleteDead(missleExplosions)
+  deleteDead(bombExplosions)
   deleteDead(weapons)
 end
 
@@ -256,34 +289,34 @@ function gameState:draw()
   drawGameObjects(flybombEnemies)
   drawGameObjects(defShotEnemies)
   drawGameObjects(shootEnemies)
+  drawGameObjects(blobEnemies)
+  drawGameObjects(shieldEnemies)
+  drawGameObjects(spikeEnemies)
   drawGameObjects(items)
-  -- drawGameObjects(ladders)
+  drawGameObjects(ladders)
   drawGameObjects(bullets)
   drawGameObjects(defShotEnemiesBullets)
   drawGameObjects(machinegunBullets)
   drawGameObjects(missleBullets)
   drawGameObjects(shotgunBullets)
   drawGameObjects(shotEnemyBullets)
+  drawGameObjects(blobEnemyBullets)
   drawGameObjects(bombs)
   drawGameObjects(bite)
   drawGameObjects(missleExplosions)
+  drawGameObjects(bombExplosions)
   drawGameObjects(weapons)
 
+  boss:draw()
   player:draw()
 
   drawDebug()
-
   camera:detach()
-
-  -- love.graphics.draw(
-  -- psystem, love.graphics.getWidth() *
-  -- 0.5, love.graphics.getHeight() * 0.5)
-
   drawMobileTouches()
 
   love.graphics.push()
-  setZoom()
 
+  setZoom()
   love.graphics.scale(config.scale)
   drawHUD()
 
@@ -305,6 +338,7 @@ end
 function drawDebug()
   if debug then
     player:drawDebug()
+    boss:drawDebug()
     drawDebugGameObjects(tiles)
     drawDebugGameObjects(enemies)
     drawDebugGameObjects(chaseEnemies)
@@ -312,15 +346,21 @@ function drawDebug()
     drawDebugGameObjects(flybombEnemies)
     drawDebugGameObjects(defShotEnemies)
     drawDebugGameObjects(shootEnemies)
+    drawDebugGameObjects(blobEnemies)
+    drawDebugGameObjects(shieldEnemies)
+    drawDebugGameObjects(spikeEnemies)
     drawDebugGameObjects(items)
+    drawDebugGameObjects(weapons)
     drawDebugGameObjects(bullets)
     drawDebugGameObjects(defShotEnemiesBullets)
     drawDebugGameObjects(machinegunBullets)
     drawDebugGameObjects(missleBullets)
     drawDebugGameObjects(shotgunBullets)
     drawDebugGameObjects(shotEnemyBullets)
+    drawDebugGameObjects(blobEnemyBullets)
     drawDebugGameObjects(bombs)
     drawDebugGameObjects(missleExplosions)
+    drawDebugGameObjects(bombExplosions)
     drawDebugGameObjects(bite)
   end
 end
@@ -333,14 +373,16 @@ end
 
 --- Draws all graphics that act as a head-up display.
 function drawHUD()
-  love.graphics.draw(love.graphics.newImage("img/Overlay.png"), 0, 0)
-  love.graphics.setFont(font.bold)
-  love.graphics.setColor(179, 164, 106)
-  love.graphics.print("STAGE: " .. "1", 10, 2)
-  love.graphics.print("BLABLA: " .. "25", 10, 9)
-  love.graphics.print("ITEMS: " .. player.items, 90, 2)
-  love.graphics.print("WEAPON: " .. player.weapon, 90, 9)
-  love.graphics.setColor(255,255,255)
+  local lg = love.graphics
+  lg.draw(love.graphics.newImage("img/Overlay.png"), 0, 0)
+  lg.setFont(font.bold)
+  lg.setColor(179, 164, 106)
+  lg.print("STAGE: " .. "1", 10, 2)
+  lg.print("LIFE: " .. player.health, 10, 9)
+  if player.weapon == 0 then lg.print("BULLETS: ... ", 75, 2)
+  else lg.print("BULLETS: " .. player.bulletAmount, 75, 2) end
+  lg.print("WEAPON: " .. player.weapon, 75, 9)
+  lg.setColor(255, 255, 255)
 end
 
 --- Checks for key press events.
@@ -356,10 +398,10 @@ function gameState:keypressed(key)
 
   if key == "left" or key == "right" then
     if key == "left" then
-      local min = math.min(config.scale - 1, 4)
+      local min = math.min(config.scale - 1, 6)
       config.scale = math.max(min, 1)
     elseif key == "right" then
-      local min = math.min(config.scale + 1, 4)
+      local min = math.min(config.scale + 1, 6)
       config.scale = math.max(min, 1)
     end
     setMode()

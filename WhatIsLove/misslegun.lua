@@ -19,7 +19,7 @@ function Misslegun:_init(x, y)
   Weapon:_init(x, y)
 
   self.type      = "Misslegun"
-  self.sprite    = Sprite:_init(MISSLEGUN_IMAGE, 1, 1)
+  self.sprite    = Sprite(MISSLEGUN_IMAGE, 1, 1)
   self.box       = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.collected = false
 end

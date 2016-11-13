@@ -1,13 +1,19 @@
 Sprite         = {}
 Sprite.__index = Sprite
 
+setmetatable(Sprite, {
+  __call = function (cls, ...)
+    local self = setmetatable({}, cls)
+    self:_init(...)
+    return self
+  end,
+})
+
 --- Initializes sprite.
 -- @param image
 -- @param frameCout
 -- @param frameTime
 function Sprite:_init(image, frameCout, frameTime)
-  local self = setmetatable({}, Sprite)
-
   self.image        = love.graphics.newImage(image)
   self.scaleX       = 1
   self.scaleY       = 1
@@ -26,8 +32,6 @@ function Sprite:_init(image, frameCout, frameTime)
       self.image:getDimensions()
      )
   end
-
-  return self
 end
 
 ---

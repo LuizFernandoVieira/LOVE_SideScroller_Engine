@@ -10,18 +10,15 @@ setmetatable(FlybombEnemy, {
   end,
 })
 
+local hurtSound          = love.audio.newSource("audio/hurt.wav")
 local FLYBOMB_ENEMY_TYPE  = "FlybombEnemy"
 local FLYBOMB_ENEMY_IMAGE = "img/EnemyFox-o-copter.png"
-
-local ENEMY_VELOCITY     = 0
 local ENEMY_HEALTH       = 1
 local ENEMY_GRAVITY      = 800
 local ENEMY_FACINGRIGHT  = true
 local ENEMYSTATE_IDLE    = 0
 local ENEMYSTATE_WALKING = 1
 local ENEMYSTATE_FLYING  = 2
-
-local hurtSound = love.audio.newSource("audio/hurt.wav")
 
 --- Initializes a enemy.
 -- @param x Position in the x axis that this object will be placed
@@ -30,7 +27,7 @@ function FlybombEnemy:_init(x, y)
   Enemy:_init(x, y)
 
   self.type             = FLYBOMB_ENEMY_TYPE
-  self.sprite           = Sprite:_init(FLYBOMB_ENEMY_IMAGE, 2, 0.1)
+  self.sprite           = Sprite(FLYBOMB_ENEMY_IMAGE, 2, 0.1)
   self.box              = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.initialPosition  = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.range            = 80
@@ -45,6 +42,8 @@ end
 -- Called once once each love.update.
 -- @param dt Time passed since last update
 function FlybombEnemy:update(dt)
+  self.sprite:update(dt)
+
   self.lastY = self.box.y
 
   self.box.x = self.box.x + self.xspeed
@@ -66,7 +65,6 @@ function FlybombEnemy:update(dt)
   elseif self.state == ENEMYSTATE_FLYING then
     self.flyingTime = self.flyingTime + dt
     if isToLongFlying(self) then
-      print("To long flying")
       self.state = ENEMYSTATE_IDLE
       self.xspeed = 0
       self.flyingTime = 0
@@ -74,8 +72,6 @@ function FlybombEnemy:update(dt)
       flyRightLeft(self)
     end
   end
-
-  self.sprite:update(dt)
 end
 
 function isToLongStanding(enemy)
@@ -132,25 +128,6 @@ function FlybombEnemy:drawDebug()
   lg.setColor(255, 255, 0)
   lg.rectangle("line", ix - self.range, y, self.range * 2, h)
   lg.setColor(255, 255, 255)
-end
-
---- Notifies the enemy that a collision involving himself had ocurred.
--- The enemy (subject) had previously subscribed
--- to the collision system (observer).
--- @param other
-function FlybombEnemy:notifyCollision(other)
-  if other.type == "Tile" then
-    self.grounded = true
-    self.yspeed = 0
-    self.box.y = self.lastY
-  elseif other.type == "Bullet"
-  or     other.type == "Bite"
-  or     other.type == "MissleBullet"
-  or     other.type == "ShotgunBullet"
-  or     other.type == "MachinegunBullet" then
-    hurtSound:play()
-    self.health = 0
-  end
 end
 
 --- Specifies the type of that object.

@@ -43,7 +43,7 @@ end
 -- @param dt Time passed since last update
 function DefShotEnemy:update(dt)
   self.sprite:update(dt)
-  
+
   self.lastY = self.box.y
 
   self.yspeed = self.yspeed + ENEMY_GRAVITY * dt
@@ -85,9 +85,9 @@ function DefShotEnemy:isToLongAttacking()
 end
 
 function DefShotEnemy:shot()
-  local x = self.box.x - 6
+  local x = self.box.x + 6
   local y = self.box.y + 6
-  local distLeft = 10000
+  local distLeft = 100
   table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y,  50, distLeft, -50))
   table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y, -50, distLeft, -50))
   table.insert(defShotEnemiesBullets, DefShotEnemiesBullets(x, y,  00, distLeft, -50))

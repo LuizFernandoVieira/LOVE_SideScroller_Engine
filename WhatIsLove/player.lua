@@ -155,8 +155,6 @@ function Player:update(dt)
     self:updateGravity(dt)
   end
 
-  print(self.bulletAmount)
-
   self.box.x = math.floor(self.box.x)
   self.box.y = math.floor(self.box.y)
 end
@@ -288,12 +286,17 @@ end
 -- @param dt Time passed since last update
 function Player:updateClimbing(dt)
   if self.moveUp then
+    for i,v in ipairs(ladders) do
+      if isColliding(player.box, v.box, 0, 0) then
+        self.box.y = self.box.y - 2
+        return
+      end
+    end
     self.box.y = self.box.y - 2
+    self.state = PLAYERSTATE_IDLE
   elseif self.moveDown then
     self.box.y = self.box.y + 2
   end
-
-  -- logica de sair da escada
 
   -- if not joystick then return
   if love.keyboard.isDown('space') then
@@ -369,9 +372,9 @@ function Player:shot()
     -- Gun
     if self.weapon == PLAYERWEAPON_GUN then
       if self.facingRight then
-        table.insert(bullets, Bullet(x, y+7, 250, 90))
+        table.insert(bullets, Bullet(x+12, y+7, 250, 140))
       else
-        table.insert(bullets, Bullet(x-5, y+7, -250, 90))
+        table.insert(bullets, Bullet(x-6, y+7, -250, 140))
       end
     -- Shotgun
     elseif self.weapon == PLAYERWEAPON_SHOTGUN then
@@ -380,7 +383,7 @@ function Player:shot()
         if self.facingRight then
           table.insert(shotgunBullets, ShotgunBullet(x+16, y+14, 250, 90, true))
         else
-          table.insert(shotgunBullets, ShotgunBullet(x-16, y+14, -250, 90, false))
+          table.insert(shotgunBullets, ShotgunBullet(x, y+14, -250, 90, false))
         end
       else
         self.shotgunCooldown = self.shotgunCooldown - 0.05
@@ -388,20 +391,20 @@ function Player:shot()
     -- Misslegun
     elseif self.weapon == PLAYERWEAPON_MISSLEGUN then
       if self.facingRight then
-        table.insert(missleBullets, MissleBullet(x, y+14, 200, 90, true))
+        table.insert(missleBullets, MissleBullet(x+16, y+14, 200, 90, true))
       else
-        table.insert(missleBullets, MissleBullet(x-5, y+14, -200, 90, false))
+        table.insert(missleBullets, MissleBullet(x, y+14, -200, 90, false))
       end
     -- Machinegun
     elseif self.weapon ==  PLAYERWEAPON_MACHINEGUN then
       if self.facingRight then
-        table.insert(machinegunBullets, MachinegunBullet(x+4, y+12, 150, 50, -40))
-        table.insert(machinegunBullets, MachinegunBullet(x+4, y+12, 150, 50, 0))
-        table.insert(machinegunBullets, MachinegunBullet(x+4, y+12, 150, 50, 40))
+        table.insert(machinegunBullets, MachinegunBullet(x+16, y+12, 150, 50, -40))
+        table.insert(machinegunBullets, MachinegunBullet(x+16, y+12, 150, 50, 0))
+        table.insert(machinegunBullets, MachinegunBullet(x+16, y+12, 150, 50, 40))
       else
-        table.insert(machinegunBullets, MachinegunBullet(x-16, y+12, -150, 50, -40))
-        table.insert(machinegunBullets, MachinegunBullet(x-16, y+12, -150, 50, 0))
-        table.insert(machinegunBullets, MachinegunBullet(x-16, y+12, -150, 50, 40))
+        table.insert(machinegunBullets, MachinegunBullet(x, y+12, -150, 50, -40))
+        table.insert(machinegunBullets, MachinegunBullet(x, y+12, -150, 50, 0))
+        table.insert(machinegunBullets, MachinegunBullet(x, y+12, -150, 50, 40))
       end
     end
   end
@@ -559,7 +562,7 @@ function Player:notifyCollision(other)
   elseif other.type == "Shotgun" then
     self.weapon = PLAYERWEAPON_SHOTGUN
     self.gunSprite = self.animShotgun
-    self.bulletAmount = 35
+    self.bulletAmount = 300
     pickupSound:play()
   elseif other.type == "Misslegun" then
     self.weapon = PLAYERWEAPON_MISSLEGUN

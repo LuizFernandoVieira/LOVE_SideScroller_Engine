@@ -19,12 +19,12 @@ local BITE_IMAGE = "img/bite.png"
 -- @param y Position in the y axis that this object will be placed
 -- @param w Width of the collision area of that bite
 -- @param h Height of the collision area of that bite
-function Bite:_init(x, y, w, h, facingRight)
+function Bite:_init(x, y, facingRight)
   GameObject:_init(x, y)
 
   self.type         = BITE_TYPE
   self.sprite       = Sprite(BITE_IMAGE, 3, 0.15)
-  self.box          = Rect(x, y, w, h)
+  self.box          = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
   self.facingRight  = facingRight
   self.lifeTime     = 0.45
 end
@@ -78,6 +78,6 @@ end
 --- Specifies the type of that object.
 -- @param type
 -- @return boolean
-function Bullet:is(type)
+function Bite:is(type)
   return type == self.type
 end

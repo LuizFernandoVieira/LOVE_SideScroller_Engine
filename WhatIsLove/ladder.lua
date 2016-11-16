@@ -39,6 +39,16 @@ end
 --- Draws the ladder outline and collision area.
 -- Called once once each love.draw if debug parameter passed.
 function Ladder:drawDebug()
+  local lg = love.graphics
+  local x  = self.box.x
+  local y  = self.box.y
+  local w  = self.sprite:getWidth()
+  local h  = self.sprite:getHeight()
+  lg.setColor(0, 200, 255, 50)
+  lg.rectangle("fill", x, y, w, h)
+  lg.setColor(0, 200, 255)
+  lg.rectangle("line", x, y, w, h)
+  lg.setColor(255, 255, 255)
 end
 
 --- Checks if ladder has been collected.

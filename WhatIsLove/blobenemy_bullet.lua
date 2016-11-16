@@ -57,7 +57,7 @@ end
 -- Called once once each love.draw if debug parameter passed.
 function BlobEnemyBullet:drawDebug()
   local lg = love.graphics
-  local x  = self.box.x + self.sprite:getWidth()/2
+  local x  = self.box.x
   local y  = self.box.y
   local w  = self.box.w
   local h  = self.box.h

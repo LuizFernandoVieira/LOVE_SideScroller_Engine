@@ -26,7 +26,6 @@ shotEnemyBullets      = {}
 blobEnemyBullets      = {}
 missleExplosions      = {}
 bombExplosions        = {}
-psystem               = {}
 boss                  = {}
 
 mobileCntrl   = love.graphics.newImage("img/mobile_cntrl.png")
@@ -45,9 +44,9 @@ bossFight     = false
 function gameState:init()
   currentGameState = "gameState"
 
-  player = Player(132, 116)
+  player = Player(120, 116)
   camera = Camera(player.box.x, player.box.y)
-  boss   = Boss(800, 0)
+  boss   = Boss(825, 0)
 
   loadEnemies()
   loadItems()
@@ -59,17 +58,21 @@ end
 
 --- Initializes enemies.
 function loadEnemies()
-  table.insert(enemies, Enemy(70, 0))
-  table.insert(shootEnemies, ShootEnemy(150, 0))
-  table.insert(chaseEnemies, ChaseEnemy(250, 0))
-  table.insert(rightLeftEnemies, RightLeftEnemy(350, 0))
-  table.insert(flybombEnemies, FlybombEnemy(450, 100))
-  table.insert(flybombEnemies, FlybombEnemy(550, 70))
-  table.insert(defShotEnemies, DefShotEnemy(200, 0))
-  table.insert(blobEnemies, BlobEnemy(620, 70, "down"))
-  table.insert(blobEnemies, BlobEnemy(660, 170, "up"))
+  -- table.insert(enemies, Enemy(70, 0))
+  -- table.insert(shootEnemies, ShootEnemy(150, 0))
+  -- table.insert(chaseEnemies, ChaseEnemy(250, 0))
+  -- table.insert(rightLeftEnemies, RightLeftEnemy(350, 0))
+  -- table.insert(flybombEnemies, FlybombEnemy(400, 90))
+  -- table.insert(flybombEnemies, FlybombEnemy(450, 100))
+  -- table.insert(flybombEnemies, FlybombEnemy(550, 70))
+  -- table.insert(defShotEnemies, DefShotEnemy(200, 0))
+  -- table.insert(blobEnemies, BlobEnemy(620, 70, "down"))
+  -- table.insert(blobEnemies, BlobEnemy(660, 170, "up"))
   table.insert(shieldEnemies, ShieldEnemy(40, 0))
-  table.insert(spikeEnemies, SpikeEnemy(50, 120))
+  -- table.insert(spikeEnemies, SpikeEnemy(50, 120))
+  -- table.insert(spikeEnemies, SpikeEnemy(400, 120))
+  -- table.insert(spikeEnemies, SpikeEnemy(450, 120))
+  -- table.insert(spikeEnemies, SpikeEnemy(500, 120))
 end
 
 --- Initializes items.
@@ -81,7 +84,7 @@ function loadItems()
   table.insert(items, Item(10, 150))
   table.insert(items, Item(15, 160))
   table.insert(items, Antidote(50, 150))
-  table.insert(ladders, Ladder(230, 120))
+  table.insert(ladders, Ladder(230, 112))
   table.insert(weapons, Shotgun(100, 120))
   table.insert(weapons, Misslegun(150, 120))
   table.insert(weapons, Machinegun(0, 150))
@@ -100,16 +103,6 @@ end
 function loadAudio()
   -- splashSound:stop()
   -- sound:play()
-end
-
---- Initializes particles.
-function loadParticles()
-  local img = love.graphics.newImage('img/rain.png')
-  psystem = love.graphics.newParticleSystem(img, 32)
-  psystem:setParticleLifetime(2, 5)
-  psystem:setEmissionRate(50)
-  psystem:setSizeVariation(1)
-  psystem:setLinearAcceleration(-1000, 0, 1000, 1000)
 end
 
 --- Updates all entities that belong to the first level.
@@ -191,7 +184,6 @@ end
 function updateBossFight()
   if bossFight then
     camera:lockX(800)
-    print("boss fight")
   end
 end
 
@@ -362,6 +354,7 @@ function drawDebug()
     drawDebugGameObjects(missleExplosions)
     drawDebugGameObjects(bombExplosions)
     drawDebugGameObjects(bite)
+    drawDebugGameObjects(ladders)
   end
 end
 
@@ -377,11 +370,11 @@ function drawHUD()
   lg.draw(love.graphics.newImage("img/Overlay.png"), 0, 0)
   lg.setFont(font.bold)
   lg.setColor(179, 164, 106)
-  lg.print("STAGE: " .. "1", 10, 2)
-  lg.print("LIFE: " .. player.health, 10, 9)
-  if player.weapon == 0 then lg.print("BULLETS: ... ", 75, 2)
-  else lg.print("BULLETS: " .. player.bulletAmount, 75, 2) end
-  lg.print("WEAPON: " .. player.weapon, 75, 9)
+  lg.print("STAGE: " .. "1", 6, 2)
+  lg.print("LIFE: " .. player.health, 6, 9)
+  if player.weapon == 0 then lg.print("BULLETS: ... ", 70, 2)
+  else lg.print("BULLETS: " .. player.bulletAmount, 70, 2) end
+  lg.print("WEAPON: " .. player.weapon, 70, 9)
   lg.setColor(255, 255, 255)
 end
 

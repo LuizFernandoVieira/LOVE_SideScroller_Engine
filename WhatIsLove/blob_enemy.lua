@@ -41,7 +41,7 @@ function BlobEnemy:update(dt)
   self.sprite:update(dt)
   self.timeUntilAttack:update(dt)
   if self.timeUntilAttack:get() > 0.7 then
-    table.insert(blobEnemyBullets, BlobEnemyBullet(self.box.x, self.box.y, self.dir, 250))
+    table.insert(blobEnemyBullets, BlobEnemyBullet(self.box.x + 7, self.box.y, self.dir, 250))
     self.timeUntilAttack:restart()
   end
 end

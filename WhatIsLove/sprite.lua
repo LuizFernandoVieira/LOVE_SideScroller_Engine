@@ -57,6 +57,7 @@ end
 -- @param angle
 -- @param facing
 function Sprite:draw(x, y, angle, facing)
+  angle = angle or 0
   facingRight = facingRight or true
 
   if facing == true then
@@ -70,7 +71,7 @@ function Sprite:draw(x, y, angle, facing)
     love.graphics.draw(
       self.image,
       self.frames[self.currentFrame],
-      x + 16, y, angle,
+      x + self.image:getWidth()/self.frameCout, y, angle,
       -self.scaleX, self.scaleY
     )
   end

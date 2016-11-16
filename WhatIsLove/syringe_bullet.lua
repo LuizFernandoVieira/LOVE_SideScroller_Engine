@@ -35,38 +35,6 @@ function SyringeBullet:update(dt)
   self.distanceLeft = self.distanceLeft - math.sqrt( math.pow((self.box.x - previousX), 2) + math.pow((self.box.y - previousY), 2) )
 end
 
---- Draws the bullet object.
--- Called once once each love.draw.
-function SyringeBullet:draw()
-  self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
-end
-
---- Draws the bite outline and collision area.
--- Called once once each love.draw if debug parameter passed.
-function SyringeBullet:drawDebug()
-  local lg = love.graphics
-  local x  = self.box.x + self.sprite:getWidth()/2
-  local y  = self.box.y
-  local w  = self.box.w
-  local h  = self.box.h
-  lg.setColor(0, 200, 255, 50)
-  lg.rectangle("fill", x, y, w, h)
-  lg.setColor(0, 200, 255)
-  lg.rectangle("line", x, y, w, h)
-  lg.setColor(255, 255, 255)
-end
-
---- Checks if the bullet have traveled its full distance.
--- If so it should be destroyed.
--- @return boolean
-function SyringeBullet:isDead()
-  if self.distanceLeft > 0 then
-    return false
-  else
-    return true
-  end
-end
-
 function SyringeBullet:notifyCollision(other)
   if other.type == "Enemy"
   or other.type == "ChaseEnemy"

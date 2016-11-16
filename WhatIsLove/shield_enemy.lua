@@ -11,7 +11,7 @@ setmetatable(ShieldEnemy, {
 })
 
 local SHIELD_ENEMY_TYPE  = "ShieldEnemy"
-local SHIELD_ENEMY_IDLE_IMAGE = "img/EnemyShieldFoxyyy.png"
+local SHIELD_ENEMY_IDLE_IMAGE = "img/BigFox_36x33.png"
 local SHIELD_ENEMY_DEF_IMAGE  = "img/EnemyShieldFox.png"
 local ENEMY_HEALTH       = 1
 local ENEMY_GRAVITY      = 800
@@ -27,12 +27,12 @@ function ShieldEnemy:_init(x, y)
   Enemy:_init(x, y)
 
   self.type           = SHIELD_ENEMY_TYPE
-  self.animIdle       = Sprite(SHIELD_ENEMY_IDLE_IMAGE, 1, 1)
+  self.animIdle       = Sprite(SHIELD_ENEMY_IDLE_IMAGE, 3, 1)
   self.animDef        = Sprite(SHIELD_ENEMY_DEF_IMAGE, 1, 1)
-  self.sprite         = self.animIdle
+  self.sprite         = self.animDef
   self.box            = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
-  self.shield         = Rect(x+20, y, 50, 100)
-  self.range          = 80
+  self.shield         = Rect(x+20, self.box.y, self.sprite:getWidth()/4, self.sprite:getHeight())
+  self.range          = 70
   self.shootDownTimer = Timer()
   self.shootUpTimer   = Timer()
   self.changeStateCd  = Timer()
@@ -46,21 +46,21 @@ function ShieldEnemy:update(dt)
   self.sprite:update(dt)
 
   self.lastY = self.box.y
-
   self.yspeed = self.yspeed + ENEMY_GRAVITY * dt
   self.box.y = self.box.y + self.yspeed * dt
-
   self.box.x = self.box.x + self.xspeed
+
+  print(self.state)
 
   -- IDLE STATE
   if self.state == ENEMYSTATE_IDLE then
     print(self.changeStateCd:get())
 
     if self:isPlayerInRange()
-    and self.changeStateCd:get() <= -2 then
+    and self.changeStateCd:get() <= -2.2 then
       self.state = ENEMYSTATE_DEF
       self.sprite = self.animDef
-      self.changeStateCd:set(5)
+      self.changeStateCd:set(3)
     else
       self.changeStateCd:update(-dt)
     end
@@ -79,8 +79,12 @@ function ShieldEnemy:update(dt)
 
   -- DEF STATE
   elseif self.state == ENEMYSTATE_DEF then
+    self.changeStateCd:update(-dt)
+    print(self:isPlayerInRange())
+    print(self.changeStateCd:get())
     if self:isPlayerInRange()
     and self.changeStateCd:get() < 0 then
+      print("ENTROU")
       self.state = ENEMYSTATE_IDLE
       self.sprite = self.animIdle
     end
@@ -152,6 +156,10 @@ function ShieldEnemy:drawDebug()
   lg.circle("fill", cx, cy, self.range, 100)
   lg.setColor(255, 255, 0)
   lg.circle("line", cx, cy, self.range, 100)
+  lg.setColor(255, 0, 255, 50)
+  lg.rectangle("fill", sx, y, sw, sh)
+  lg.setColor(255, 0, 255)
+  lg.rectangle("line", sx, y, sw, sh)
   lg.setColor(255, 255, 255)
 end
 

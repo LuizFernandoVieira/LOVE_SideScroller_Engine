@@ -11,6 +11,7 @@ function checkCollision()
   checkCollisionBetween(tiles, defShotEnemies)
   checkCollisionBetween(tiles, shieldEnemies)
   checkCollisionBetween(tiles, bombs)
+  checkCollisionBetween(tiles, defShotEnemiesBullets)
   -- Enemies
   checkCollisionBetweenPlayerAnd(enemies)
   checkCollisionBetween(enemies, bite)

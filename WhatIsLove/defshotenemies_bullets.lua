@@ -52,7 +52,7 @@ end
 -- Called once once each love.draw if debug parameter passed.
 function DefShotEnemiesBullets:drawDebug()
   local lg = love.graphics
-  local x  = self.box.x + self.sprite:getWidth()/2
+  local x  = self.box.x
   local y  = self.box.y
   local w  = self.box.w
   local h  = self.box.h
@@ -80,6 +80,12 @@ end
 -- @param other
 function DefShotEnemiesBullets:notifyCollision(other)
   if other.type == "Player" then
+    for k,v in ipairs(defShotEnemiesBullets) do
+      if v.id == self.id then
+        defShotEnemiesBullets[k] = nil
+      end
+    end
+  elseif other.type == "Tile" then
     for k,v in ipairs(defShotEnemiesBullets) do
       if v.id == self.id then
         defShotEnemiesBullets[k] = nil

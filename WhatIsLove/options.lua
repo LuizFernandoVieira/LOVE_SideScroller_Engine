@@ -34,6 +34,7 @@ function optionsState:draw()
   setZoom()
   lg.scale(config.scale)
 
+  love.graphics.setColor(123, 114, 99)
   lg.setFont(font.bold)
 
   lg.print("SCALE:", 25, 33)

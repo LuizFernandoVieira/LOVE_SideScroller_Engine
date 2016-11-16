@@ -21,11 +21,6 @@ function ShotgunBullet:_init(x, y, speed, distanceLeft, facingRight)
   self.box    = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
-function ShotgunBullet:draw()
-  self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
-end
-
-
 function ShotgunBullet:notifyCollision(other)
   if other.type == "Enemy"
   or other.type == "ChaseEnemy"

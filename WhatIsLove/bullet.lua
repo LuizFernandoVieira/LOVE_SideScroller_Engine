@@ -17,7 +17,7 @@ local BULLET_IMAGE = "img/bullet.png"
 -- @param y Position in the y axis that this object will be placed
 -- @param speed Quantity that represents how fast this bullet moves
 -- @param distanceLeft Amount of space left before the bullet is destroyed
-function Bullet:_init(x, y, speed, distanceLeft, speedY)
+function Bullet:_init(x, y, speed, distanceLeft, speedY, facingRight)
   GameObject:_init(x, y)
 
   self.type         = "Bullet"
@@ -25,6 +25,7 @@ function Bullet:_init(x, y, speed, distanceLeft, speedY)
   self.speedX       = speed or 0
   self.speedY       = speedY or 0
   self.distanceLeft = distanceLeft
+  self.facingRight  = facingRight or true 
   self.box          = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
 end
 
@@ -45,14 +46,14 @@ end
 --- Draws the bullet object.
 -- Called once once each love.draw.
 function Bullet:draw()
-  self.sprite:draw(self.box.x, self.box.y, 0)
+  self.sprite:draw(self.box.x, self.box.y, 0, self.facingRight)
 end
 
 --- Draws the bite outline and collision area.
 -- Called once once each love.draw if debug parameter passed.
 function Bullet:drawDebug()
   local lg = love.graphics
-  local x  = self.box.x + self.sprite:getWidth()/2
+  local x  = self.box.x
   local y  = self.box.y
   local w  = self.box.w
   local h  = self.box.h
